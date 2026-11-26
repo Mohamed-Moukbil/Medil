@@ -185,7 +185,7 @@ function getSupabase() {
   const cfg = window.MEDIL_SUPABASE_CONFIG || window.SUPABASE_CONFIG;
   if (!supabaseConfigured()) return null;
   if (!window.__medilSupabase) {
-    try { window.__medilSupabase = window.supabase.createClient(cfg.url, cfg.anonKey); }
+    try { window.__medilSupabase = window.supabase.createClient(cfg.url, cfg.anonKey, { auth: { flowType: 'pkce', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }); }
     catch (error) { window.__medilSupabase = null; }
   }
   return window.__medilSupabase || null;
