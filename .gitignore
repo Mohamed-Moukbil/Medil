@@ -19,3 +19,7 @@ Thumbs.db
 /test-results/
 /playwright-report/
 /screenshots/
+
+# Cloudflare Wrangler
+.wrangler/
+.assetsignore
