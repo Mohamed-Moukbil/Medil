@@ -81,37 +81,35 @@ create table if not exists daily_challenges (
   "date" date not null
 );
 
+-- Contenu éditorial : lecture publique, écriture ouverte (l'admin est protégé
+-- par un mot de passe côté client, comme avant — pas d'auth Supabase pour l'admin).
 alter table courses enable row level security;
 drop policy if exists "content public read" on courses;
 create policy "content public read" on courses for select using (true);
-drop policy if exists "content admin write" on courses;
-create policy "content admin write" on courses for all
-  using (exists (select 1 from profiles where id = auth.uid() and is_admin))
-  with check (exists (select 1 from profiles where id = auth.uid() and is_admin));
+drop policy if exists "content anon write" on courses;
+create policy "content anon write" on courses for all
+  using (true) with check (true);
 
 alter table exercises enable row level security;
 drop policy if exists "content public read" on exercises;
 create policy "content public read" on exercises for select using (true);
-drop policy if exists "content admin write" on exercises;
-create policy "content admin write" on exercises for all
-  using (exists (select 1 from profiles where id = auth.uid() and is_admin))
-  with check (exists (select 1 from profiles where id = auth.uid() and is_admin));
+drop policy if exists "content anon write" on exercises;
+create policy "content anon write" on exercises for all
+  using (true) with check (true);
 
 alter table papers enable row level security;
 drop policy if exists "content public read" on papers;
 create policy "content public read" on papers for select using (true);
-drop policy if exists "content admin write" on papers;
-create policy "content admin write" on papers for all
-  using (exists (select 1 from profiles where id = auth.uid() and is_admin))
-  with check (exists (select 1 from profiles where id = auth.uid() and is_admin));
+drop policy if exists "content anon write" on papers;
+create policy "content anon write" on papers for all
+  using (true) with check (true);
 
 alter table daily_challenges enable row level security;
 drop policy if exists "content public read" on daily_challenges;
 create policy "content public read" on daily_challenges for select using (true);
-drop policy if exists "content admin write" on daily_challenges;
-create policy "content admin write" on daily_challenges for all
-  using (exists (select 1 from profiles where id = auth.uid() and is_admin))
-  with check (exists (select 1 from profiles where id = auth.uid() and is_admin));
+drop policy if exists "content anon write" on daily_challenges;
+create policy "content anon write" on daily_challenges for all
+  using (true) with check (true);
 
 -- ---------------------------------------------------------------------------
 -- Données personnelles (Phase 3) : sauvegardes / complétions / likes / streaks

@@ -3313,6 +3313,27 @@ function bindGlobalEvents() {
   }, { passive: true });
 }
 
+function loadContentFromSupabase() {
+  const client = getSupabase();
+  if (!client) return;
+  (async () => {
+    try {
+      const [coursesRes, exercisesRes, papersRes, dailyRes] = await Promise.all([
+        client.from('courses').select('id,data'),
+        client.from('exercises').select('id,data'),
+        client.from('papers').select('id,data'),
+        client.from('daily_challenges').select('id,data').limit(1)
+      ]);
+      if (coursesRes.data && coursesRes.data.length) { COURSES.length = 0; COURSES.push(...coursesRes.data.map(r => r.data)); }
+      if (exercisesRes.data && exercisesRes.data.length) { EXERCISES.length = 0; EXERCISES.push(...exercisesRes.data.map(r => r.data)); }
+      if (papersRes.data && papersRes.data.length) { PAPERS.length = 0; PAPERS.push(...papersRes.data.map(r => r.data)); }
+      if (dailyRes.data && dailyRes.data[0] && dailyRes.data[0].data) Object.assign(DAILY_CHALLENGE, dailyRes.data[0].data);
+      window.invalidateDetailCache?.();
+      renderRoute();
+    } catch (error) { console.error('Chargement contenu Supabase:', error); }
+  })();
+}
+
 function init() {
   // Restaure le chemin après un retour OAuth ou une redirection 404 (GitHub Pages).
   try {
@@ -3349,6 +3370,8 @@ function init() {
   const menuButton = $('#menu-toggle');
   if (menuButton) menuButton.innerHTML = icon('menu');
   setTimeout(() => document.body.classList.add('loaded'), 40);
+  // Charge le contenu éditorial depuis Supabase (remplace les données statiques si disponibles).
+  loadContentFromSupabase();
 }
 
 init();

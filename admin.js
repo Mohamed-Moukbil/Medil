@@ -77,7 +77,7 @@
     return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16);
   }
 
-  const DEFAULT_ADMIN_HASH = hashPassword(DEFAULT_ADMIN_PASSWORD);
+  const DEFAULT_ADMIN_HASH = hashPassword('medil-admin');
 
   function isAdminUnlocked() {
     try {
@@ -95,24 +95,20 @@
   }
 
   function unlockAdmin() {
-    try {
-      sessionStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify({ at: Date.now() }));
-    } catch (error) {
-      /* Session uniquement : le navigateur peut la bloquer. */
-    }
+    try { sessionStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify({ at: Date.now() })); } catch (error) { /* Session uniquement. */ }
   }
 
   function lockAdmin() {
-    try {
-      sessionStorage.removeItem(ADMIN_SESSION_KEY);
-    } catch (error) {
-      /* Rien à faire. */
-    }
+    try { sessionStorage.removeItem(ADMIN_SESSION_KEY); } catch (error) { /* Rien à faire. */ }
   }
 
   function adminPasswordMatches(value) {
     const stored = localStorage.getItem(ADMIN_HASH_KEY);
     return hashPassword(value) === (stored || DEFAULT_ADMIN_HASH);
+  }
+
+  function getSupabaseClient() {
+    try { return window.getSupabase ? window.getSupabase() : null; } catch (error) { return null; }
   }
 
   /* --------------------------------------------------------------------------
@@ -170,8 +166,25 @@
     return true;
   }
 
-  const storedContent = readStore(CONTENT_KEY, null);
-  if (storedContent) applyEditorialContent(storedContent);
+  // Contenu éditorial chargé depuis Supabase (fallback : données statiques).
+  (async function loadContentFromSupabase() {
+    const client = getSupabaseClient();
+    if (!client) return;
+    try {
+      const [coursesRes, exercisesRes, papersRes, dailyRes] = await Promise.all([
+        client.from('courses').select('id,data'),
+        client.from('exercises').select('id,data'),
+        client.from('papers').select('id,data'),
+        client.from('daily_challenges').select('id,data').limit(1)
+      ]);
+      const snapshot = {};
+      if (coursesRes.data && coursesRes.data.length) snapshot.courses = coursesRes.data.map(r => r.data);
+      if (exercisesRes.data && exercisesRes.data.length) snapshot.exercises = exercisesRes.data.map(r => r.data);
+      if (papersRes.data && papersRes.data.length) snapshot.papers = papersRes.data.map(r => r.data);
+      if (dailyRes.data && dailyRes.data[0] && dailyRes.data[0].data) snapshot.dailyChallenge = dailyRes.data[0].data;
+      if (Object.keys(snapshot).length) applyEditorialContent(snapshot);
+    } catch (error) { console.error('Chargement contenu Supabase:', error); }
+  })();
 
   /* --------------------------------------------------------------------------
      État de l’interface admin
@@ -350,7 +363,7 @@
           </label>
           <p class="admin-login-error" data-admin-login-error aria-live="polite"></p>
           <button class="btn btn--dark btn--full" type="submit">Déverrouiller le studio ${icon('arrowRight')}</button>
-          <p class="admin-login-note">${icon('lock')} Démo locale : les modifications restent dans ce navigateur. Pense à exporter ta sauvegarde.</p>
+          <p class="admin-login-note">${icon('lock')} Le contenu est désormais persisté dans Supabase. Pense à exporter ta sauvegarde.</p>
         </form>
       </div>
     </section>`;
@@ -1088,8 +1101,33 @@
     };
   }
 
-  function persistEditorial() {
-    return writeStore(CONTENT_KEY, editorialSnapshot());
+  async function persistEditorial() {
+    const client = getSupabaseClient();
+    if (!client) { toast('Supabase indisponible : impossible de persister le contenu.', { type: 'error' }); return false; }
+    const snap = editorialSnapshot();
+    try {
+      // Upsert courses
+      await client.from('courses').upsert(snap.courses.map(c => ({ id: c.id, data: c })), { onConflict: 'id' });
+      await client.from('exercises').upsert(snap.exercises.map(e => ({ id: e.id, data: e })), { onConflict: 'id' });
+      await client.from('papers').upsert(snap.papers.map(p => ({ id: p.id, data: p })), { onConflict: 'id' });
+      if (snap.dailyChallenge) await client.from('daily_challenges').upsert([{ id: snap.dailyChallenge.id || 'daily', data: snap.dailyChallenge, date: new Date().toISOString().slice(0, 10) }], { onConflict: 'id' });
+      // Remove deleted items
+      // (best-effort: delete rows whose id is no longer in the snapshot)
+      const { data: dbCourses } = await client.from('courses').select('id');
+      const keepC = new Set(snap.courses.map(c => c.id));
+      for (const row of (dbCourses || [])) if (!keepC.has(row.id)) await client.from('courses').delete().eq('id', row.id);
+      const { data: dbEx } = await client.from('exercises').select('id');
+      const keepE = new Set(snap.exercises.map(e => e.id));
+      for (const row of (dbEx || [])) if (!keepE.has(row.id)) await client.from('exercises').delete().eq('id', row.id);
+      const { data: dbP } = await client.from('papers').select('id');
+      const keepP = new Set(snap.papers.map(p => p.id));
+      for (const row of (dbP || [])) if (!keepP.has(row.id)) await client.from('papers').delete().eq('id', row.id);
+      return true;
+    } catch (error) {
+      console.error(error);
+      toast('Impossible de persister le contenu dans Supabase.', { type: 'error' });
+      return false;
+    }
   }
 
   function persistForum() {
@@ -1105,7 +1143,7 @@
     setTimeout(() => toast(message, { type: 'success' }), 40);
   }
 
-  function saveCourse(form) {
+  async function saveCourse(form) {
     const data = readCourseForm(form);
     if (!data.title) {
       toast('Le titre du cours est obligatoire.');
@@ -1115,10 +1153,10 @@
     const existingIndex = COURSES.findIndex(course => course.id === currentId);
     if (existingIndex >= 0) COURSES[existingIndex] = data;
     else COURSES.unshift(data);
-    if (persistEditorial()) finishEditing(existingIndex >= 0 ? 'Cours mis à jour.' : 'Cours ajouté.', 'courses');
+    if (await persistEditorial()) finishEditing(existingIndex >= 0 ? 'Cours mis à jour.' : 'Cours ajouté.', 'courses');
   }
 
-  function saveExercise(form) {
+  async function saveExercise(form) {
     const data = readExerciseForm(form);
     if (!data.title) {
       toast('Le titre de l’exercice est obligatoire.');
@@ -1128,10 +1166,10 @@
     const existingIndex = EXERCISES.findIndex(exercise => exercise.id === currentId);
     if (existingIndex >= 0) EXERCISES[existingIndex] = data;
     else EXERCISES.unshift(data);
-    if (persistEditorial()) finishEditing(existingIndex >= 0 ? 'Exercice mis à jour.' : 'Exercice ajouté.', 'exercises');
+    if (await persistEditorial()) finishEditing(existingIndex >= 0 ? 'Exercice mis à jour.' : 'Exercice ajouté.', 'exercises');
   }
 
-  function savePaper(form) {
+  async function savePaper(form) {
     const data = readPaperForm(form);
     if (!data.title) {
       toast('Le titre du sujet est obligatoire.');
@@ -1141,7 +1179,7 @@
     const existingIndex = PAPERS.findIndex(paper => paper.id === currentId);
     if (existingIndex >= 0) PAPERS[existingIndex] = data;
     else PAPERS.unshift(data);
-    if (persistEditorial()) finishEditing(existingIndex >= 0 ? 'Sujet mis à jour.' : 'Sujet ajouté.', 'papers');
+    if (await persistEditorial()) finishEditing(existingIndex >= 0 ? 'Sujet mis à jour.' : 'Sujet ajouté.', 'papers');
   }
 
   function saveThread(form) {
@@ -1157,7 +1195,7 @@
     if (persistForum()) finishEditing(existingIndex >= 0 ? 'Discussion mise à jour.' : 'Discussion publiée.', 'forum');
   }
 
-  function saveDaily(form) {
+  async function saveDaily(form) {
     const data = {
       ...clone(DAILY_CHALLENGE),
       eyebrow: valueOf(form, 'eyebrow'),
@@ -1174,7 +1212,7 @@
       return;
     }
     replaceObject(DAILY_CHALLENGE, data);
-    if (persistEditorial()) finishEditing('Défi du jour mis à jour.', 'daily');
+    if (await persistEditorial()) finishEditing('Défi du jour mis à jour.', 'daily');
   }
 
   function startEditing(type, id) {
@@ -1304,14 +1342,14 @@
     }
   }
 
-  function deleteContent(type, id) {
+  async function deleteContent(type, id) {
     if (!ensureEditorAvailable()) return;
     if (type === 'course') {
       const course = COURSES.find(item => item.id === id);
       if (!course || !window.confirm(`Supprimer définitivement le cours « ${course.title} » ?`)) return;
       replaceArray(COURSES, COURSES.filter(item => item.id !== id));
       removeCourseReferences(id);
-      persistEditorial();
+      await persistEditorial();
       finishEditing('Cours supprimé.', 'courses');
       return;
     }
@@ -1331,7 +1369,7 @@
       if (DAILY_CHALLENGE.id === id) {
         DAILY_CHALLENGE.id = EXERCISES[0]?.id || '';
       }
-      persistEditorial();
+      await persistEditorial();
       finishEditing('Exercice supprimé.', 'exercises');
       return;
     }
@@ -1339,7 +1377,7 @@
       const paper = PAPERS.find(item => item.id === id);
       if (!paper || !window.confirm(`Supprimer définitivement le sujet « ${paper.title} » ?`)) return;
       replaceArray(PAPERS, PAPERS.filter(item => item.id !== id));
-      persistEditorial();
+      await persistEditorial();
       finishEditing('Sujet supprimé.', 'papers');
       return;
     }
@@ -1395,13 +1433,13 @@
     toast('Export data.js prêt. Renomme-le data.js pour le publier.', { type: 'success', duration: 5000 });
   }
 
-  function resetResources() {
-    if (!window.confirm('Restaurer les cours, exercices, sujets et défi d’origine ? Les modifications locales sur ces contenus seront perdues.')) return;
+  async function resetResources() {
+    if (!window.confirm('Restaurer les cours, exercices, sujets et défi d’origine ? Les modifications seront perdues.')) return;
     replaceArray(COURSES, SEED.courses);
     replaceArray(EXERCISES, SEED.exercises);
     replaceArray(PAPERS, SEED.papers);
     replaceObject(DAILY_CHALLENGE, SEED.dailyChallenge);
-    try { localStorage.removeItem(CONTENT_KEY); } catch (error) { /* Best-effort. */ }
+    await persistEditorial();
     finishEditing('Ressources restaurées.', adminState.section);
   }
 
@@ -1437,12 +1475,14 @@
           replaceArray(forumThreads, data.threads);
           persistForum();
         }
-        persistEditorial();
-        adminState.editing = null;
-        adminState.dirty = false;
-        adminState.section = 'dashboard';
-        renderRoute();
-        setTimeout(() => toast('Sauvegarde importée avec succès.', { type: 'success' }), 40);
+        persistEditorial().then(() => {
+          adminState.editing = null;
+          adminState.dirty = false;
+          adminState.section = 'dashboard';
+          renderRoute();
+          setTimeout(() => toast('Sauvegarde importée avec succès.', { type: 'success' }), 40);
+        });
+        return;
       } catch (error) {
         toast('Import impossible : le fichier JSON n’est pas valide.', { type: 'error' });
       }
