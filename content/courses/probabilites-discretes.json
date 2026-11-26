@@ -1,0 +1,69 @@
+{
+  "id": "probabilites-discretes",
+  "title": "Probabilités & variables aléatoires",
+  "tag": "Probabilités",
+  "subject": "Maths",
+  "level": "MPSI",
+  "color": "rose",
+  "coverType": "dots",
+  "coverEq": "\\mathbb{P}(X=k) = \\binom{n}{k}p^k(1-p)^{n-k}",
+  "chaptersCount": 12,
+  "duration": "4 h 40",
+  "students": "2,1k",
+  "rating": 4.7,
+  "featured": false,
+  "description": "De l’espace probabilisé aux variables aléatoires finies : les bases solides, avec les pièges de rédaction classiques.",
+  "formula": "\\mathbb{P}(X=k) = \\binom{n}{k}p^k(1-p)^{n-k}",
+  "objectives": [
+    "Modéliser proprement un espace probabilisé fini.",
+    "Calculer loi, espérance et variance sans oublier les hypothèses.",
+    "Utiliser la linéarité de l’espérance avec discernement."
+  ],
+  "toc": [
+    "Espaces probabilisés finis",
+    "Conditionnement",
+    "Indépendance",
+    "Variables aléatoires",
+    "Espérance et variance",
+    "Lois usuelles"
+  ],
+  "sections": [
+    {
+      "id": "modele",
+      "kicker": "01 · Le modèle",
+      "title": "Nommer l’univers avant de calculer",
+      "paragraphs": [
+        "Un calcul probabiliste commence par une phrase de modélisation. Quelle expérience ? Quel univers ? Quelle hypothèse d’équiprobabilité ? Sans ces mots, la formule la plus juste devient une réponse incomplète.",
+        "Sur un univers fini, une probabilité est une masse totale égale à 1 répartie sur les issues. Le passage aux événements est ensuite entièrement additif."
+      ],
+      "formula": "\\mathbb{P}\\left(\\bigcup_{i\\in I} A_i\\right) = \\sum_{i\\in I} \\mathbb{P}(A_i) \\quad \\text{si les } A_i \\text{ sont deux à deux incompatibles}",
+      "note": "Astuce de rédaction : note <strong>A</strong> l’événement en lettres, puis sa probabilité. Cela évite les phrases floues du type « il y a 2 chances sur 5 ici »."
+    },
+    {
+      "id": "conditionnement",
+      "kicker": "02 · L’information",
+      "title": "Conditionner, ce n’est pas biaiser",
+      "paragraphs": [
+        "La probabilité conditionnelle <span class=\"inline-tex\" data-tex=\"\\mathbb{P}(A\\mid B)\"></span> est une probabilité sur le même univers, mais restreinte à l’événement <span class=\"inline-tex\" data-tex=\"B\"></span>. La formule des probabilités totales découpe naturellement un univers en scénarios incompatibles.",
+        "Le piège fréquent : oublier que la probabilité conditionnelle change l’espace de référence. Un changement de conditionnement peut transformer un événement rare en événement presque certain."
+      ],
+      "formula": "\\mathbb{P}(A\\mid B) = \\frac{\\mathbb{P}(A\\cap B)}{\\mathbb{P}(B)}, \\qquad \\mathbb{P}(B)>0",
+      "note": "La formule de Bayes se retrouve en trente secondes avec un arbre pondéré. Dessine l’arbre avant de manipuler les formules."
+    },
+    {
+      "id": "variables",
+      "kicker": "03 · La loi",
+      "title": "Lire une variable aléatoire comme une fonction",
+      "paragraphs": [
+        "Une variable aléatoire finie est une application de l’univers vers <span class=\"inline-tex\" data-tex=\"\\mathbb{R}\"></span>. Sa loi est l’image de la probabilité : elle regroupe les issues qui donnent la même valeur.",
+        "L’espérance est une moyenne pondérée. Sa linéarité ne demande aucune hypothèse d’indépendance, contrairement à la variance d’une somme."
+      ],
+      "formula": "\\mathbb{E}(X+Y)=\\mathbb{E}(X)+\\mathbb{E}(Y), \\qquad \\mathbb{V}(X+Y)=\\mathbb{V}(X)+\\mathbb{V}(Y)+2\\operatorname{Cov}(X,Y)",
+      "note": "L’indépendance sert à factoriser les espérances de produits. Pour une somme, la linéarité suffit toujours."
+    }
+  ],
+  "exercise": {
+    "prompt": "Une urne contient <span class=\"inline-tex\" data-tex=\"n\"></span> boules numérotées. On tire sans remise jusqu’à obtenir la boule 1. Calculer l’espérance du rang d’arrêt.",
+    "answer": "\\frac{n+1}{2}"
+  }
+}

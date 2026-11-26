@@ -1,0 +1,33 @@
+{
+  "id": "lunette-astronomique",
+  "title": "La lunette, sans faux foyer",
+  "subject": "Physique",
+  "tag": "Optique",
+  "source": "CCINP · 2024",
+  "level": "MP",
+  "stars": 3,
+  "minutes": 30,
+  "equation": "\\alpha' = -\\frac{f'_{\\rm obj}}{f'_{\\rm occ}}\\,\\alpha",
+  "teaser": "Grossissement, cercle oculaire et condition de vision confortable.",
+  "statement": "On considère une lunette astronomique afocale constituée d’un objectif de focale <span class=\"inline-tex\" data-tex=\"f'_1\"></span> et d’un oculaire de focale <span class=\"inline-tex\" data-tex=\"f'_2\"></span>. Déterminer le grossissement et la position du cercle oculaire.",
+  "hint": "Le foyer image de l’objectif coïncide avec le foyer objet de l’oculaire.",
+  "solution": [
+    {
+      "title": "Schéma avant calcul",
+      "text": "La lunette est afocale : le foyer image de l’objectif et le foyer objet de l’oculaire coïncident. Un rayon parallèle à l’axe émerge parallèle à l’axe."
+    },
+    {
+      "title": "Relier les angles",
+      "text": "Pour un objet à l’infini, le grossissement compare les angles sous lesquels on voit l’image et l’objet. La relation de conjugaison pour l’oculaire donne le facteur de rapport des focales.",
+      "equation": "G = \\frac{\\alpha'}{\\alpha} = -\\frac{f'_1}{f'_2}"
+    },
+    {
+      "title": "Placer le cercle oculaire",
+      "text": "Le cercle oculaire est l’image de l’objectif à travers l’oculaire. Sa position s’obtient par la relation de conjugaison appliquée à l’objectif vu par l’oculaire.",
+      "equation": "\\overline{O_2 A'} = \\frac{f'_2(f'_1+f'_2)}{f'_1}"
+    }
+  ],
+  "answer": "G = -f′₁/f′₂ ; cercle oculaire derrière l’oculaire.",
+  "solves": 634,
+  "verified": true
+}

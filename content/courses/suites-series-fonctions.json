@@ -1,0 +1,69 @@
+{
+  "id": "suites-series-fonctions",
+  "title": "Suites & séries de fonctions",
+  "tag": "Analyse",
+  "subject": "Maths",
+  "level": "MP",
+  "color": "sky",
+  "coverType": "graph",
+  "coverEq": "\\sum_{n\\ge 0} \\frac{x^n}{n!}",
+  "chaptersCount": 14,
+  "duration": "5 h 10",
+  "students": "1,8k",
+  "rating": 4.8,
+  "featured": true,
+  "description": "Convergence simple, uniforme, normale et interversion limite / intégrale : les bons réflexes pour rédiger sans se tromper.",
+  "formula": "\\sum_{n \\ge 0} \\frac{x^n}{n!}",
+  "objectives": [
+    "Distinguer convergence simple et convergence uniforme sur un exemple.",
+    "Utiliser le critère de Cauchy uniforme sans hésitation.",
+    "Justifier une interversion par convergence normale en trois lignes."
+  ],
+  "toc": [
+    "Convergence simple",
+    "Convergence uniforme",
+    "Convergence normale",
+    "Continuité de la limite",
+    "Dérivation et intégration",
+    "Séries entières"
+  ],
+  "sections": [
+    {
+      "id": "simple",
+      "kicker": "01 · Point de départ",
+      "title": "Convergence simple : la définition qui ne pardonne pas",
+      "paragraphs": [
+        "La convergence simple est une propriété <em>ponctuelle</em>. Pour chaque <span class=\"inline-tex\" data-tex=\"x \\in I\"></span>, la suite numérique <span class=\"inline-tex\" data-tex=\"(f_n(x))\"></span> converge. Rien de plus. Rien qui autorise à échanger limite et intégrale.",
+        "L’erreur classique consiste à fixer un <span class=\"inline-tex\" data-tex=\"\\varepsilon\"></span> qui dépend de <span class=\"inline-tex\" data-tex=\"x\"></span> puis à prétendre avoir montré l’uniformité. Le rang <span class=\"inline-tex\" data-tex=\"N\"></span> doit être commun à tous les points."
+      ],
+      "formula": "\\forall x\\in I,\\ \\forall \\varepsilon>0,\\ \\exists N_{x,\\varepsilon},\\quad n\\ge N_{x,\\varepsilon} \\Longrightarrow |f_n(x)-f(x)|\\le \\varepsilon",
+      "note": "Pour réfuter l’uniformité, cherche une suite <strong>x<sub>n</sub></strong> telle que <strong>|f<sub>n</sub>(x<sub>n</sub>) − f(x<sub>n</sub>)|</strong> ne tende pas vers 0. C’est souvent plus rapide que de calculer un sup."
+    },
+    {
+      "id": "uniforme",
+      "kicker": "02 · Le saut de qualité",
+      "title": "La norme uniforme comme boussole",
+      "paragraphs": [
+        "Sur un espace de fonctions bornées, la convergence uniforme n’est autre que la convergence au sens de <span class=\"inline-tex\" data-tex=\"\\lVert f \\rVert_\\infty = \\sup_{x\\in I}|f(x)|\"></span>. Cette lecture linéaire clarifie beaucoup de théorèmes d’échange.",
+        "Le théorème d’interversion est alors une conséquence de l’inégalité triangulaire : on contrôle l’écart à la limite uniformément, puis on conclut intégrale par intégrale."
+      ],
+      "formula": "\\left|\\int_a^b f_n(t)\\,dt - \\int_a^b f(t)\\,dt\\right| \\le (b-a)\\,\\lVert f_n-f\\rVert_\\infty",
+      "note": "Sur un segment, convergence uniforme + continuité donne continuité de la limite. Sur un intervalle non borné, il faut un argument supplémentaire."
+    },
+    {
+      "id": "normale",
+      "kicker": "03 · La boîte à outils",
+      "title": "Convergence normale : l’arme fatale",
+      "paragraphs": [
+        "La convergence normale est plus forte que la convergence uniforme. Elle a un immense avantage : elle se teste avec des majorations de séries numériques, sans calcul de sup de reste.",
+        "Dès que tu reconnais un terme d’une série entière, pense « convergence normale sur tout compact ». C’est presque toujours le bon cadre pour dériver terme à terme."
+      ],
+      "formula": "\\sum_{n\\ge 0} \\lVert f_n \\rVert_\\infty < +\\infty \\quad\\Longrightarrow\\quad \\sum f_n \\text{ converge normalement}",
+      "note": "La réciproque est fausse. Une série peut converger uniformément sans converger normalement ; la série alternée de fonctions est le contre-exemple à garder en tête."
+    }
+  ],
+  "exercise": {
+    "prompt": "Étudier la convergence de <span class=\"inline-tex\" data-tex=\"\\sum_{n\\ge 1} f_n\"></span> avec <span class=\"inline-tex\" data-tex=\"f_n(x)=\\frac{x^n}{1+x^n}\"></span> sur <span class=\"inline-tex\" data-tex=\"[0,1[\"></span>.",
+    "answer": "Convergence simple, mais pas uniforme."
+  }
+}

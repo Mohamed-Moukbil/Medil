@@ -1,0 +1,15 @@
+{
+  "id": "centrale-2024-maths-1",
+  "school": "Centrale",
+  "short": "C",
+  "year": 2024,
+  "subject": "Maths",
+  "title": "Épreuve de mathématiques 1",
+  "track": "MP",
+  "duration": "4 h",
+  "difficulty": 4,
+  "parts": "2 problèmes",
+  "hot": true,
+  "correction": true,
+  "color": "peach"
+}

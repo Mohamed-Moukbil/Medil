@@ -1,0 +1,43 @@
+{
+  "id": "banque-ccinp-astuces",
+  "category": "Concours",
+  "title": "Vos meilleures astuces pour attaquer la banque CCINP",
+  "excerpt": "Les sujets sont longs et la gestion du temps me tue. Vous commencez par quoi : les petites questions ou le problème principal ?",
+  "author": "Sofia M.",
+  "initials": "SM",
+  "avatarColor": "peach",
+  "grade": "MP · Chaptal",
+  "time": "il y a 6 h",
+  "replies": 42,
+  "views": "2,1k",
+  "upvotes": 117,
+  "tags": [
+    "CCINP",
+    "stratégie",
+    "annales"
+  ],
+  "pinned": false,
+  "content": "Les sujets CCINP sont longs et la gestion du temps me tue. Vous commencez par quoi : les petites questions ou le problème principal ? Et vous faites vraiment les 3 problèmes dans l’ordre ?\n\nJe prends tous les conseils, même les plus basiques.",
+  "answers": [
+    {
+      "id": "r6",
+      "author": "Nour H.",
+      "initials": "NH",
+      "avatarColor": "butter",
+      "grade": "MP* · Pasteur",
+      "time": "il y a 5 h",
+      "text": "Je survole 5 minutes pour repérer les questions accessibles. Ensuite, je fais les questions courtes de chaque problème avant d’attaquer les gros morceaux. L’objectif est de sécuriser des points tôt, pas de finir un problème entier.",
+      "upvotes": 58
+    },
+    {
+      "id": "r7",
+      "author": "Yanis R.",
+      "initials": "YR",
+      "avatarColor": "mint",
+      "grade": "MP* · Stan",
+      "time": "il y a 4 h",
+      "text": "Une règle simple : jamais plus de 10 minutes bloqué sur une question. Je note l’idée en une ligne et je passe. À la fin, je reviens avec un regard neuf. Ça m’a fait gagner au moins 2 points.",
+      "upvotes": 36
+    }
+  ]
+}

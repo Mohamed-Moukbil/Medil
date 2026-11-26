@@ -1,0 +1,69 @@
+{
+  "id": "thermodynamique",
+  "title": "Thermodynamique",
+  "tag": "Physique",
+  "subject": "Physique",
+  "level": "MPSI",
+  "color": "peach",
+  "coverType": "thermo",
+  "coverEq": "dU = \\delta Q + \\delta W",
+  "chaptersCount": 13,
+  "duration": "4 h 55",
+  "students": "1,7k",
+  "rating": 4.6,
+  "featured": false,
+  "description": "Premier et second principe, transformations et machines thermiques : les bilans sans les erreurs de signe.",
+  "formula": "dU = \\delta Q + \\delta W",
+  "objectives": [
+    "Choisir un système et un bilan correctement.",
+    "Distinguer une variable d’état d’une grandeur de transfert.",
+    "Utiliser l’entropie pour caractériser une évolution."
+  ],
+  "toc": [
+    "Le système thermodynamique",
+    "Premier principe",
+    "Second principe",
+    "Transformations usuelles",
+    "Machines thermiques",
+    "Changements d’état"
+  ],
+  "sections": [
+    {
+      "id": "systeme",
+      "kicker": "01 · Le cadre",
+      "title": "Un bon bilan commence par un bon système",
+      "paragraphs": [
+        "Avant toute équation, délimite le système, précise le référentiel, et identifie les échanges. Une erreur de signe est presque toujours une erreur de système ou de convention.",
+        "La thermodynamique manipulate des variables d’état et des grandeurs de transfert. Une variation de U s’écrit dU ; une quantité de chaleur reçue s’écrit δQ. Mélanger les deux notations, c’est mélanger deux natures."
+      ],
+      "formula": "dU = \\delta Q + \\delta W",
+      "note": "Convention reçue : δQ et δW sont algébriques. Un transfert entrant est positif, un transfert sortant est négatif. Écris cette convention en tête de copie."
+    },
+    {
+      "id": "entropie",
+      "kicker": "02 · L’irréversibilité",
+      "title": "L’entropie, juge des transformations",
+      "paragraphs": [
+        "L’entropie d’un système isolé ne diminue jamais. Pour un système non isolé, on distingue l’entropie échangée, réversible, et l’entropie créée, positive ou nulle.",
+        "C’est cette entropie créée qui quantifie l’irréversibilité. Une transformation réversible est une limite idéale, jamais une hypothèse gratuite."
+      ],
+      "formula": "\\Delta S = S_{\\rm échangée} + S_{\\rm créée}, \\qquad S_{\\rm créée}\\ge 0",
+      "note": "Pour un cycle, l’entropie d’un système revient à sa valeur initiale. Ce n’est pas le cas de l’entropie de l’univers, qui ne fait qu’augmenter."
+    },
+    {
+      "id": "machines",
+      "kicker": "03 · Les machines",
+      "title": "Carnot : le rendement limite",
+      "paragraphs": [
+        "Une machine thermique convertit de la chaleur en travail. Le moteur de Carnot, entièrement réversible, donne le meilleur rendement possible entre deux sources de températures fixées.",
+        "Aucune machine réelle ne peut dépasser ce rendement. Ce résultat n’est pas une recette technologique, mais une conséquence directe du second principe."
+      ],
+      "formula": "\\eta_{\\rm Carnot} = 1 - \\frac{T_{\\rm froid}}{T_{\\rm chaud}}",
+      "note": "Attention aux températures : les rendements thermodynamiques utilisent toujours des kelvins, jamais des degrés Celsius."
+    }
+  ],
+  "exercise": {
+    "prompt": "Une mole de gaz parfait subit une détente isotherme réversible de <span class=\"inline-tex\" data-tex=\"V_1\"></span> à <span class=\"inline-tex\" data-tex=\"V_2\"></span>. Calculer le travail reçu par le gaz.",
+    "answer": "W = -RT\\ln\\left(\\frac{V_2}{V_1}\\right)"
+  }
+}

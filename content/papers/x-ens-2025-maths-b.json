@@ -1,0 +1,15 @@
+{
+  "id": "x-ens-2025-maths-b",
+  "school": "X/ENS",
+  "short": "X",
+  "year": 2025,
+  "subject": "Maths",
+  "title": "Épreuve de mathématiques B",
+  "track": "MP",
+  "duration": "4 h",
+  "difficulty": 5,
+  "parts": "3 parties",
+  "hot": true,
+  "correction": true,
+  "color": "lime"
+}

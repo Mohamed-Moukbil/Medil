@@ -1,0 +1,69 @@
+{
+  "id": "python-prepa",
+  "title": "Python pour la prépa",
+  "tag": "Python",
+  "subject": "Informatique",
+  "level": "MPSI",
+  "color": "sky",
+  "coverType": "terminal",
+  "coverEq": "\\texttt{def f(x): return x ** 2}",
+  "chaptersCount": 9,
+  "duration": "3 h 00",
+  "students": "1,5k",
+  "rating": 4.7,
+  "featured": false,
+  "description": "Listes, dictionnaires, classes et complexité : écrire du code propre et lisible le jour du concours.",
+  "formula": "\\texttt{def f(x): return x ** 2}",
+  "objectives": [
+    "Choisir la structure Python adaptée.",
+    "Écrire une fonction documentée et testable.",
+    "Comprendre le coût réel des opérations courantes."
+  ],
+  "toc": [
+    "Syntaxe essentielle",
+    "Listes et compréhensions",
+    "Dictionnaires",
+    "Classes et objets",
+    "Récursivité",
+    "Bonnes pratiques"
+  ],
+  "sections": [
+    {
+      "id": "structures",
+      "kicker": "01 · Les bases",
+      "title": "Penser en structures, pas en boucles",
+      "paragraphs": [
+        "Le choix d’une structure de données est souvent plus déterminant que la micro-optimisation d’une boucle. Une liste convient à un parcours ordonné, un dictionnaire à une recherche par clé, un ensemble à un test d’appartenance.",
+        "Python ne rend pas impossible le calcul de complexité : il le déplace. Une recherche dans une liste est linéaire, une recherche dans un dictionnaire est en moyenne constante."
+      ],
+      "formula": "T_{liste}(n)=O(n) \\qquad T_{dict}(n)=O(1) \\text{ en moyenne}",
+      "note": "Connais tes coûts : un `in` sur une liste est O(n), un `in` sur un set est O(1) en moyenne. Cette différence suffit souvent à passer un test de performance."
+    },
+    {
+      "id": "propre",
+      "kicker": "02 · Écrire",
+      "title": "Un code lisible est un code qui rapporte",
+      "paragraphs": [
+        "Nommer les variables, découper les responsabilités, documenter les hypothèses : ces habitudes font gagner des points à l’oral. Le correcteur doit pouvoir suivre l’intention sans exécuter mentalement tout le programme.",
+        "En prépa, on privilégie la clarté. Un code de vingt lignes compréhensible vaut mieux qu’un code de huit lignes illisible, surtout lorsqu’il faut le corriger au tableau."
+      ],
+      "formula": "\\texttt{def est\\_pair(n):\\n    return n \\% 2 == 0}",
+      "note": "Évite les effets de bord dans une fonction de calcul. Une fonction qui modifie son argument doit le dire dans son nom ou sa documentation."
+    },
+    {
+      "id": "recursivite",
+      "kicker": "03 · La profondeur",
+      "title": "Récursivité : élégante, mais bornée",
+      "paragraphs": [
+        "Une fonction récursive se lit souvent mieux qu’une boucle. Mais chaque appel consume de la pile d’exécution. Une récursion profonde peut dépasser les limites de Python.",
+        "La version itérative n’est pas toujours meilleure, mais elle évite ce risque. À l’écrit, on privilégie la version la plus lisible qui respecte les contraintes de taille."
+      ],
+      "formula": "\\texttt{sys.getrecursionlimit()} \\approx 1000",
+      "note": "Si une récursion peut dépasser la profondeur autorisée, transforme-la en boucle avec une pile explicite, ou utilise la mémoïsation si les sous-problèmes se répètent."
+    }
+  ],
+  "exercise": {
+    "prompt": "Écrire une fonction qui renvoie le plus long sous-tableau contigu dont la somme est nulle. Complexité attendue : <span class=\"inline-tex\" data-tex=\"O(n)\"></span>.",
+    "answer": "Accumuler les sommes préfixes dans un dictionnaire."
+  }
+}

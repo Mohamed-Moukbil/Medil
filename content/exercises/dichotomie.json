@@ -1,0 +1,32 @@
+{
+  "id": "dichotomie",
+  "title": "Couper en deux, conquérir",
+  "subject": "Informatique",
+  "tag": "Algorithmes",
+  "source": "Oral X · 2022",
+  "level": "MP",
+  "stars": 2,
+  "minutes": 15,
+  "equation": "T(n)=T(n/2)+O(1)",
+  "teaser": "La dichotomie, ses invariants et le piège des bornes.",
+  "statement": "Écrire une recherche dichotomique itérative qui renvoie l’indice d’une valeur dans un tableau trié, ou −1. Prouver la terminaison et la correction.",
+  "hint": "Maintiens un invariant sur l’intervalle [g, d] et réduis strictement sa taille à chaque itération.",
+  "solution": [
+    {
+      "title": "Invariant",
+      "text": "On maintient que si la valeur est présente, alors son indice appartient à l’intervalle de recherche. La valeur médiane permet d’éliminer une moitié."
+    },
+    {
+      "title": "Terminaison",
+      "text": "La quantité d − g diminue strictement à chaque itération. Elle est minorée par −1, donc la boucle termine.",
+      "equation": "T(n)=T(n/2)+O(1)=O(\\log n)"
+    },
+    {
+      "title": "Pièges",
+      "text": "Attention aux débordements arithmétiques dans le calcul du milieu et à la mise à jour des bornes. Utilise <span class=\"inline-tex\" data-tex=\"g + (d-g)//2\"></span> plutôt que <span class=\"inline-tex\" data-tex=\"(g+d)//2\"></span> dans les langages à entiers bornés."
+    }
+  ],
+  "answer": "Recherche dichotomique en O(log n), avec invariant et terminaison.",
+  "solves": 2034,
+  "verified": true
+}

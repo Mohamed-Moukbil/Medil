@@ -1,0 +1,53 @@
+{
+  "id": "colles-maths-mp",
+  "category": "Méthode",
+  "title": "Comment vous gérez vraiment les colles de maths en MP* ?",
+  "excerpt": "Je sors de colle avec l’impression de comprendre en salle et de tout perdre au tableau. Vous avez des rituels de préparation qui marchent ?",
+  "author": "Lina B.",
+  "initials": "LB",
+  "avatarColor": "lime",
+  "grade": "MP* · Ginette",
+  "time": "il y a 2 h",
+  "replies": 34,
+  "views": "1,2k",
+  "upvotes": 86,
+  "tags": [
+    "khôlle",
+    "méthode",
+    "oral"
+  ],
+  "pinned": true,
+  "content": "Je sors de colle avec l’impression de comprendre en salle et de tout perdre au tableau. Le prof me demande de rédiger une preuve au tableau et je me mets à sauter des étapes que j’avais pourtant comprises.\n\nVous avez des rituels de préparation qui marchent ? Je parle surtout de l’oral : est-ce que vous récitez le cours à voix haute, vous refaites les démos sans regarder, vous vous enregistrez ? J’aimerais sortir de la logique « je relis mon cours et ça ira ».\n\nMerci d’avance pour les retours concrets !",
+  "answers": [
+    {
+      "id": "r1",
+      "author": "Adam K.",
+      "initials": "AK",
+      "avatarColor": "lilac",
+      "grade": "MP* · LLG",
+      "time": "il y a 1 h",
+      "text": "Ce qui a tout changé pour moi : refaire les démonstrations à voix haute, sans support, en 3 minutes chrono. Au début c’est humiliant, puis tu construis des automatismes. Je note les trous dans un carnet à part.",
+      "upvotes": 41
+    },
+    {
+      "id": "r2",
+      "author": "Sofia M.",
+      "initials": "SM",
+      "avatarColor": "peach",
+      "grade": "MP · Chaptal",
+      "time": "il y a 48 min",
+      "text": "Demande à ton colleur de te laisser 30 secondes de réflexion silencieuse avant d’écrire. Ça paraît bête, mais ça m’a évité de partir dans une mauvaise direction devant tout le monde.",
+      "upvotes": 27
+    },
+    {
+      "id": "r3",
+      "author": "Yanis R.",
+      "initials": "YR",
+      "avatarColor": "mint",
+      "grade": "MP* · Stan",
+      "time": "il y a 20 min",
+      "text": "Je prépare chaque colle en 2 temps : 20 min de cours actif (je ferme le livre et je résume), puis 20 min d’exercice au tableau. Le plus dur, c’est de tenir la régularité.",
+      "upvotes": 18
+    }
+  ]
+}

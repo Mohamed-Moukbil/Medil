@@ -1,0 +1,33 @@
+{
+  "id": "fiches-electromagnetisme",
+  "category": "Physique",
+  "title": "Fiches d’électromagnétisme : on mutualise ?",
+  "excerpt": "Je commence une fiche de synthèse sur Maxwell et l’induction. Je peux partager mon LaTeX ici, et on corrige à plusieurs ?",
+  "author": "Nour H.",
+  "initials": "NH",
+  "avatarColor": "butter",
+  "grade": "MP* · Pasteur",
+  "time": "hier",
+  "replies": 12,
+  "views": "640",
+  "upvotes": 73,
+  "tags": [
+    "LaTeX",
+    "électromagnétisme",
+    "fiches"
+  ],
+  "pinned": false,
+  "content": "Je commence une fiche de synthèse sur Maxwell et l’induction. Je peux partager mon LaTeX ici, et on corrige à plusieurs ? L’idée serait d’avoir une fiche propre, avec les hypothèses, les pièges et les schémas minimaux.\n\nSi ça vous dit, je mets le fichier en commentaire ce soir et on relit ensemble.",
+  "answers": [
+    {
+      "id": "r8",
+      "author": "Lina B.",
+      "initials": "LB",
+      "avatarColor": "lime",
+      "grade": "MP* · Ginette",
+      "time": "hier",
+      "text": "Partante pour la relecture ! Je peux ajouter la partie induction et les conventions de signe, c’est là que je fais toujours des erreurs.",
+      "upvotes": 19
+    }
+  ]
+}

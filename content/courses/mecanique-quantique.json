@@ -1,0 +1,69 @@
+{
+  "id": "mecanique-quantique",
+  "title": "Mécanique quantique",
+  "tag": "Physique",
+  "subject": "Physique",
+  "level": "MP",
+  "color": "lilac",
+  "coverType": "wave",
+  "coverEq": "i\\hbar\\,\\partial_t\\psi = \\hat H\\psi",
+  "chaptersCount": 10,
+  "duration": "4 h 15",
+  "students": "980",
+  "rating": 4.9,
+  "featured": false,
+  "description": "Fonction d’onde, superposition et puits de potentiel : une introduction rigoureuse, sans détour métaphysique.",
+  "formula": "i\\hbar\\,\\partial_t\\psi = \\hat H\\psi",
+  "objectives": [
+    "Relier amplitude et probabilité de présence.",
+    "Résoudre l’équation de Schrödinger dans les cas 1D usuels.",
+    "Interpréter un spectre quantifié sans réciter."
+  ],
+  "toc": [
+    "Fonction d’onde",
+    "Équation de Schrödinger",
+    "Marche et barrière",
+    "Puits infini",
+    "Oscillateur harmonique",
+    "Effet tunnel"
+  ],
+  "sections": [
+    {
+      "id": "onde",
+      "kicker": "01 · Le vocabulaire",
+      "title": "Une amplitude, pas une trajectoire",
+      "paragraphs": [
+        "En mécanique quantique, l’état d’une particule est décrit par une fonction d’onde. Son module au carré donne une densité de probabilité de présence. Cette lecture probabiliste est au cœur de l’interprétation de Born.",
+        "La fonction d’onde doit être normalisable et remplir les conditions de raccordement imposées par le potentiel. Les conditions aux limites sont donc les véritables guides de calcul."
+      ],
+      "formula": "\\int_{\\mathbb{R}} |\\psi(x,t)|^2\\,dx = 1, \\qquad dP = |\\psi(x,t)|^2\\,dx",
+      "note": "Une fonction d’onde n’est pas une onde matérielle. Ce que l’on suit, c’est une amplitude de probabilité, pas une trajectoire déterministe."
+    },
+    {
+      "id": "schrodinger",
+      "kicker": "02 · Le moteur",
+      "title": "Schrödinger, version stationnaire",
+      "paragraphs": [
+        "Pour un potentiel indépendant du temps, on cherche des solutions séparables. L’équation de Schrödinger stationnaire devient une équation différentielle en espace, avec l’énergie comme paramètre.",
+        "Les solutions acceptables imposent des conditions de continuité. C’est précisément ce qui fait apparaître des niveaux d’énergie discrets dans un puits."
+      ],
+      "formula": "-\\frac{\\hbar^2}{2m}\\frac{d^2\\varphi}{dx^2} + V(x)\\varphi = E\\varphi",
+      "note": "Pense toujours à vérifier la continuité de ψ et de ψ′ aux interfaces, sauf lorsque le potentiel présente un pic de Dirac."
+    },
+    {
+      "id": "puits",
+      "kicker": "03 · Le puits",
+      "title": "Le puits infini, laboratoire minimal",
+      "paragraphs": [
+        "Le puits infini est le problème à connaître par cœur. Les modes propres sont des sinus, quantifiés par un entier. L’énergie minimale n’est jamais nulle : c’est le prix de la localisation.",
+        "Ce modèle sert de base pour comprendre la quantification des niveaux dans les systèmes plus réalistes. Il ne faut pas le traiter comme une simple formule à réciter."
+      ],
+      "formula": "E_n = \\frac{n^2\\pi^2\\hbar^2}{2mL^2}, \\qquad \\varphi_n(x)=\\sqrt{\\frac{2}{L}}\\sin\\left(\\frac{n\\pi x}{L}\\right)",
+      "note": "L’énergie de l’état fondamental pour n = 1 n’est pas une offset arbitraire : elle est conséquence des conditions aux limites."
+    }
+  ],
+  "exercise": {
+    "prompt": "Une particule traverse une barrière de potentiel de hauteur <span class=\"inline-tex\" data-tex=\"V_0 > E\"></span>. Sans résoudre l’équation, expliquer pourquoi le coefficient de transmission n’est pas strictement nul.",
+    "answer": "La fonction d’onde décroît exponentiellement mais reste non nulle de l’autre côté : effet tunnel."
+  }
+}

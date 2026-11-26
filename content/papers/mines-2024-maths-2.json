@@ -1,0 +1,15 @@
+{
+  "id": "mines-2024-maths-2",
+  "school": "Mines-Ponts",
+  "short": "MP",
+  "year": 2024,
+  "subject": "Maths",
+  "title": "Épreuve de mathématiques 2",
+  "track": "MP",
+  "duration": "4 h",
+  "difficulty": 4,
+  "parts": "2 problèmes",
+  "hot": true,
+  "correction": true,
+  "color": "sky"
+}

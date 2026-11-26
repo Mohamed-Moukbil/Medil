@@ -1,0 +1,69 @@
+{
+  "id": "electromagnetisme",
+  "title": "Électromagnétisme",
+  "tag": "Physique",
+  "subject": "Physique",
+  "level": "MP",
+  "color": "butter",
+  "coverType": "field",
+  "coverEq": "\\nabla\\cdot\\vec{E} = \\frac{\\rho}{\\varepsilon_0}",
+  "chaptersCount": 16,
+  "duration": "5 h 50",
+  "students": "1,6k",
+  "rating": 4.8,
+  "featured": true,
+  "description": "Maxwell, potentiels et induction : les équations prennent enfin du sens grâce aux schémas et aux cas d’école.",
+  "formula": "\\nabla\\cdot\\vec{E} = \\frac{\\rho}{\\varepsilon_0}",
+  "objectives": [
+    "Passer d’une carte de champ à une description locale.",
+    "Choisir entre potentiel scalaire et vecteur.",
+    "Rédiger proprement un problème d’induction."
+  ],
+  "toc": [
+    "Champ et potentiel",
+    "Théorème de Gauss",
+    "Équations de Maxwell",
+    "Induction",
+    "Ondes électromagnétiques",
+    "Milieux diélectriques"
+  ],
+  "sections": [
+    {
+      "id": "gauss",
+      "kicker": "01 · Symétries",
+      "title": "Gauss commence par un dessin",
+      "paragraphs": [
+        "Les symétries et invariances déterminent la direction du champ avant tout calcul. Une surface de Gauss correcte épouse ces symétries : sphère pour une distribution sphérique, cylindre pour un fil infini.",
+        "Le théorème de Gauss relie le flux à la charge enfermée. Mais la rédaction doit préciser la surface choisie, son orientation et le champ qui la traverse."
+      ],
+      "formula": "\\oiint_{\\Sigma}\\vec{E}\\cdot d\\vec{S} = \\frac{Q_{\\rm int}}{\\varepsilon_0}",
+      "note": "Le champ électrique est toujours normal à la surface d’un conducteur en équilibre : c’est souvent le premier argument à poser."
+    },
+    {
+      "id": "maxwell",
+      "kicker": "02 · Le cœur",
+      "title": "Quatre équations, une histoire",
+      "paragraphs": [
+        "Les équations de Maxwell disent comment les charges créent le champ et comment les champs s’auto-entretiennent. Le terme de courant de déplacement, souvent oublié, est précisément ce qui rend les ondes possibles.",
+        "En régime stationnaire, les équations découplent électricité et magnétisme. Dès que le régime varie, les deux champs deviennent inséparables."
+      ],
+      "formula": "\\nabla\\times\\vec{B} = \\mu_0\\vec{j} + \\mu_0\\varepsilon_0\\frac{\\partial \\vec{E}}{\\partial t}",
+      "note": "Pour un écran de concours, commence par indiquer le référentiel, le régime et les approximations. Une équation hors contexte ne vaut que la moitié des points."
+    },
+    {
+      "id": "induction",
+      "kicker": "03 · Le mouvement",
+      "title": "L’induction, ou la variation comme moteur",
+      "paragraphs": [
+        "La force électromotrice induite mesure le flux qui varie. Le signe n’est jamais décoratif : il traduit la loi de Lenz, donc l’opposition à la cause qui a produit le courant.",
+        "Un bon raisonnement caractérise d’abord le sens du champ inducteur, puis le sens du flux, enfin le sens du courant induit. Le calcul vient après."
+      ],
+      "formula": "e = -\\frac{d\\Phi}{dt}",
+      "note": "Deux causes possibles de variation du flux : la surface ou le champ. Pense à traiter les deux, même si l’énoncé semble n’en désigner qu’une."
+    }
+  ],
+  "exercise": {
+    "prompt": "Une tige conductrice de longueur <span class=\"inline-tex\" data-tex=\"\\ell\"></span> tourne à vitesse angulaire <span class=\"inline-tex\" data-tex=\"\\omega\"></span> dans un champ uniforme <span class=\"inline-tex\" data-tex=\"\\vec B\"></span>. Calculer la fem induite aux bornes de la tige.",
+    "answer": "\\frac{1}{2}B\\omega\\ell^2"
+  }
+}

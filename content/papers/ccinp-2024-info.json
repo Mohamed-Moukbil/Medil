@@ -1,0 +1,15 @@
+{
+  "id": "ccinp-2024-info",
+  "school": "CCINP",
+  "short": "CC",
+  "year": 2024,
+  "subject": "Informatique",
+  "title": "Épreuve d’informatique",
+  "track": "MP",
+  "duration": "4 h",
+  "difficulty": 3,
+  "parts": "2 problèmes",
+  "hot": false,
+  "correction": true,
+  "color": "butter"
+}

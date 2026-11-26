@@ -1,0 +1,33 @@
+{
+  "id": "gaz-parfait",
+  "title": "Le détour par l’entropie",
+  "subject": "Physique",
+  "tag": "Thermodynamique",
+  "source": "Oral Centrale · 2022",
+  "level": "MP",
+  "stars": 3,
+  "minutes": 20,
+  "equation": "\\Delta S = nR\\ln\\!\\frac{V_2}{V_1}",
+  "teaser": "Un gaz parfait, une détente et un bilan qui repose sur une fonction d’état.",
+  "statement": "Une mole de gaz parfait subit une détente isotherme réversible à température <span class=\"inline-tex\" data-tex=\"T\"></span> de <span class=\"inline-tex\" data-tex=\"V_1\"></span> à <span class=\"inline-tex\" data-tex=\"V_2\"></span>. Calculer le travail reçu, la chaleur reçue et la variation d’entropie.",
+  "hint": "Pour un gaz parfait, U ne dépend que de T. Utilise l’identité thermodynamique.",
+  "solution": [
+    {
+      "title": "Bilan d’énergie",
+      "text": "La transformation est isotherme et le gaz est parfait : ΔU = 0. Le travail reçu vaut donc l’opposé du travail des forces de pression.",
+      "equation": "W=-nRT\\ln\\frac{V_2}{V_1}"
+    },
+    {
+      "title": "Chaleur",
+      "text": "Par le premier principe, ΔU = Q + W, donc Q = −W. Le gaz reçoit de la chaleur pendant la détente."
+    },
+    {
+      "title": "Entropie",
+      "text": "L’entropie est une fonction d’état. Pour un gaz parfait à température constante, l’identité thermodynamique donne le résultat.",
+      "equation": "\\Delta S = nR\\ln\\frac{V_2}{V_1}"
+    }
+  ],
+  "answer": "W = −RT ln(V₂/V₁), Q = RT ln(V₂/V₁), ΔS = R ln(V₂/V₁).",
+  "solves": 518,
+  "verified": true
+}

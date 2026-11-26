@@ -1,0 +1,15 @@
+{
+  "id": "ccinp-2025-maths-1",
+  "school": "CCINP",
+  "short": "CC",
+  "year": 2025,
+  "subject": "Maths",
+  "title": "Épreuve de mathématiques 1",
+  "track": "MP",
+  "duration": "4 h",
+  "difficulty": 3,
+  "parts": "3 problèmes",
+  "hot": true,
+  "correction": true,
+  "color": "butter"
+}

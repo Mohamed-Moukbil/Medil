@@ -1,0 +1,1427 @@
+/* ==========================================================================
+   MEDIL — Source éditoriale complète (admin uniquement)
+   Généré depuis le Studio admin le 2026-11-26T02:10:59.659Z.
+   Ce fichier n’est pas chargé par le site public : il alimente le Studio.
+   ========================================================================== */
+
+window.MEDIL_EDITORIAL = {
+  "version": 2,
+  "savedAt": "2026-11-26T02:10:59.659Z",
+  "courses": [
+    {
+      "id": "reduction-endomorphismes",
+      "title": "Réduction des endomorphismes",
+      "tag": "Algèbre",
+      "subject": "Maths",
+      "level": "MP",
+      "color": "lime",
+      "coverType": "matrix",
+      "coverEq": "A = PDP^{-1}",
+      "chaptersCount": 18,
+      "duration": "6 h 20",
+      "students": "2,4k",
+      "rating": 4.9,
+      "progress": 68,
+      "featured": true,
+      "description": "Polynômes d'endomorphismes, diagonalisation, trigonalisation et forme de Jordan : la réduction racontée sans trous.",
+      "formula": "A = PDP^{-1}",
+      "objectives": [
+        "Manipuler les polynômes d’un endomorphisme avec assurance.",
+        "Savoir quand diagonaliser — et quoi faire quand ce n’est pas possible.",
+        "Construire une réduction de Jordan sans réciter un théorème."
+      ],
+      "toc": [
+        "Polynômes d’endomorphismes",
+        "Le lemme des noyaux",
+        "Diagonalisation",
+        "Trigonalisation",
+        "Réduction de Jordan",
+        "Applications aux suites et aux matrices"
+      ],
+      "sections": [
+        {
+          "id": "poly",
+          "kicker": "01 · Le socle",
+          "title": "Faire agir un polynôme sur un endomorphisme",
+          "paragraphs": [
+            "Soit <span class=\"inline-tex\" data-tex=\"u \\in \\mathcal{L}(E)\"></span>. Pour <span class=\"inline-tex\" data-tex=\"P = \\sum a_k X^k \\in \\mathbb{K}[X]\"></span>, on définit naturellement <span class=\"inline-tex\" data-tex=\"P(u) = \\sum a_k u^k\"></span>. Cette petite construction transforme un problème de géométrie en un problème d’algèbre commutative.",
+            "L’objet central est l’idéal annulateur <span class=\"inline-tex\" data-tex=\"I_u = \\{P \\in \\mathbb{K}[X] \\mid P(u)=0\\}\"></span>. Comme <span class=\"inline-tex\" data-tex=\"\\mathbb{K}[X]\"></span> est principal, cet idéal admet un unique générateur unitaire : le polynôme minimal <span class=\"inline-tex\" data-tex=\"\\pi_u\"></span>."
+          ],
+          "formula": "\\chi_u(u)=0 \\quad \\text{et} \\quad \\pi_u \\mid \\chi_u",
+          "note": "Cayley–Hamilton n’est pas une astuce de calcul : c’est l’énoncé qui relie spectre, trace et réduction. Garde toujours en tête que <strong>π<sub>u</sub></strong> divise <strong>χ<sub>u</sub></strong>, et qu’ils ont les mêmes racines."
+        },
+        {
+          "id": "noyaux",
+          "kicker": "02 · La mécanique",
+          "title": "Le lemme des noyaux, votre meilleur ami",
+          "paragraphs": [
+            "Si <span class=\"inline-tex\" data-tex=\"P = P_1 \\cdots P_r\"></span> avec les <span class=\"inline-tex\" data-tex=\"P_i\"></span> deux à deux premiers entre eux, alors <span class=\"inline-tex\" data-tex=\"\\ker P(u) = \\bigoplus_{i=1}^{r} \\ker P_i(u)\"></span>. C’est ce résultat, bien plus que la formule de changement de base, qui fait vivre toute la réduction.",
+            "En particulier, on récupère les sous-espaces caractéristiques et l’on décompose l’espace en morceaux stables sur lesquels l’endomorphisme est plus simple."
+          ],
+          "formula": "\\ker\\bigl((P_1P_2)(u)\\bigr) = \\ker P_1(u) \\oplus \\ker P_2(u)",
+          "note": "Réflexe de rédaction : vérifie toujours l’hypothèse de coprimalité avant d’écrire une somme directe de noyaux. Sans elle, le lemme peut tomber en défaut."
+        },
+        {
+          "id": "diagonalisation",
+          "kicker": "03 · Le critère",
+          "title": "Diagonaliser, vraiment",
+          "paragraphs": [
+            "Un endomorphisme est diagonalisable si et seulement si son polynôme minimal est scindé à racines simples. En pratique, on cherche le spectre, puis on teste si la somme des dimensions des espaces propres vaut <span class=\"inline-tex\" data-tex=\"\\dim E\"></span>.",
+            "La matrice de passage n’est pas un détail : ses colonnes sont des vecteurs propres. Une réduction correctement rédigée se termine donc toujours par une phrase du type « après regroupement des colonnes en bases adaptées »."
+          ],
+          "formula": "E = \\bigoplus_{\\lambda \\in \\operatorname{Sp}(u)} \\ker(u-\\lambda \\mathrm{Id})",
+          "note": "Astuce anti-erreur : diagonaliser <strong>u</strong> et diagonaliser sa matrice dans une base donnée sont deux énoncés différents. Le second nécessite la matrice de passage."
+        }
+      ],
+      "exercise": {
+        "prompt": "Soit <span class=\"inline-tex\" data-tex=\"A \\in \\mathrm{M}_n(\\mathbb{R})\"></span> telle que <span class=\"inline-tex\" data-tex=\"A^3 = 0\"></span>. Montrer que <span class=\"inline-tex\" data-tex=\"I_n + A\"></span> est inversible et exprimer son inverse comme un polynôme en <span class=\"inline-tex\" data-tex=\"A\"></span>.",
+        "answer": "I_n - A + A^2"
+      }
+    },
+    {
+      "id": "suites-series-fonctions",
+      "title": "Suites & séries de fonctions",
+      "tag": "Analyse",
+      "subject": "Maths",
+      "level": "MP",
+      "color": "sky",
+      "coverType": "graph",
+      "coverEq": "\\sum_{n\\ge 0} \\frac{x^n}{n!}",
+      "chaptersCount": 14,
+      "duration": "5 h 10",
+      "students": "1,8k",
+      "rating": 4.8,
+      "featured": true,
+      "description": "Convergence simple, uniforme, normale et interversion limite / intégrale : les bons réflexes pour rédiger sans se tromper.",
+      "formula": "\\sum_{n \\ge 0} \\frac{x^n}{n!}",
+      "objectives": [
+        "Distinguer convergence simple et convergence uniforme sur un exemple.",
+        "Utiliser le critère de Cauchy uniforme sans hésitation.",
+        "Justifier une interversion par convergence normale en trois lignes."
+      ],
+      "toc": [
+        "Convergence simple",
+        "Convergence uniforme",
+        "Convergence normale",
+        "Continuité de la limite",
+        "Dérivation et intégration",
+        "Séries entières"
+      ],
+      "sections": [
+        {
+          "id": "simple",
+          "kicker": "01 · Point de départ",
+          "title": "Convergence simple : la définition qui ne pardonne pas",
+          "paragraphs": [
+            "La convergence simple est une propriété <em>ponctuelle</em>. Pour chaque <span class=\"inline-tex\" data-tex=\"x \\in I\"></span>, la suite numérique <span class=\"inline-tex\" data-tex=\"(f_n(x))\"></span> converge. Rien de plus. Rien qui autorise à échanger limite et intégrale.",
+            "L’erreur classique consiste à fixer un <span class=\"inline-tex\" data-tex=\"\\varepsilon\"></span> qui dépend de <span class=\"inline-tex\" data-tex=\"x\"></span> puis à prétendre avoir montré l’uniformité. Le rang <span class=\"inline-tex\" data-tex=\"N\"></span> doit être commun à tous les points."
+          ],
+          "formula": "\\forall x\\in I,\\ \\forall \\varepsilon>0,\\ \\exists N_{x,\\varepsilon},\\quad n\\ge N_{x,\\varepsilon} \\Longrightarrow |f_n(x)-f(x)|\\le \\varepsilon",
+          "note": "Pour réfuter l’uniformité, cherche une suite <strong>x<sub>n</sub></strong> telle que <strong>|f<sub>n</sub>(x<sub>n</sub>) − f(x<sub>n</sub>)|</strong> ne tende pas vers 0. C’est souvent plus rapide que de calculer un sup."
+        },
+        {
+          "id": "uniforme",
+          "kicker": "02 · Le saut de qualité",
+          "title": "La norme uniforme comme boussole",
+          "paragraphs": [
+            "Sur un espace de fonctions bornées, la convergence uniforme n’est autre que la convergence au sens de <span class=\"inline-tex\" data-tex=\"\\lVert f \\rVert_\\infty = \\sup_{x\\in I}|f(x)|\"></span>. Cette lecture linéaire clarifie beaucoup de théorèmes d’échange.",
+            "Le théorème d’interversion est alors une conséquence de l’inégalité triangulaire : on contrôle l’écart à la limite uniformément, puis on conclut intégrale par intégrale."
+          ],
+          "formula": "\\left|\\int_a^b f_n(t)\\,dt - \\int_a^b f(t)\\,dt\\right| \\le (b-a)\\,\\lVert f_n-f\\rVert_\\infty",
+          "note": "Sur un segment, convergence uniforme + continuité donne continuité de la limite. Sur un intervalle non borné, il faut un argument supplémentaire."
+        },
+        {
+          "id": "normale",
+          "kicker": "03 · La boîte à outils",
+          "title": "Convergence normale : l’arme fatale",
+          "paragraphs": [
+            "La convergence normale est plus forte que la convergence uniforme. Elle a un immense avantage : elle se teste avec des majorations de séries numériques, sans calcul de sup de reste.",
+            "Dès que tu reconnais un terme d’une série entière, pense « convergence normale sur tout compact ». C’est presque toujours le bon cadre pour dériver terme à terme."
+          ],
+          "formula": "\\sum_{n\\ge 0} \\lVert f_n \\rVert_\\infty < +\\infty \\quad\\Longrightarrow\\quad \\sum f_n \\text{ converge normalement}",
+          "note": "La réciproque est fausse. Une série peut converger uniformément sans converger normalement ; la série alternée de fonctions est le contre-exemple à garder en tête."
+        }
+      ],
+      "exercise": {
+        "prompt": "Étudier la convergence de <span class=\"inline-tex\" data-tex=\"\\sum_{n\\ge 1} f_n\"></span> avec <span class=\"inline-tex\" data-tex=\"f_n(x)=\\frac{x^n}{1+x^n}\"></span> sur <span class=\"inline-tex\" data-tex=\"[0,1[\"></span>.",
+        "answer": "Convergence simple, mais pas uniforme."
+      }
+    },
+    {
+      "id": "probabilites-discretes",
+      "title": "Probabilités & variables aléatoires",
+      "tag": "Probabilités",
+      "subject": "Maths",
+      "level": "MPSI",
+      "color": "rose",
+      "coverType": "dots",
+      "coverEq": "\\mathbb{P}(X=k) = \\binom{n}{k}p^k(1-p)^{n-k}",
+      "chaptersCount": 12,
+      "duration": "4 h 40",
+      "students": "2,1k",
+      "rating": 4.7,
+      "featured": false,
+      "description": "De l’espace probabilisé aux variables aléatoires finies : les bases solides, avec les pièges de rédaction classiques.",
+      "formula": "\\mathbb{P}(X=k) = \\binom{n}{k}p^k(1-p)^{n-k}",
+      "objectives": [
+        "Modéliser proprement un espace probabilisé fini.",
+        "Calculer loi, espérance et variance sans oublier les hypothèses.",
+        "Utiliser la linéarité de l’espérance avec discernement."
+      ],
+      "toc": [
+        "Espaces probabilisés finis",
+        "Conditionnement",
+        "Indépendance",
+        "Variables aléatoires",
+        "Espérance et variance",
+        "Lois usuelles"
+      ],
+      "sections": [
+        {
+          "id": "modele",
+          "kicker": "01 · Le modèle",
+          "title": "Nommer l’univers avant de calculer",
+          "paragraphs": [
+            "Un calcul probabiliste commence par une phrase de modélisation. Quelle expérience ? Quel univers ? Quelle hypothèse d’équiprobabilité ? Sans ces mots, la formule la plus juste devient une réponse incomplète.",
+            "Sur un univers fini, une probabilité est une masse totale égale à 1 répartie sur les issues. Le passage aux événements est ensuite entièrement additif."
+          ],
+          "formula": "\\mathbb{P}\\left(\\bigcup_{i\\in I} A_i\\right) = \\sum_{i\\in I} \\mathbb{P}(A_i) \\quad \\text{si les } A_i \\text{ sont deux à deux incompatibles}",
+          "note": "Astuce de rédaction : note <strong>A</strong> l’événement en lettres, puis sa probabilité. Cela évite les phrases floues du type « il y a 2 chances sur 5 ici »."
+        },
+        {
+          "id": "conditionnement",
+          "kicker": "02 · L’information",
+          "title": "Conditionner, ce n’est pas biaiser",
+          "paragraphs": [
+            "La probabilité conditionnelle <span class=\"inline-tex\" data-tex=\"\\mathbb{P}(A\\mid B)\"></span> est une probabilité sur le même univers, mais restreinte à l’événement <span class=\"inline-tex\" data-tex=\"B\"></span>. La formule des probabilités totales découpe naturellement un univers en scénarios incompatibles.",
+            "Le piège fréquent : oublier que la probabilité conditionnelle change l’espace de référence. Un changement de conditionnement peut transformer un événement rare en événement presque certain."
+          ],
+          "formula": "\\mathbb{P}(A\\mid B) = \\frac{\\mathbb{P}(A\\cap B)}{\\mathbb{P}(B)}, \\qquad \\mathbb{P}(B)>0",
+          "note": "La formule de Bayes se retrouve en trente secondes avec un arbre pondéré. Dessine l’arbre avant de manipuler les formules."
+        },
+        {
+          "id": "variables",
+          "kicker": "03 · La loi",
+          "title": "Lire une variable aléatoire comme une fonction",
+          "paragraphs": [
+            "Une variable aléatoire finie est une application de l’univers vers <span class=\"inline-tex\" data-tex=\"\\mathbb{R}\"></span>. Sa loi est l’image de la probabilité : elle regroupe les issues qui donnent la même valeur.",
+            "L’espérance est une moyenne pondérée. Sa linéarité ne demande aucune hypothèse d’indépendance, contrairement à la variance d’une somme."
+          ],
+          "formula": "\\mathbb{E}(X+Y)=\\mathbb{E}(X)+\\mathbb{E}(Y), \\qquad \\mathbb{V}(X+Y)=\\mathbb{V}(X)+\\mathbb{V}(Y)+2\\operatorname{Cov}(X,Y)",
+          "note": "L’indépendance sert à factoriser les espérances de produits. Pour une somme, la linéarité suffit toujours."
+        }
+      ],
+      "exercise": {
+        "prompt": "Une urne contient <span class=\"inline-tex\" data-tex=\"n\"></span> boules numérotées. On tire sans remise jusqu’à obtenir la boule 1. Calculer l’espérance du rang d’arrêt.",
+        "answer": "\\frac{n+1}{2}"
+      }
+    },
+    {
+      "id": "electromagnetisme",
+      "title": "Électromagnétisme",
+      "tag": "Physique",
+      "subject": "Physique",
+      "level": "MP",
+      "color": "butter",
+      "coverType": "field",
+      "coverEq": "\\nabla\\cdot\\vec{E} = \\frac{\\rho}{\\varepsilon_0}",
+      "chaptersCount": 16,
+      "duration": "5 h 50",
+      "students": "1,6k",
+      "rating": 4.8,
+      "featured": true,
+      "description": "Maxwell, potentiels et induction : les équations prennent enfin du sens grâce aux schémas et aux cas d’école.",
+      "formula": "\\nabla\\cdot\\vec{E} = \\frac{\\rho}{\\varepsilon_0}",
+      "objectives": [
+        "Passer d’une carte de champ à une description locale.",
+        "Choisir entre potentiel scalaire et vecteur.",
+        "Rédiger proprement un problème d’induction."
+      ],
+      "toc": [
+        "Champ et potentiel",
+        "Théorème de Gauss",
+        "Équations de Maxwell",
+        "Induction",
+        "Ondes électromagnétiques",
+        "Milieux diélectriques"
+      ],
+      "sections": [
+        {
+          "id": "gauss",
+          "kicker": "01 · Symétries",
+          "title": "Gauss commence par un dessin",
+          "paragraphs": [
+            "Les symétries et invariances déterminent la direction du champ avant tout calcul. Une surface de Gauss correcte épouse ces symétries : sphère pour une distribution sphérique, cylindre pour un fil infini.",
+            "Le théorème de Gauss relie le flux à la charge enfermée. Mais la rédaction doit préciser la surface choisie, son orientation et le champ qui la traverse."
+          ],
+          "formula": "\\oiint_{\\Sigma}\\vec{E}\\cdot d\\vec{S} = \\frac{Q_{\\rm int}}{\\varepsilon_0}",
+          "note": "Le champ électrique est toujours normal à la surface d’un conducteur en équilibre : c’est souvent le premier argument à poser."
+        },
+        {
+          "id": "maxwell",
+          "kicker": "02 · Le cœur",
+          "title": "Quatre équations, une histoire",
+          "paragraphs": [
+            "Les équations de Maxwell disent comment les charges créent le champ et comment les champs s’auto-entretiennent. Le terme de courant de déplacement, souvent oublié, est précisément ce qui rend les ondes possibles.",
+            "En régime stationnaire, les équations découplent électricité et magnétisme. Dès que le régime varie, les deux champs deviennent inséparables."
+          ],
+          "formula": "\\nabla\\times\\vec{B} = \\mu_0\\vec{j} + \\mu_0\\varepsilon_0\\frac{\\partial \\vec{E}}{\\partial t}",
+          "note": "Pour un écran de concours, commence par indiquer le référentiel, le régime et les approximations. Une équation hors contexte ne vaut que la moitié des points."
+        },
+        {
+          "id": "induction",
+          "kicker": "03 · Le mouvement",
+          "title": "L’induction, ou la variation comme moteur",
+          "paragraphs": [
+            "La force électromotrice induite mesure le flux qui varie. Le signe n’est jamais décoratif : il traduit la loi de Lenz, donc l’opposition à la cause qui a produit le courant.",
+            "Un bon raisonnement caractérise d’abord le sens du champ inducteur, puis le sens du flux, enfin le sens du courant induit. Le calcul vient après."
+          ],
+          "formula": "e = -\\frac{d\\Phi}{dt}",
+          "note": "Deux causes possibles de variation du flux : la surface ou le champ. Pense à traiter les deux, même si l’énoncé semble n’en désigner qu’une."
+        }
+      ],
+      "exercise": {
+        "prompt": "Une tige conductrice de longueur <span class=\"inline-tex\" data-tex=\"\\ell\"></span> tourne à vitesse angulaire <span class=\"inline-tex\" data-tex=\"\\omega\"></span> dans un champ uniforme <span class=\"inline-tex\" data-tex=\"\\vec B\"></span>. Calculer la fem induite aux bornes de la tige.",
+        "answer": "\\frac{1}{2}B\\omega\\ell^2"
+      }
+    },
+    {
+      "id": "mecanique-quantique",
+      "title": "Mécanique quantique",
+      "tag": "Physique",
+      "subject": "Physique",
+      "level": "MP",
+      "color": "lilac",
+      "coverType": "wave",
+      "coverEq": "i\\hbar\\,\\partial_t\\psi = \\hat H\\psi",
+      "chaptersCount": 10,
+      "duration": "4 h 15",
+      "students": "980",
+      "rating": 4.9,
+      "featured": false,
+      "description": "Fonction d’onde, superposition et puits de potentiel : une introduction rigoureuse, sans détour métaphysique.",
+      "formula": "i\\hbar\\,\\partial_t\\psi = \\hat H\\psi",
+      "objectives": [
+        "Relier amplitude et probabilité de présence.",
+        "Résoudre l’équation de Schrödinger dans les cas 1D usuels.",
+        "Interpréter un spectre quantifié sans réciter."
+      ],
+      "toc": [
+        "Fonction d’onde",
+        "Équation de Schrödinger",
+        "Marche et barrière",
+        "Puits infini",
+        "Oscillateur harmonique",
+        "Effet tunnel"
+      ],
+      "sections": [
+        {
+          "id": "onde",
+          "kicker": "01 · Le vocabulaire",
+          "title": "Une amplitude, pas une trajectoire",
+          "paragraphs": [
+            "En mécanique quantique, l’état d’une particule est décrit par une fonction d’onde. Son module au carré donne une densité de probabilité de présence. Cette lecture probabiliste est au cœur de l’interprétation de Born.",
+            "La fonction d’onde doit être normalisable et remplir les conditions de raccordement imposées par le potentiel. Les conditions aux limites sont donc les véritables guides de calcul."
+          ],
+          "formula": "\\int_{\\mathbb{R}} |\\psi(x,t)|^2\\,dx = 1, \\qquad dP = |\\psi(x,t)|^2\\,dx",
+          "note": "Une fonction d’onde n’est pas une onde matérielle. Ce que l’on suit, c’est une amplitude de probabilité, pas une trajectoire déterministe."
+        },
+        {
+          "id": "schrodinger",
+          "kicker": "02 · Le moteur",
+          "title": "Schrödinger, version stationnaire",
+          "paragraphs": [
+            "Pour un potentiel indépendant du temps, on cherche des solutions séparables. L’équation de Schrödinger stationnaire devient une équation différentielle en espace, avec l’énergie comme paramètre.",
+            "Les solutions acceptables imposent des conditions de continuité. C’est précisément ce qui fait apparaître des niveaux d’énergie discrets dans un puits."
+          ],
+          "formula": "-\\frac{\\hbar^2}{2m}\\frac{d^2\\varphi}{dx^2} + V(x)\\varphi = E\\varphi",
+          "note": "Pense toujours à vérifier la continuité de ψ et de ψ′ aux interfaces, sauf lorsque le potentiel présente un pic de Dirac."
+        },
+        {
+          "id": "puits",
+          "kicker": "03 · Le puits",
+          "title": "Le puits infini, laboratoire minimal",
+          "paragraphs": [
+            "Le puits infini est le problème à connaître par cœur. Les modes propres sont des sinus, quantifiés par un entier. L’énergie minimale n’est jamais nulle : c’est le prix de la localisation.",
+            "Ce modèle sert de base pour comprendre la quantification des niveaux dans les systèmes plus réalistes. Il ne faut pas le traiter comme une simple formule à réciter."
+          ],
+          "formula": "E_n = \\frac{n^2\\pi^2\\hbar^2}{2mL^2}, \\qquad \\varphi_n(x)=\\sqrt{\\frac{2}{L}}\\sin\\left(\\frac{n\\pi x}{L}\\right)",
+          "note": "L’énergie de l’état fondamental pour n = 1 n’est pas une offset arbitraire : elle est conséquence des conditions aux limites."
+        }
+      ],
+      "exercise": {
+        "prompt": "Une particule traverse une barrière de potentiel de hauteur <span class=\"inline-tex\" data-tex=\"V_0 > E\"></span>. Sans résoudre l’équation, expliquer pourquoi le coefficient de transmission n’est pas strictement nul.",
+        "answer": "La fonction d’onde décroît exponentiellement mais reste non nulle de l’autre côté : effet tunnel."
+      }
+    },
+    {
+      "id": "thermodynamique",
+      "title": "Thermodynamique",
+      "tag": "Physique",
+      "subject": "Physique",
+      "level": "MPSI",
+      "color": "peach",
+      "coverType": "thermo",
+      "coverEq": "dU = \\delta Q + \\delta W",
+      "chaptersCount": 13,
+      "duration": "4 h 55",
+      "students": "1,7k",
+      "rating": 4.6,
+      "featured": false,
+      "description": "Premier et second principe, transformations et machines thermiques : les bilans sans les erreurs de signe.",
+      "formula": "dU = \\delta Q + \\delta W",
+      "objectives": [
+        "Choisir un système et un bilan correctement.",
+        "Distinguer une variable d’état d’une grandeur de transfert.",
+        "Utiliser l’entropie pour caractériser une évolution."
+      ],
+      "toc": [
+        "Le système thermodynamique",
+        "Premier principe",
+        "Second principe",
+        "Transformations usuelles",
+        "Machines thermiques",
+        "Changements d’état"
+      ],
+      "sections": [
+        {
+          "id": "systeme",
+          "kicker": "01 · Le cadre",
+          "title": "Un bon bilan commence par un bon système",
+          "paragraphs": [
+            "Avant toute équation, délimite le système, précise le référentiel, et identifie les échanges. Une erreur de signe est presque toujours une erreur de système ou de convention.",
+            "La thermodynamique manipulate des variables d’état et des grandeurs de transfert. Une variation de U s’écrit dU ; une quantité de chaleur reçue s’écrit δQ. Mélanger les deux notations, c’est mélanger deux natures."
+          ],
+          "formula": "dU = \\delta Q + \\delta W",
+          "note": "Convention reçue : δQ et δW sont algébriques. Un transfert entrant est positif, un transfert sortant est négatif. Écris cette convention en tête de copie."
+        },
+        {
+          "id": "entropie",
+          "kicker": "02 · L’irréversibilité",
+          "title": "L’entropie, juge des transformations",
+          "paragraphs": [
+            "L’entropie d’un système isolé ne diminue jamais. Pour un système non isolé, on distingue l’entropie échangée, réversible, et l’entropie créée, positive ou nulle.",
+            "C’est cette entropie créée qui quantifie l’irréversibilité. Une transformation réversible est une limite idéale, jamais une hypothèse gratuite."
+          ],
+          "formula": "\\Delta S = S_{\\rm échangée} + S_{\\rm créée}, \\qquad S_{\\rm créée}\\ge 0",
+          "note": "Pour un cycle, l’entropie d’un système revient à sa valeur initiale. Ce n’est pas le cas de l’entropie de l’univers, qui ne fait qu’augmenter."
+        },
+        {
+          "id": "machines",
+          "kicker": "03 · Les machines",
+          "title": "Carnot : le rendement limite",
+          "paragraphs": [
+            "Une machine thermique convertit de la chaleur en travail. Le moteur de Carnot, entièrement réversible, donne le meilleur rendement possible entre deux sources de températures fixées.",
+            "Aucune machine réelle ne peut dépasser ce rendement. Ce résultat n’est pas une recette technologique, mais une conséquence directe du second principe."
+          ],
+          "formula": "\\eta_{\\rm Carnot} = 1 - \\frac{T_{\\rm froid}}{T_{\\rm chaud}}",
+          "note": "Attention aux températures : les rendements thermodynamiques utilisent toujours des kelvins, jamais des degrés Celsius."
+        }
+      ],
+      "exercise": {
+        "prompt": "Une mole de gaz parfait subit une détente isotherme réversible de <span class=\"inline-tex\" data-tex=\"V_1\"></span> à <span class=\"inline-tex\" data-tex=\"V_2\"></span>. Calculer le travail reçu par le gaz.",
+        "answer": "W = -RT\\ln\\left(\\frac{V_2}{V_1}\\right)"
+      }
+    },
+    {
+      "id": "algorithmique-complexite",
+      "title": "Algorithmique & complexité",
+      "tag": "Informatique",
+      "subject": "Informatique",
+      "level": "MP",
+      "color": "mint",
+      "coverType": "code",
+      "coverEq": "O(n\\log n)",
+      "chaptersCount": 11,
+      "duration": "3 h 40",
+      "students": "1,2k",
+      "rating": 4.8,
+      "featured": true,
+      "description": "Diviser pour régner, structures de données et preuves de correction : le bagage informatique de l’écrit et de l’oral.",
+      "formula": "T(n)=2T(n/2)+O(n)",
+      "objectives": [
+        "Mesurer une complexité en fonction de la taille d’entrée.",
+        "Prouver la correction d’un algorithme par invariant.",
+        "Choisir la bonne structure de données selon la complexité visée."
+      ],
+      "toc": [
+        "Complexité asymptotique",
+        "Preuves par invariant",
+        "Diviser pour régner",
+        "Structures de données",
+        "Graphes",
+        "Algorithmes gloutons"
+      ],
+      "sections": [
+        {
+          "id": "complexite",
+          "kicker": "01 · Mesurer",
+          "title": "La complexité n’est pas un temps d’exécution",
+          "paragraphs": [
+            "La complexité décrit l’évolution du coût lorsque la taille de l’entrée grandit. Elle demande de choisir une unité : nombre de comparaisons, d’affectations, d’opérations élémentaires. Cette unité doit être annoncée.",
+            "On distingue le pire cas, le cas moyen et le meilleur cas. Pour un concours, le pire cas est la convention par défaut, sauf indication contraire de l’énoncé."
+          ],
+          "formula": "T(n) = 3n^2 + 5n + 7 = O(n^2)",
+          "note": "Les constantes disparaissent dans le O, mais elles peuvent compter dans la vraie vie. Ne confonds pas une amélioration asymptotique avec une optimisation pertinente sur toutes les tailles."
+        },
+        {
+          "id": "invariant",
+          "kicker": "02 · Prouver",
+          "title": "Un invariant pour verrouiller la boucle",
+          "paragraphs": [
+            "Un invariant de boucle est une propriété vraie avant la boucle, préservée à chaque itération, et utile à la sortie. Il transforme une intuition en preuve.",
+            "La terminaison se prouve séparément, avec une quantité positive qui décroît à chaque itération. Correction partielle et terminaison forment deux obligations distinctes."
+          ],
+          "formula": "\\text{Invariant} \\land \\text{condition d’arrêt} \\Longrightarrow \\text{propriété de sortie}",
+          "note": "La majoration avec un variant est un classique de l’oral : décris-le explicitement, puis justifie qu’il est borné inférieurement."
+        },
+        {
+          "id": "divide",
+          "kicker": "03 · Découper",
+          "title": "Diviser pour régner, sans récursion infinie",
+          "paragraphs": [
+            "Un algorithme diviser-pour-régner se reconnaît à trois étapes : diviser, résoudre récursivement, recombiner. La complexité émerge de l’équation de récurrence, pas du nombre de lignes de code.",
+            "Le tri fusion en est l’exemple canonique : division en deux, tri des moitiés, fusion linéaire. Son coût total est en n log n."
+          ],
+          "formula": "T(n)=2T\\!\\left(\\frac{n}{2}\\right)+O(n)=\\Theta(n\\log n)",
+          "note": "Pour appliquer le master theorem, identifie le coût de recombinaison. Une fusion en O(n) n’est pas la même chose qu’une fusion en O(n²)."
+        }
+      ],
+      "exercise": {
+        "prompt": "Soit un tableau trié. Écrire une recherche dichotomique itérative et justifier sa complexité en <span class=\"inline-tex\" data-tex=\"O(\\log n)\"></span>.",
+        "answer": "Chaque itération divise par deux la taille de l’intervalle de recherche."
+      }
+    },
+    {
+      "id": "python-prepa",
+      "title": "Python pour la prépa",
+      "tag": "Python",
+      "subject": "Informatique",
+      "level": "MPSI",
+      "color": "sky",
+      "coverType": "terminal",
+      "coverEq": "\\texttt{def f(x): return x ** 2}",
+      "chaptersCount": 9,
+      "duration": "3 h 00",
+      "students": "1,5k",
+      "rating": 4.7,
+      "featured": false,
+      "description": "Listes, dictionnaires, classes et complexité : écrire du code propre et lisible le jour du concours.",
+      "formula": "\\texttt{def f(x): return x ** 2}",
+      "objectives": [
+        "Choisir la structure Python adaptée.",
+        "Écrire une fonction documentée et testable.",
+        "Comprendre le coût réel des opérations courantes."
+      ],
+      "toc": [
+        "Syntaxe essentielle",
+        "Listes et compréhensions",
+        "Dictionnaires",
+        "Classes et objets",
+        "Récursivité",
+        "Bonnes pratiques"
+      ],
+      "sections": [
+        {
+          "id": "structures",
+          "kicker": "01 · Les bases",
+          "title": "Penser en structures, pas en boucles",
+          "paragraphs": [
+            "Le choix d’une structure de données est souvent plus déterminant que la micro-optimisation d’une boucle. Une liste convient à un parcours ordonné, un dictionnaire à une recherche par clé, un ensemble à un test d’appartenance.",
+            "Python ne rend pas impossible le calcul de complexité : il le déplace. Une recherche dans une liste est linéaire, une recherche dans un dictionnaire est en moyenne constante."
+          ],
+          "formula": "T_{liste}(n)=O(n) \\qquad T_{dict}(n)=O(1) \\text{ en moyenne}",
+          "note": "Connais tes coûts : un `in` sur une liste est O(n), un `in` sur un set est O(1) en moyenne. Cette différence suffit souvent à passer un test de performance."
+        },
+        {
+          "id": "propre",
+          "kicker": "02 · Écrire",
+          "title": "Un code lisible est un code qui rapporte",
+          "paragraphs": [
+            "Nommer les variables, découper les responsabilités, documenter les hypothèses : ces habitudes font gagner des points à l’oral. Le correcteur doit pouvoir suivre l’intention sans exécuter mentalement tout le programme.",
+            "En prépa, on privilégie la clarté. Un code de vingt lignes compréhensible vaut mieux qu’un code de huit lignes illisible, surtout lorsqu’il faut le corriger au tableau."
+          ],
+          "formula": "\\texttt{def est\\_pair(n):\\n    return n \\% 2 == 0}",
+          "note": "Évite les effets de bord dans une fonction de calcul. Une fonction qui modifie son argument doit le dire dans son nom ou sa documentation."
+        },
+        {
+          "id": "recursivite",
+          "kicker": "03 · La profondeur",
+          "title": "Récursivité : élégante, mais bornée",
+          "paragraphs": [
+            "Une fonction récursive se lit souvent mieux qu’une boucle. Mais chaque appel consume de la pile d’exécution. Une récursion profonde peut dépasser les limites de Python.",
+            "La version itérative n’est pas toujours meilleure, mais elle évite ce risque. À l’écrit, on privilégie la version la plus lisible qui respecte les contraintes de taille."
+          ],
+          "formula": "\\texttt{sys.getrecursionlimit()} \\approx 1000",
+          "note": "Si une récursion peut dépasser la profondeur autorisée, transforme-la en boucle avec une pile explicite, ou utilise la mémoïsation si les sous-problèmes se répètent."
+        }
+      ],
+      "exercise": {
+        "prompt": "Écrire une fonction qui renvoie le plus long sous-tableau contigu dont la somme est nulle. Complexité attendue : <span class=\"inline-tex\" data-tex=\"O(n)\"></span>.",
+        "answer": "Accumuler les sommes préfixes dans un dictionnaire."
+      }
+    },
+    {
+      "id": "topologie-evn",
+      "title": "Topologie & espaces vectoriels normés",
+      "tag": "Analyse",
+      "subject": "Maths",
+      "level": "MP",
+      "color": "ink",
+      "coverType": "norm",
+      "coverEq": "\\lVert x+y\\rVert \\le \\lVert x\\rVert + \\lVert y\\rVert",
+      "chaptersCount": 15,
+      "duration": "6 h 50",
+      "students": "840",
+      "rating": 4.9,
+      "featured": false,
+      "description": "Normes, compacité et complétude : le langage qui rend l’analyse en dimension infinie contrôlable.",
+      "formula": "\\lVert x+y\\rVert \\le \\lVert x\\rVert + \\lVert y\\rVert",
+      "objectives": [
+        "Manipuler les normes et les distances sans confusion.",
+        "Identifier et utiliser la compacité.",
+        "Comprendre la complétude comme une propriété de Cauchy."
+      ],
+      "toc": [
+        "Normes et distances",
+        "Ouverts et fermés",
+        "Suites et adhérence",
+        "Compacité",
+        "Complétude",
+        "Théorèmes de point fixe"
+      ],
+      "sections": [
+        {
+          "id": "normes",
+          "kicker": "01 · Mesurer",
+          "title": "Toutes les normes ne se valent pas",
+          "paragraphs": [
+            "En dimension finie, toutes les normes sont équivalentes. En dimension infinie, ce n’est plus vrai, et les phénomènes topologiques deviennent beaucoup plus riches. C’est là que la prépa bascule vers l’analyse fonctionnelle.",
+            "Une norme doit satisfaire trois axiomes : positivité définie, homogénéité et inégalité triangulaire. Vérifier ces axiomes est un classique d’oral."
+          ],
+          "formula": "\\lVert \\lambda x \\rVert = |\\lambda|\\,\\lVert x\\rVert",
+          "note": "L’équivalence des normes n’est pas l’égalité des normes. Elle dit seulement que les notions de convergence et de continuité sont les mêmes."
+        },
+        {
+          "id": "compacite",
+          "kicker": "02 · Contrôler",
+          "title": "Être compact, c’est être borné et complet",
+          "paragraphs": [
+            "En dimension finie, compact équivaut à fermé borné (Bolzano–Weierstrass). En dimension infinie, cette équivalence tombe : la boule unité fermée d’un espace normé n’est jamais compacte sauf en dimension finie.",
+            "La compacité est une arme d’existence : une fonction continue sur un compact atteint ses bornes, une suite d’un compact admet une sous-suite convergente. C’est souvent le chaînon manquant d’une preuve."
+          ],
+          "formula": "K \\text{ compact},\\ f \\in \\mathcal{C}(K,\\mathbb{R}) \\Longrightarrow f \\text{ est bornée et atteint ses bornes}",
+          "note": "Garde en tête le théorème de Riesz : c’est lui qui explique pourquoi la dimension infinie change tout. Un énoncé de compacité doit toujours préciser l’espace ambiant."
+        },
+        {
+          "id": "complete",
+          "kicker": "03 · Converger",
+          "title": "Complet, ou l’assurance de converger",
+          "paragraphs": [
+            "Un espace complet garantit que toute suite de Cauchy converge. On peut alors montrer l’existence d’une limite sans deviner sa valeur à l’avance. C’est le cœur des théorèmes de point fixe.",
+            "L’incomplétude classique de <span class=\"inline-tex\" data-tex=\"\\mathbb{Q}\"></span> montre que la complétude n’est pas une évidence : elle dépend du corps et de la distance choisis."
+          ],
+          "formula": "\\text{Toute suite de Cauchy converge} \\iff (E,d) \\text{ est complet}",
+          "note": "Pour appliquer Banach, il te faut une application contractante d’un espace complet dans lui-même. L’hypothèse de contraction stricte, avec un coefficient <strong>k &lt; 1</strong>, est indispensable."
+        }
+      ],
+      "exercise": {
+        "prompt": "Montrer que dans un espace normé, toute suite convergente est de Cauchy. La réciproque est-elle vraie ?",
+        "answer": "Vrai : utiliser l’inégalité triangulaire. Non : Q n’est pas complet."
+      }
+    }
+  ],
+  "exercises": [
+    {
+      "id": "nilpotente-inversible",
+      "title": "Quand nilpotence rime avec inverse",
+      "subject": "Maths",
+      "tag": "Algèbre",
+      "source": "Oral X · 2023",
+      "level": "MP*",
+      "stars": 4,
+      "minutes": 25,
+      "equation": "A^3 = 0 \\Rightarrow (I+A)^{-1} = I-A+A^2",
+      "teaser": "Un énoncé court, une preuve élégante et une leçon à garder pour la suite.",
+      "statement": "Soit <span class=\"inline-tex\" data-tex=\"A \\in \\mathrm{M}_n(\\mathbb{R})\"></span> telle que <span class=\"inline-tex\" data-tex=\"A^3=0\"></span>. Montrer que <span class=\"inline-tex\" data-tex=\"I_n + A\"></span> est inversible et exprimer son inverse comme un polynôme en <span class=\"inline-tex\" data-tex=\"A\"></span>.",
+      "hint": "Pense à l’identité remarquable <span class=\"inline-tex\" data-tex=\"(1+x)(1-x+x^2)=1+x^3\"></span>.",
+      "solution": [
+        {
+          "title": "Faire apparaître la relation",
+          "text": "On calcule le produit <span class=\"inline-tex\" data-tex=\"(I+A)(I-A+A^2)\"></span>. L’identité remarquable tronquée donne un reste cubique.",
+          "equation": "(I+A)(I-A+A^2)=I+A^3=I"
+        },
+        {
+          "title": "Conclure l’inversibilité",
+          "text": "Comme <span class=\"inline-tex\" data-tex=\"A^3=0\"></span>, le produit vaut l’identité. De même, dans l’autre sens, le produit vaut l’identité. Ainsi <span class=\"inline-tex\" data-tex=\"I+A\"></span> admet un inverse à gauche et à droite, donc est inversible.",
+          "equation": "(I-A+A^2)(I+A)=I+A^3=I"
+        },
+        {
+          "title": "La morale du problème",
+          "text": "Toute matrice nilpotente est « proche » d’une matrice invertible : <span class=\"inline-tex\" data-tex=\"I+A\"></span> est toujours inversible. La preuve est un exemple modèle de troncature polynomiale."
+        }
+      ],
+      "answer": "I_n - A + A^2",
+      "solves": 1284,
+      "verified": true
+    },
+    {
+      "id": "sinus-racine",
+      "title": "Un sinus qui joue avec les racines",
+      "subject": "Maths",
+      "tag": "Analyse",
+      "source": "Mines-Ponts · 2022",
+      "level": "MP",
+      "stars": 5,
+      "minutes": 40,
+      "equation": "\\sum \\sin\\!\\left(\\pi\\sqrt{n^2+1}\\right)",
+      "teaser": "Une série aux allures inoffensives, un développement asymptotique décisif.",
+      "statement": "Étudier la nature de la série <span class=\"inline-tex\" data-tex=\"\\sum_{n\\ge 1}\\sin\\!\\left(\\pi\\sqrt{n^2+1}\\right)\"></span>.",
+      "hint": "Écris <span class=\"inline-tex\" data-tex=\"\\sqrt{n^2+1}=n+\\frac{1}{2n}+O(n^{-3})\"></span> puis regarde la parité de n.",
+      "solution": [
+        {
+          "title": "Développer la racine",
+          "text": "On factorise par n et on développe en puissances de 1/n². Le terme principal permet de comprendre le comportement de l’argument.",
+          "equation": "\\sqrt{n^2+1}=n+\\frac1{2n}+O\\!\\left(\\frac1{n^3}\\right)"
+        },
+        {
+          "title": "Séparer selon la parité",
+          "text": "Pour n pair, le sinus est proche de π/(2n). Pour n impair, il est proche de −π/(2n). Dans les deux cas, le terme général est équivalent à ±π/(2n). En regroupant par paires, la série se comporte comme une série harmonique alternée.",
+          "equation": "\\sin\\!\\left(\\pi\\sqrt{n^2+1}\\right)=(-1)^n\\frac{\\pi}{2n}+O(n^{-2})"
+        },
+        {
+          "title": "Conclure avec précaution",
+          "text": "La série brute ne converge pas absolument. Après regroupement par paires, on obtient une série convergente par le critère spécial des séries alternées. On en déduit que la série initiale converge."
+        }
+      ],
+      "answer": "Convergente, mais pas absolument.",
+      "solves": 846,
+      "verified": true
+    },
+    {
+      "id": "marche-aleatoire",
+      "title": "Le retour du marcheur",
+      "subject": "Maths",
+      "tag": "Probabilités",
+      "source": "Épreuve X · 2021",
+      "level": "MP",
+      "stars": 4,
+      "minutes": 35,
+      "equation": "\\mathbb{P}(S_{2n}=0)=\\binom{2n}{n}2^{-2n}",
+      "teaser": "Une marche aléatoire, un coefficient binomial et un équivalent à retrouver.",
+      "statement": "On lance une pièce équilibrée à chaque étape : <span class=\"inline-tex\" data-tex=\"S_n\"></span> est la différence entre le nombre de piles et de faces. Montrer que <span class=\"inline-tex\" data-tex=\"\\mathbb{P}(S_{2n}=0)\\sim \\frac{1}{\\sqrt{\\pi n}}\"></span>.",
+      "hint": "Exprime l’événement en termes de coefficients binomiaux, puis utilise la formule de Stirling.",
+      "solution": [
+        {
+          "title": "Compter les chemins",
+          "text": "Revenir à zéro en 2n pas signifie avoir exactement n piles et n faces. Le nombre de trajectoires favorables est donc le coefficient binomial central.",
+          "equation": "\\mathbb{P}(S_{2n}=0)=\\binom{2n}{n}\\,\\frac{1}{2^{2n}}"
+        },
+        {
+          "title": "Appliquer Stirling",
+          "text": "On remplace les factorielles par leur équivalent de Stirling, puis on simplifie les puissances de 2 et de n.",
+          "equation": "\\binom{2n}{n}\\frac{1}{2^{2n}}\\sim \\frac{4^n}{\\sqrt{\\pi n}}\\cdot\\frac{1}{2^{2n}}"
+        },
+        {
+          "title": "Conclure",
+          "text": "Les puissances se compensent et on obtient l’équivalent attendu. La probabilité de retour tend vers zéro, mais assez lentement pour que la marche soit récurrente en dimension 1."
+        }
+      ],
+      "answer": "\\sim \\frac{1}{\\sqrt{\\pi n}}",
+      "solves": 1102,
+      "verified": true
+    },
+    {
+      "id": "lunette-astronomique",
+      "title": "La lunette, sans faux foyer",
+      "subject": "Physique",
+      "tag": "Optique",
+      "source": "CCINP · 2024",
+      "level": "MP",
+      "stars": 3,
+      "minutes": 30,
+      "equation": "\\alpha' = -\\frac{f'_{\\rm obj}}{f'_{\\rm occ}}\\,\\alpha",
+      "teaser": "Grossissement, cercle oculaire et condition de vision confortable.",
+      "statement": "On considère une lunette astronomique afocale constituée d’un objectif de focale <span class=\"inline-tex\" data-tex=\"f'_1\"></span> et d’un oculaire de focale <span class=\"inline-tex\" data-tex=\"f'_2\"></span>. Déterminer le grossissement et la position du cercle oculaire.",
+      "hint": "Le foyer image de l’objectif coïncide avec le foyer objet de l’oculaire.",
+      "solution": [
+        {
+          "title": "Schéma avant calcul",
+          "text": "La lunette est afocale : le foyer image de l’objectif et le foyer objet de l’oculaire coïncident. Un rayon parallèle à l’axe émerge parallèle à l’axe."
+        },
+        {
+          "title": "Relier les angles",
+          "text": "Pour un objet à l’infini, le grossissement compare les angles sous lesquels on voit l’image et l’objet. La relation de conjugaison pour l’oculaire donne le facteur de rapport des focales.",
+          "equation": "G = \\frac{\\alpha'}{\\alpha} = -\\frac{f'_1}{f'_2}"
+        },
+        {
+          "title": "Placer le cercle oculaire",
+          "text": "Le cercle oculaire est l’image de l’objectif à travers l’oculaire. Sa position s’obtient par la relation de conjugaison appliquée à l’objectif vu par l’oculaire.",
+          "equation": "\\overline{O_2 A'} = \\frac{f'_2(f'_1+f'_2)}{f'_1}"
+        }
+      ],
+      "answer": "G = -f′₁/f′₂ ; cercle oculaire derrière l’oculaire.",
+      "solves": 634,
+      "verified": true
+    },
+    {
+      "id": "effet-tunnel",
+      "title": "Traverser l’interdit",
+      "subject": "Physique",
+      "tag": "Quantique",
+      "source": "Mines-Ponts · 2023",
+      "level": "MP",
+      "stars": 5,
+      "minutes": 45,
+      "equation": "T \\approx 16\\frac{E(V_0-E)}{V_0^2}e^{-2\\kappa a}",
+      "teaser": "Une barrière, des exponentielles et une probabilité qui ne s’annule jamais.",
+      "statement": "Une particule d’énergie <span class=\"inline-tex\" data-tex=\"E&lt;V_0\"></span> rencontre une barrière rectangulaire de hauteur <span class=\"inline-tex\" data-tex=\"V_0\"></span> et de largeur <span class=\"inline-tex\" data-tex=\"a\"></span>. Justifier qualitativement l’effet tunnel et donner l’expression du coefficient de transmission.",
+      "hint": "Dans la barrière, la solution est une combinaison d’exponentielles réelles. La continuité impose un recouvrement non nul.",
+      "solution": [
+        {
+          "title": "Écrire l’équation dans les trois zones",
+          "text": "À gauche et à droite, les solutions sont des ondes planes. Dans la barrière, l’énergie cinétique est négative : les solutions sont exponentielles.",
+          "equation": "\\psi_{\\rm II}(x)=Ae^{\\kappa x}+Be^{-\\kappa x},\\quad \\kappa=\\sqrt{\\frac{2m(V_0-E)}{\\hbar^2}}"
+        },
+        {
+          "title": "Raccorder les solutions",
+          "text": "Les conditions de continuité de ψ et de sa dérivée aux deux interfaces donnent quatre équations. Le coefficient de transmission est le rapport des courants de probabilité à droite et à gauche."
+        },
+        {
+          "title": "Lire le résultat",
+          "text": "Le coefficient décroît exponentiellement avec la largeur et la hauteur de la barrière. Il n’est jamais strictement nul pour une barrière de largeur finie : c’est l’effet tunnel.",
+          "equation": "T\\sim e^{-2\\kappa a}"
+        }
+      ],
+      "answer": "T ≠ 0, décroissance exponentielle avec la largeur.",
+      "solves": 488,
+      "verified": true
+    },
+    {
+      "id": "sous-tableau-somme-nulle",
+      "title": "Le sous-tableau qui s’annule",
+      "subject": "Informatique",
+      "tag": "Algorithmes",
+      "source": "ENS Info · 2024",
+      "level": "MP",
+      "stars": 4,
+      "minutes": 20,
+      "equation": "\\text{sommes préfixes} + \\text{dictionnaire}",
+      "teaser": "Un problème de tableau qui se résout en un seul passage.",
+      "statement": "Étant donné un tableau d’entiers, déterminer s’il existe un sous-tableau contigu non vide dont la somme est nulle. Proposer un algorithme en <span class=\"inline-tex\" data-tex=\"O(n)\"></span> temps.",
+      "hint": "Deux sommes préfixes égales signalent un sous-tableau de somme nulle.",
+      "solution": [
+        {
+          "title": "Sommes préfixes",
+          "text": "On note <span class=\"inline-tex\" data-tex=\"S_k=\\sum_{i=0}^{k-1}a_i\"></span>. Un sous-tableau de i à j a une somme nulle si et seulement si <span class=\"inline-tex\" data-tex=\"S_i=S_{j+1}\"></span>.",
+          "equation": "\\sum_{k=i}^{j} a_k = 0 \\iff S_i = S_{j+1}"
+        },
+        {
+          "title": "Un dictionnaire",
+          "text": "On parcourt le tableau en maintenant la somme courante. À chaque étape, on vérifie si cette somme a déjà été rencontrée ; sinon on l’insère dans un ensemble. Initialement, la somme 0 correspond au sous-tableau vide.",
+          "equation": "\\texttt{if s in seen: return True; seen.add(s)}"
+        },
+        {
+          "title": "Complexité",
+          "text": "Chaque élément est traité une fois et chaque opération de dictionnaire est en moyenne constante. Le temps total est linéaire, l’espace auxiliaire est au pire linéaire."
+        }
+      ],
+      "answer": "Un dictionnaire de sommes préfixes donne O(n).",
+      "solves": 972,
+      "verified": true
+    },
+    {
+      "id": "matrice-trace",
+      "title": "La trace ne ment jamais",
+      "subject": "Maths",
+      "tag": "Algèbre",
+      "source": "Centrale · 2023",
+      "level": "MP",
+      "stars": 3,
+      "minutes": 18,
+      "equation": "\\operatorname{tr}(AB)=\\operatorname{tr}(BA)",
+      "teaser": "Une preuve courte et un critère d’impossibilité très utile.",
+      "statement": "Montrer que si <span class=\"inline-tex\" data-tex=\"A,B\\in\\mathrm{M}_n(\\mathbb{R})\"></span>, alors <span class=\"inline-tex\" data-tex=\"AB-BA=I_n\"></span> est impossible.",
+      "hint": "Prends la trace des deux côtés.",
+      "solution": [
+        {
+          "title": "Une égalité de traces",
+          "text": "La trace est linéaire et vérifie l’identité de cyclicité. On en déduit que la trace du commutateur <span class=\"inline-tex\" data-tex=\"[A,B]\"></span> est nulle.",
+          "equation": "\\operatorname{tr}(AB-BA)=0"
+        },
+        {
+          "title": "Contradiction",
+          "text": "La trace de l’identité vaut n, qui est strictement positif. L’égalité demandée impliquerait donc 0 = n, ce qui est absurde.",
+          "equation": "0 = \\operatorname{tr}(I_n)=n"
+        },
+        {
+          "title": "Généralisation",
+          "text": "Dans un corps de caractéristique non nulle, l’argument tombe. C’est un rappel utile : une preuve dépend toujours de son contexte."
+        }
+      ],
+      "answer": "Impossible car tr([A,B]) = 0 ≠ n.",
+      "solves": 1560,
+      "verified": true
+    },
+    {
+      "id": "suite-convergence-uniforme",
+      "title": "Une limite qui n’aime pas le sup",
+      "subject": "Maths",
+      "tag": "Analyse",
+      "source": "CCINP · 2025",
+      "level": "MP",
+      "stars": 4,
+      "minutes": 30,
+      "equation": "f_n(x)=x(1-x)^n",
+      "teaser": "Trouver la limite, puis comprendre pourquoi la convergence n’est pas uniforme.",
+      "statement": "Pour <span class=\"inline-tex\" data-tex=\"x\\in[0,1]\"></span>, on pose <span class=\"inline-tex\" data-tex=\"f_n(x)=x(1-x)^n\"></span>. Déterminer la limite simple et montrer que la convergence n’est pas uniforme.",
+      "hint": "La limite simple est nulle partout. Pour l’uniformité, évalue en <span class=\"inline-tex\" data-tex=\"x=1/n\"></span>.",
+      "solution": [
+        {
+          "title": "Limite simple",
+          "text": "Pour x = 0 et x = 1, la suite est nulle. Pour x ∈ ]0,1[, (1−x)^n tend vers 0, donc f_n(x) tend vers 0."
+        },
+        {
+          "title": "Un contretemps",
+          "text": "On évalue la suite au point 1/n, dans [0,1]. La valeur ne tend pas vers zéro.",
+          "equation": "f_n(1/n)=\\frac{1}{n}\\left(1-\\frac1n\\right)^n\\to \\frac1e \\neq 0"
+        },
+        {
+          "title": "Conclusion",
+          "text": "Une suite peut converger en tout point sans que la distance uniforme à sa limite tende vers zéro. C’est exactement le fossé entre convergence simple et uniforme."
+        }
+      ],
+      "answer": "Limite nulle, mais convergence non uniforme.",
+      "solves": 745,
+      "verified": true
+    },
+    {
+      "id": "gaz-parfait",
+      "title": "Le détour par l’entropie",
+      "subject": "Physique",
+      "tag": "Thermodynamique",
+      "source": "Oral Centrale · 2022",
+      "level": "MP",
+      "stars": 3,
+      "minutes": 20,
+      "equation": "\\Delta S = nR\\ln\\!\\frac{V_2}{V_1}",
+      "teaser": "Un gaz parfait, une détente et un bilan qui repose sur une fonction d’état.",
+      "statement": "Une mole de gaz parfait subit une détente isotherme réversible à température <span class=\"inline-tex\" data-tex=\"T\"></span> de <span class=\"inline-tex\" data-tex=\"V_1\"></span> à <span class=\"inline-tex\" data-tex=\"V_2\"></span>. Calculer le travail reçu, la chaleur reçue et la variation d’entropie.",
+      "hint": "Pour un gaz parfait, U ne dépend que de T. Utilise l’identité thermodynamique.",
+      "solution": [
+        {
+          "title": "Bilan d’énergie",
+          "text": "La transformation est isotherme et le gaz est parfait : ΔU = 0. Le travail reçu vaut donc l’opposé du travail des forces de pression.",
+          "equation": "W=-nRT\\ln\\frac{V_2}{V_1}"
+        },
+        {
+          "title": "Chaleur",
+          "text": "Par le premier principe, ΔU = Q + W, donc Q = −W. Le gaz reçoit de la chaleur pendant la détente."
+        },
+        {
+          "title": "Entropie",
+          "text": "L’entropie est une fonction d’état. Pour un gaz parfait à température constante, l’identité thermodynamique donne le résultat.",
+          "equation": "\\Delta S = nR\\ln\\frac{V_2}{V_1}"
+        }
+      ],
+      "answer": "W = −RT ln(V₂/V₁), Q = RT ln(V₂/V₁), ΔS = R ln(V₂/V₁).",
+      "solves": 518,
+      "verified": true
+    },
+    {
+      "id": "dichotomie",
+      "title": "Couper en deux, conquérir",
+      "subject": "Informatique",
+      "tag": "Algorithmes",
+      "source": "Oral X · 2022",
+      "level": "MP",
+      "stars": 2,
+      "minutes": 15,
+      "equation": "T(n)=T(n/2)+O(1)",
+      "teaser": "La dichotomie, ses invariants et le piège des bornes.",
+      "statement": "Écrire une recherche dichotomique itérative qui renvoie l’indice d’une valeur dans un tableau trié, ou −1. Prouver la terminaison et la correction.",
+      "hint": "Maintiens un invariant sur l’intervalle [g, d] et réduis strictement sa taille à chaque itération.",
+      "solution": [
+        {
+          "title": "Invariant",
+          "text": "On maintient que si la valeur est présente, alors son indice appartient à l’intervalle de recherche. La valeur médiane permet d’éliminer une moitié."
+        },
+        {
+          "title": "Terminaison",
+          "text": "La quantité d − g diminue strictement à chaque itération. Elle est minorée par −1, donc la boucle termine.",
+          "equation": "T(n)=T(n/2)+O(1)=O(\\log n)"
+        },
+        {
+          "title": "Pièges",
+          "text": "Attention aux débordements arithmétiques dans le calcul du milieu et à la mise à jour des bornes. Utilise <span class=\"inline-tex\" data-tex=\"g + (d-g)//2\"></span> plutôt que <span class=\"inline-tex\" data-tex=\"(g+d)//2\"></span> dans les langages à entiers bornés."
+        }
+      ],
+      "answer": "Recherche dichotomique en O(log n), avec invariant et terminaison.",
+      "solves": 2034,
+      "verified": true
+    }
+  ],
+  "papers": [
+    {
+      "id": "x-ens-2025-maths-a",
+      "school": "X/ENS",
+      "short": "X",
+      "year": 2025,
+      "subject": "Maths",
+      "title": "Épreuve de mathématiques A",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 5,
+      "parts": "2 problèmes",
+      "hot": true,
+      "correction": true,
+      "color": "lime"
+    },
+    {
+      "id": "x-ens-2025-maths-b",
+      "school": "X/ENS",
+      "short": "X",
+      "year": 2025,
+      "subject": "Maths",
+      "title": "Épreuve de mathématiques B",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 5,
+      "parts": "3 parties",
+      "hot": true,
+      "correction": true,
+      "color": "lime"
+    },
+    {
+      "id": "x-ens-2024-info-a",
+      "school": "X/ENS",
+      "short": "X",
+      "year": 2024,
+      "subject": "Informatique",
+      "title": "Épreuve d’informatique A",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 4,
+      "parts": "2 problèmes",
+      "hot": false,
+      "correction": true,
+      "color": "lilac"
+    },
+    {
+      "id": "mines-2024-maths-2",
+      "school": "Mines-Ponts",
+      "short": "MP",
+      "year": 2024,
+      "subject": "Maths",
+      "title": "Épreuve de mathématiques 2",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 4,
+      "parts": "2 problèmes",
+      "hot": true,
+      "correction": true,
+      "color": "sky"
+    },
+    {
+      "id": "mines-2024-physique-1",
+      "school": "Mines-Ponts",
+      "short": "MP",
+      "year": 2024,
+      "subject": "Physique",
+      "title": "Épreuve de physique 1",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 4,
+      "parts": "3 parties",
+      "hot": false,
+      "correction": true,
+      "color": "sky"
+    },
+    {
+      "id": "centrale-2024-maths-1",
+      "school": "Centrale",
+      "short": "C",
+      "year": 2024,
+      "subject": "Maths",
+      "title": "Épreuve de mathématiques 1",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 4,
+      "parts": "2 problèmes",
+      "hot": true,
+      "correction": true,
+      "color": "peach"
+    },
+    {
+      "id": "centrale-2023-physique-chimie",
+      "school": "Centrale",
+      "short": "C",
+      "year": 2023,
+      "subject": "Physique",
+      "title": "Épreuve de physique-chimie",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 3,
+      "parts": "3 parties",
+      "hot": false,
+      "correction": true,
+      "color": "peach"
+    },
+    {
+      "id": "ccinp-2025-maths-1",
+      "school": "CCINP",
+      "short": "CC",
+      "year": 2025,
+      "subject": "Maths",
+      "title": "Épreuve de mathématiques 1",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 3,
+      "parts": "3 problèmes",
+      "hot": true,
+      "correction": true,
+      "color": "butter"
+    },
+    {
+      "id": "ccinp-2025-physique",
+      "school": "CCINP",
+      "short": "CC",
+      "year": 2025,
+      "subject": "Physique",
+      "title": "Épreuve de physique",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 3,
+      "parts": "2 parties",
+      "hot": false,
+      "correction": true,
+      "color": "butter"
+    },
+    {
+      "id": "ccinp-2024-info",
+      "school": "CCINP",
+      "short": "CC",
+      "year": 2024,
+      "subject": "Informatique",
+      "title": "Épreuve d’informatique",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 3,
+      "parts": "2 problèmes",
+      "hot": false,
+      "correction": true,
+      "color": "butter"
+    },
+    {
+      "id": "e3a-2024-maths-a",
+      "school": "e3a",
+      "short": "e3a",
+      "year": 2024,
+      "subject": "Maths",
+      "title": "Épreuve de mathématiques A",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 2,
+      "parts": "3 exercices",
+      "hot": false,
+      "correction": false,
+      "color": "mint"
+    },
+    {
+      "id": "e3a-2023-physique",
+      "school": "e3a",
+      "short": "e3a",
+      "year": 2023,
+      "subject": "Physique",
+      "title": "Épreuve de physique",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 2,
+      "parts": "3 exercices",
+      "hot": false,
+      "correction": true,
+      "color": "mint"
+    },
+    {
+      "id": "x-ens-2024-maths-a",
+      "school": "X/ENS",
+      "short": "X",
+      "year": 2024,
+      "subject": "Maths",
+      "title": "Épreuve de mathématiques A",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 5,
+      "parts": "2 problèmes",
+      "hot": false,
+      "correction": true,
+      "color": "lime"
+    },
+    {
+      "id": "mines-2023-info",
+      "school": "Mines-Ponts",
+      "short": "MP",
+      "year": 2023,
+      "subject": "Informatique",
+      "title": "Épreuve d’informatique",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 4,
+      "parts": "2 problèmes",
+      "hot": false,
+      "correction": true,
+      "color": "sky"
+    },
+    {
+      "id": "centrale-2025-maths-2",
+      "school": "Centrale",
+      "short": "C",
+      "year": 2025,
+      "subject": "Maths",
+      "title": "Épreuve de mathématiques 2",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 4,
+      "parts": "2 problèmes",
+      "hot": true,
+      "correction": true,
+      "color": "peach"
+    },
+    {
+      "id": "ccinp-2023-maths-2",
+      "school": "CCINP",
+      "short": "CC",
+      "year": 2023,
+      "subject": "Maths",
+      "title": "Épreuve de mathématiques 2",
+      "track": "MP",
+      "duration": "4 h",
+      "difficulty": 3,
+      "parts": "3 problèmes",
+      "hot": false,
+      "correction": true,
+      "color": "butter"
+    }
+  ],
+  "threads": [
+    {
+      "id": "colles-maths-mp",
+      "category": "Méthode",
+      "title": "Comment vous gérez vraiment les colles de maths en MP* ?",
+      "excerpt": "Je sors de colle avec l’impression de comprendre en salle et de tout perdre au tableau. Vous avez des rituels de préparation qui marchent ?",
+      "author": "Lina B.",
+      "initials": "LB",
+      "avatarColor": "lime",
+      "grade": "MP* · Ginette",
+      "time": "il y a 2 h",
+      "replies": 34,
+      "views": "1,2k",
+      "upvotes": 86,
+      "tags": [
+        "khôlle",
+        "méthode",
+        "oral"
+      ],
+      "pinned": true,
+      "content": "Je sors de colle avec l’impression de comprendre en salle et de tout perdre au tableau. Le prof me demande de rédiger une preuve au tableau et je me mets à sauter des étapes que j’avais pourtant comprises.\n\nVous avez des rituels de préparation qui marchent ? Je parle surtout de l’oral : est-ce que vous récitez le cours à voix haute, vous refaites les démos sans regarder, vous vous enregistrez ? J’aimerais sortir de la logique « je relis mon cours et ça ira ».\n\nMerci d’avance pour les retours concrets !",
+      "answers": [
+        {
+          "id": "r1",
+          "author": "Adam K.",
+          "initials": "AK",
+          "avatarColor": "lilac",
+          "grade": "MP* · LLG",
+          "time": "il y a 1 h",
+          "text": "Ce qui a tout changé pour moi : refaire les démonstrations à voix haute, sans support, en 3 minutes chrono. Au début c’est humiliant, puis tu construis des automatismes. Je note les trous dans un carnet à part.",
+          "upvotes": 41
+        },
+        {
+          "id": "r2",
+          "author": "Sofia M.",
+          "initials": "SM",
+          "avatarColor": "peach",
+          "grade": "MP · Chaptal",
+          "time": "il y a 48 min",
+          "text": "Demande à ton colleur de te laisser 30 secondes de réflexion silencieuse avant d’écrire. Ça paraît bête, mais ça m’a évité de partir dans une mauvaise direction devant tout le monde.",
+          "upvotes": 27
+        },
+        {
+          "id": "r3",
+          "author": "Yanis R.",
+          "initials": "YR",
+          "avatarColor": "mint",
+          "grade": "MP* · Stan",
+          "time": "il y a 20 min",
+          "text": "Je prépare chaque colle en 2 temps : 20 min de cours actif (je ferme le livre et je résume), puis 20 min d’exercice au tableau. Le plus dur, c’est de tenir la régularité.",
+          "upvotes": 18
+        }
+      ]
+    },
+    {
+      "id": "endomorphismes-qui-commutent",
+      "category": "Maths",
+      "title": "Une CNS pour que f∘g = g∘f, sans diagonaliser",
+      "excerpt": "Je bloque sur un exercice d’oral : on demande une condition nécessaire et suffisante sur les noyaux. Quelqu’un a une piste propre ?",
+      "author": "Adam K.",
+      "initials": "AK",
+      "avatarColor": "lilac",
+      "grade": "MP · Louis-le-Grand",
+      "time": "il y a 4 h",
+      "replies": 18,
+      "views": "864",
+      "upvotes": 52,
+      "tags": [
+        "algèbre",
+        "oral",
+        "endomorphismes"
+      ],
+      "pinned": false,
+      "content": "Je bloque sur un exercice d’oral : on demande une CNS pour que deux endomorphismes diagonalisables commutent, sans passer par une diagonalisation simultanée. J’ai essayé de regarder ce qui se passe sur les noyaux de P(f) et P(g), mais je ne vois pas où utiliser la diagonalisabilité.\n\nUne piste ou un contre-exemple à me donner ?",
+      "answers": [
+        {
+          "id": "r4",
+          "author": "Lina B.",
+          "initials": "LB",
+          "avatarColor": "lime",
+          "grade": "MP* · Ginette",
+          "time": "il y a 3 h",
+          "text": "Pense aux projecteurs spectraux. Si f est diagonalisable, les projecteurs sur ses espaces propres sont des polynômes en f. Commuter avec f revient à stabiliser ces espaces propres.",
+          "upvotes": 33
+        },
+        {
+          "id": "r5",
+          "author": "Mehdi A.",
+          "initials": "MA",
+          "avatarColor": "sky",
+          "grade": "MP · Hoche",
+          "time": "il y a 2 h",
+          "text": "Et si tu veux une CNS sans diagonaliser : f et g commutent ssi pour tout polynôme P, ker P(f) est stable par g (quand P(f) = 0 sur le spectre, il faut ajuster). C’est plus élégant à l’oral qu’on ne le pense.",
+          "upvotes": 16
+        }
+      ]
+    },
+    {
+      "id": "banque-ccinp-astuces",
+      "category": "Concours",
+      "title": "Vos meilleures astuces pour attaquer la banque CCINP",
+      "excerpt": "Les sujets sont longs et la gestion du temps me tue. Vous commencez par quoi : les petites questions ou le problème principal ?",
+      "author": "Sofia M.",
+      "initials": "SM",
+      "avatarColor": "peach",
+      "grade": "MP · Chaptal",
+      "time": "il y a 6 h",
+      "replies": 42,
+      "views": "2,1k",
+      "upvotes": 117,
+      "tags": [
+        "CCINP",
+        "stratégie",
+        "annales"
+      ],
+      "pinned": false,
+      "content": "Les sujets CCINP sont longs et la gestion du temps me tue. Vous commencez par quoi : les petites questions ou le problème principal ? Et vous faites vraiment les 3 problèmes dans l’ordre ?\n\nJe prends tous les conseils, même les plus basiques.",
+      "answers": [
+        {
+          "id": "r6",
+          "author": "Nour H.",
+          "initials": "NH",
+          "avatarColor": "butter",
+          "grade": "MP* · Pasteur",
+          "time": "il y a 5 h",
+          "text": "Je survole 5 minutes pour repérer les questions accessibles. Ensuite, je fais les questions courtes de chaque problème avant d’attaquer les gros morceaux. L’objectif est de sécuriser des points tôt, pas de finir un problème entier.",
+          "upvotes": 58
+        },
+        {
+          "id": "r7",
+          "author": "Yanis R.",
+          "initials": "YR",
+          "avatarColor": "mint",
+          "grade": "MP* · Stan",
+          "time": "il y a 4 h",
+          "text": "Une règle simple : jamais plus de 10 minutes bloqué sur une question. Je note l’idée en une ligne et je passe. À la fin, je reviens avec un regard neuf. Ça m’a fait gagner au moins 2 points.",
+          "upvotes": 36
+        }
+      ]
+    },
+    {
+      "id": "fiches-electromagnetisme",
+      "category": "Physique",
+      "title": "Fiches d’électromagnétisme : on mutualise ?",
+      "excerpt": "Je commence une fiche de synthèse sur Maxwell et l’induction. Je peux partager mon LaTeX ici, et on corrige à plusieurs ?",
+      "author": "Nour H.",
+      "initials": "NH",
+      "avatarColor": "butter",
+      "grade": "MP* · Pasteur",
+      "time": "hier",
+      "replies": 12,
+      "views": "640",
+      "upvotes": 73,
+      "tags": [
+        "LaTeX",
+        "électromagnétisme",
+        "fiches"
+      ],
+      "pinned": false,
+      "content": "Je commence une fiche de synthèse sur Maxwell et l’induction. Je peux partager mon LaTeX ici, et on corrige à plusieurs ? L’idée serait d’avoir une fiche propre, avec les hypothèses, les pièges et les schémas minimaux.\n\nSi ça vous dit, je mets le fichier en commentaire ce soir et on relit ensemble.",
+      "answers": [
+        {
+          "id": "r8",
+          "author": "Lina B.",
+          "initials": "LB",
+          "avatarColor": "lime",
+          "grade": "MP* · Ginette",
+          "time": "hier",
+          "text": "Partante pour la relecture ! Je peux ajouter la partie induction et les conventions de signe, c’est là que je fais toujours des erreurs.",
+          "upvotes": 19
+        }
+      ]
+    },
+    {
+      "id": "choisir-livre-info",
+      "category": "Informatique",
+      "title": "Quel livre pour progresser en informatique sans se noyer ?",
+      "excerpt": "Le cours de mon lycée est très léger. Je cherche un livre accessible pour consolider les algos et Python avant les concours.",
+      "author": "Mehdi A.",
+      "initials": "MA",
+      "avatarColor": "sky",
+      "grade": "MP · Hoche",
+      "time": "hier",
+      "replies": 9,
+      "views": "412",
+      "upvotes": 24,
+      "tags": [
+        "Python",
+        "livres",
+        "algorithmes"
+      ],
+      "pinned": false,
+      "content": "Le cours de mon lycée est très léger. Je cherche un livre accessible pour consolider les algos et Python avant les concours, sans tomber dans un traité de 900 pages.\n\nVous avez des références qui vous ont vraiment servi ?",
+      "answers": [
+        {
+          "id": "r9",
+          "author": "Adam K.",
+          "initials": "AK",
+          "avatarColor": "lilac",
+          "grade": "MP · Louis-le-Grand",
+          "time": "hier",
+          "text": "Le cours d’info de la prépa + les annales suffisent largement. Si tu veux un supplément, regarde les ressources de France IOI pour les algos, c’est très progressif et gratuit.",
+          "upvotes": 14
+        }
+      ]
+    }
+  ],
+  "dailyChallenge": {
+    "id": "nilpotente-inversible",
+    "eyebrow": "Défi du jour · MP · Algèbre",
+    "title": "La nilpotence cache toujours un inverse.",
+    "statement": "Soit <span class=\"inline-tex\" data-tex=\"A \\in \\mathrm{M}_n(\\mathbb{R})\"></span> telle que <span class=\"inline-tex\" data-tex=\"A^3 = 0\"></span>. Montrer que <span class=\"inline-tex\" data-tex=\"I_n + A\"></span> est inversible et exprimer son inverse.",
+    "equation": "A^3 = 0",
+    "participants": 184,
+    "xp": 40,
+    "steps": [
+      "Calcule le produit <span class=\"inline-tex\" data-tex=\"(I+A)(I-A+A^2)\"></span>.",
+      "La relation <span class=\"inline-tex\" data-tex=\"A^3=0\"></span> fait disparaître le reste cubique.",
+      "Tu obtiens <span class=\"inline-tex\" data-tex=\"I\"></span> à gauche et à droite : l’inverse est <span class=\"inline-tex\" data-tex=\"I-A+A^2\"></span>."
+    ]
+  }
+};

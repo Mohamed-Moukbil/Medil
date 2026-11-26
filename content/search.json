@@ -1,0 +1,202 @@
+[
+  {
+    "type": "course",
+    "id": "reduction-endomorphismes",
+    "text": "Réduction des endomorphismes Polynômes d'endomorphismes, diagonalisation, trigonalisation et forme de Jordan : la réduction racontée sans trous. Algèbre Maths MP Manipuler les polynômes d’un endomorphisme avec assurance. Savoir quand diagonaliser — et quoi faire quand ce n’est pas possible. Construire une réduction de Jordan sans réciter un théorème. Polynômes d’endomorphismes Le lemme des noyaux Diagonalisation Trigonalisation Réduction de Jordan Applications aux suites et aux matrices Faire agir un polynôme sur un endomorphisme 01 · Le socle Soit . Pour , on définit naturellement . Cette petite construction transforme un problème de géométrie en un problème d’algèbre commutative. L’objet central est l’idéal annulateur . Comme est principal, cet idéal admet un unique générateur unitaire : le polynôme minimal . \\chi_u(u)=0 \\quad \\text{et} \\quad \\pi_u \\mid \\chi_u Cayley–Hamilton n’est pas une astuce de calcul : c’est l’énoncé qui relie spectre, trace et réduction. Garde toujours en tête que π u divise χ u , et qu’ils ont les mêmes racines. Le lemme des noyaux, votre meilleur ami 02 · La mécanique Si avec les deux à deux premiers entre eux, alors . C’est ce résultat, bien plus que la formule de changement de base, qui fait vivre toute la réduction. En particulier, on récupère les sous-espaces caractéristiques et l’on décompose l’espace en morceaux stables sur lesquels l’endomorphisme est plus simple. \\ker\\bigl((P_1P_2)(u)\\bigr) = \\ker P_1(u) \\oplus \\ker P_2(u) Réflexe de rédaction : vérifie toujours l’hypothèse de coprimalité avant d’écrire une somme directe de noyaux. Sans elle, le lemme peut tomber en défaut. Diagonaliser, vraiment 03 · Le critère Un endomorphisme est diagonalisable si et seulement si son polynôme minimal est scindé à racines simples. En pratique, on cherche le spectre, puis on teste si la somme des dimensions des espaces propres vaut . La matrice de passage n’est pas un détail : ses colonnes sont des vecteurs propres. Une réduction correctement rédigée se termine donc toujours par une phrase du type « après regroupement des colonnes en bases adaptées ». E = \\bigoplus_{\\lambda \\in \\operatorname{Sp}(u)} \\ker(u-\\lambda \\mathrm{Id}) Astuce anti-erreur : diagonaliser u et diagonaliser sa matrice dans une base donnée sont deux énoncés différents. Le second nécessite la matrice de passage."
+  },
+  {
+    "type": "course",
+    "id": "suites-series-fonctions",
+    "text": "Suites & séries de fonctions Convergence simple, uniforme, normale et interversion limite / intégrale : les bons réflexes pour rédiger sans se tromper. Analyse Maths MP Distinguer convergence simple et convergence uniforme sur un exemple. Utiliser le critère de Cauchy uniforme sans hésitation. Justifier une interversion par convergence normale en trois lignes. Convergence simple Convergence uniforme Convergence normale Continuité de la limite Dérivation et intégration Séries entières Convergence simple : la définition qui ne pardonne pas 01 · Point de départ La convergence simple est une propriété ponctuelle . Pour chaque , la suite numérique converge. Rien de plus. Rien qui autorise à échanger limite et intégrale. L’erreur classique consiste à fixer un qui dépend de puis à prétendre avoir montré l’uniformité. Le rang doit être commun à tous les points. \\forall x\\in I,\\ \\forall \\varepsilon>0,\\ \\exists N_{x,\\varepsilon},\\quad n\\ge N_{x,\\varepsilon} \\Longrightarrow |f_n(x)-f(x)|\\le \\varepsilon Pour réfuter l’uniformité, cherche une suite x n telle que |f n (x n ) − f(x n )| ne tende pas vers 0. C’est souvent plus rapide que de calculer un sup. La norme uniforme comme boussole 02 · Le saut de qualité Sur un espace de fonctions bornées, la convergence uniforme n’est autre que la convergence au sens de . Cette lecture linéaire clarifie beaucoup de théorèmes d’échange. Le théorème d’interversion est alors une conséquence de l’inégalité triangulaire : on contrôle l’écart à la limite uniformément, puis on conclut intégrale par intégrale. \\left|\\int_a^b f_n(t)\\,dt - \\int_a^b f(t)\\,dt\\right| \\le (b-a)\\,\\lVert f_n-f\\rVert_\\infty Sur un segment, convergence uniforme + continuité donne continuité de la limite. Sur un intervalle non borné, il faut un argument supplémentaire. Convergence normale : l’arme fatale 03 · La boîte à outils La convergence normale est plus forte que la convergence uniforme. Elle a un immense avantage : elle se teste avec des majorations de séries numériques, sans calcul de sup de reste. Dès que tu reconnais un terme d’une série entière, pense « convergence normale sur tout compact ». C’est presque toujours le bon cadre pour dériver terme à terme. \\sum_{n\\ge 0} \\lVert f_n \\rVert_\\infty < +\\infty \\quad\\Longrightarrow\\quad \\sum f_n \\text{ converge normalement} La réciproque est fausse. Une série peut converger uniformément sans converger normalement ; la série alternée de fonctions est le contre-exemple à garder en tête."
+  },
+  {
+    "type": "course",
+    "id": "probabilites-discretes",
+    "text": "Probabilités & variables aléatoires De l’espace probabilisé aux variables aléatoires finies : les bases solides, avec les pièges de rédaction classiques. Probabilités Maths MPSI Modéliser proprement un espace probabilisé fini. Calculer loi, espérance et variance sans oublier les hypothèses. Utiliser la linéarité de l’espérance avec discernement. Espaces probabilisés finis Conditionnement Indépendance Variables aléatoires Espérance et variance Lois usuelles Nommer l’univers avant de calculer 01 · Le modèle Un calcul probabiliste commence par une phrase de modélisation. Quelle expérience ? Quel univers ? Quelle hypothèse d’équiprobabilité ? Sans ces mots, la formule la plus juste devient une réponse incomplète. Sur un univers fini, une probabilité est une masse totale égale à 1 répartie sur les issues. Le passage aux événements est ensuite entièrement additif. \\mathbb{P}\\left(\\bigcup_{i\\in I} A_i\\right) = \\sum_{i\\in I} \\mathbb{P}(A_i) \\quad \\text{si les } A_i \\text{ sont deux à deux incompatibles} Astuce de rédaction : note A l’événement en lettres, puis sa probabilité. Cela évite les phrases floues du type « il y a 2 chances sur 5 ici ». Conditionner, ce n’est pas biaiser 02 · L’information La probabilité conditionnelle est une probabilité sur le même univers, mais restreinte à l’événement . La formule des probabilités totales découpe naturellement un univers en scénarios incompatibles. Le piège fréquent : oublier que la probabilité conditionnelle change l’espace de référence. Un changement de conditionnement peut transformer un événement rare en événement presque certain. \\mathbb{P}(A\\mid B) = \\frac{\\mathbb{P}(A\\cap B)}{\\mathbb{P}(B)}, \\qquad \\mathbb{P}(B)>0 La formule de Bayes se retrouve en trente secondes avec un arbre pondéré. Dessine l’arbre avant de manipuler les formules. Lire une variable aléatoire comme une fonction 03 · La loi Une variable aléatoire finie est une application de l’univers vers . Sa loi est l’image de la probabilité : elle regroupe les issues qui donnent la même valeur. L’espérance est une moyenne pondérée. Sa linéarité ne demande aucune hypothèse d’indépendance, contrairement à la variance d’une somme. \\mathbb{E}(X+Y)=\\mathbb{E}(X)+\\mathbb{E}(Y), \\qquad \\mathbb{V}(X+Y)=\\mathbb{V}(X)+\\mathbb{V}(Y)+2\\operatorname{Cov}(X,Y) L’indépendance sert à factoriser les espérances de produits. Pour une somme, la linéarité suffit toujours."
+  },
+  {
+    "type": "course",
+    "id": "electromagnetisme",
+    "text": "Électromagnétisme Maxwell, potentiels et induction : les équations prennent enfin du sens grâce aux schémas et aux cas d’école. Physique Physique MP Passer d’une carte de champ à une description locale. Choisir entre potentiel scalaire et vecteur. Rédiger proprement un problème d’induction. Champ et potentiel Théorème de Gauss Équations de Maxwell Induction Ondes électromagnétiques Milieux diélectriques Gauss commence par un dessin 01 · Symétries Les symétries et invariances déterminent la direction du champ avant tout calcul. Une surface de Gauss correcte épouse ces symétries : sphère pour une distribution sphérique, cylindre pour un fil infini. Le théorème de Gauss relie le flux à la charge enfermée. Mais la rédaction doit préciser la surface choisie, son orientation et le champ qui la traverse. \\oiint_{\\Sigma}\\vec{E}\\cdot d\\vec{S} = \\frac{Q_{\\rm int}}{\\varepsilon_0} Le champ électrique est toujours normal à la surface d’un conducteur en équilibre : c’est souvent le premier argument à poser. Quatre équations, une histoire 02 · Le cœur Les équations de Maxwell disent comment les charges créent le champ et comment les champs s’auto-entretiennent. Le terme de courant de déplacement, souvent oublié, est précisément ce qui rend les ondes possibles. En régime stationnaire, les équations découplent électricité et magnétisme. Dès que le régime varie, les deux champs deviennent inséparables. \\nabla\\times\\vec{B} = \\mu_0\\vec{j} + \\mu_0\\varepsilon_0\\frac{\\partial \\vec{E}}{\\partial t} Pour un écran de concours, commence par indiquer le référentiel, le régime et les approximations. Une équation hors contexte ne vaut que la moitié des points. L’induction, ou la variation comme moteur 03 · Le mouvement La force électromotrice induite mesure le flux qui varie. Le signe n’est jamais décoratif : il traduit la loi de Lenz, donc l’opposition à la cause qui a produit le courant. Un bon raisonnement caractérise d’abord le sens du champ inducteur, puis le sens du flux, enfin le sens du courant induit. Le calcul vient après. e = -\\frac{d\\Phi}{dt} Deux causes possibles de variation du flux : la surface ou le champ. Pense à traiter les deux, même si l’énoncé semble n’en désigner qu’une."
+  },
+  {
+    "type": "course",
+    "id": "mecanique-quantique",
+    "text": "Mécanique quantique Fonction d’onde, superposition et puits de potentiel : une introduction rigoureuse, sans détour métaphysique. Physique Physique MP Relier amplitude et probabilité de présence. Résoudre l’équation de Schrödinger dans les cas 1D usuels. Interpréter un spectre quantifié sans réciter. Fonction d’onde Équation de Schrödinger Marche et barrière Puits infini Oscillateur harmonique Effet tunnel Une amplitude, pas une trajectoire 01 · Le vocabulaire En mécanique quantique, l’état d’une particule est décrit par une fonction d’onde. Son module au carré donne une densité de probabilité de présence. Cette lecture probabiliste est au cœur de l’interprétation de Born. La fonction d’onde doit être normalisable et remplir les conditions de raccordement imposées par le potentiel. Les conditions aux limites sont donc les véritables guides de calcul. \\int_{\\mathbb{R}} |\\psi(x,t)|^2\\,dx = 1, \\qquad dP = |\\psi(x,t)|^2\\,dx Une fonction d’onde n’est pas une onde matérielle. Ce que l’on suit, c’est une amplitude de probabilité, pas une trajectoire déterministe. Schrödinger, version stationnaire 02 · Le moteur Pour un potentiel indépendant du temps, on cherche des solutions séparables. L’équation de Schrödinger stationnaire devient une équation différentielle en espace, avec l’énergie comme paramètre. Les solutions acceptables imposent des conditions de continuité. C’est précisément ce qui fait apparaître des niveaux d’énergie discrets dans un puits. -\\frac{\\hbar^2}{2m}\\frac{d^2\\varphi}{dx^2} + V(x)\\varphi = E\\varphi Pense toujours à vérifier la continuité de ψ et de ψ′ aux interfaces, sauf lorsque le potentiel présente un pic de Dirac. Le puits infini, laboratoire minimal 03 · Le puits Le puits infini est le problème à connaître par cœur. Les modes propres sont des sinus, quantifiés par un entier. L’énergie minimale n’est jamais nulle : c’est le prix de la localisation. Ce modèle sert de base pour comprendre la quantification des niveaux dans les systèmes plus réalistes. Il ne faut pas le traiter comme une simple formule à réciter. E_n = \\frac{n^2\\pi^2\\hbar^2}{2mL^2}, \\qquad \\varphi_n(x)=\\sqrt{\\frac{2}{L}}\\sin\\left(\\frac{n\\pi x}{L}\\right) L’énergie de l’état fondamental pour n = 1 n’est pas une offset arbitraire : elle est conséquence des conditions aux limites."
+  },
+  {
+    "type": "course",
+    "id": "thermodynamique",
+    "text": "Thermodynamique Premier et second principe, transformations et machines thermiques : les bilans sans les erreurs de signe. Physique Physique MPSI Choisir un système et un bilan correctement. Distinguer une variable d’état d’une grandeur de transfert. Utiliser l’entropie pour caractériser une évolution. Le système thermodynamique Premier principe Second principe Transformations usuelles Machines thermiques Changements d’état Un bon bilan commence par un bon système 01 · Le cadre Avant toute équation, délimite le système, précise le référentiel, et identifie les échanges. Une erreur de signe est presque toujours une erreur de système ou de convention. La thermodynamique manipulate des variables d’état et des grandeurs de transfert. Une variation de U s’écrit dU ; une quantité de chaleur reçue s’écrit δQ. Mélanger les deux notations, c’est mélanger deux natures. dU = \\delta Q + \\delta W Convention reçue : δQ et δW sont algébriques. Un transfert entrant est positif, un transfert sortant est négatif. Écris cette convention en tête de copie. L’entropie, juge des transformations 02 · L’irréversibilité L’entropie d’un système isolé ne diminue jamais. Pour un système non isolé, on distingue l’entropie échangée, réversible, et l’entropie créée, positive ou nulle. C’est cette entropie créée qui quantifie l’irréversibilité. Une transformation réversible est une limite idéale, jamais une hypothèse gratuite. \\Delta S = S_{\\rm échangée} + S_{\\rm créée}, \\qquad S_{\\rm créée}\\ge 0 Pour un cycle, l’entropie d’un système revient à sa valeur initiale. Ce n’est pas le cas de l’entropie de l’univers, qui ne fait qu’augmenter. Carnot : le rendement limite 03 · Les machines Une machine thermique convertit de la chaleur en travail. Le moteur de Carnot, entièrement réversible, donne le meilleur rendement possible entre deux sources de températures fixées. Aucune machine réelle ne peut dépasser ce rendement. Ce résultat n’est pas une recette technologique, mais une conséquence directe du second principe. \\eta_{\\rm Carnot} = 1 - \\frac{T_{\\rm froid}}{T_{\\rm chaud}} Attention aux températures : les rendements thermodynamiques utilisent toujours des kelvins, jamais des degrés Celsius."
+  },
+  {
+    "type": "course",
+    "id": "algorithmique-complexite",
+    "text": "Algorithmique & complexité Diviser pour régner, structures de données et preuves de correction : le bagage informatique de l’écrit et de l’oral. Informatique Informatique MP Mesurer une complexité en fonction de la taille d’entrée. Prouver la correction d’un algorithme par invariant. Choisir la bonne structure de données selon la complexité visée. Complexité asymptotique Preuves par invariant Diviser pour régner Structures de données Graphes Algorithmes gloutons La complexité n’est pas un temps d’exécution 01 · Mesurer La complexité décrit l’évolution du coût lorsque la taille de l’entrée grandit. Elle demande de choisir une unité : nombre de comparaisons, d’affectations, d’opérations élémentaires. Cette unité doit être annoncée. On distingue le pire cas, le cas moyen et le meilleur cas. Pour un concours, le pire cas est la convention par défaut, sauf indication contraire de l’énoncé. T(n) = 3n^2 + 5n + 7 = O(n^2) Les constantes disparaissent dans le O, mais elles peuvent compter dans la vraie vie. Ne confonds pas une amélioration asymptotique avec une optimisation pertinente sur toutes les tailles. Un invariant pour verrouiller la boucle 02 · Prouver Un invariant de boucle est une propriété vraie avant la boucle, préservée à chaque itération, et utile à la sortie. Il transforme une intuition en preuve. La terminaison se prouve séparément, avec une quantité positive qui décroît à chaque itération. Correction partielle et terminaison forment deux obligations distinctes. \\text{Invariant} \\land \\text{condition d’arrêt} \\Longrightarrow \\text{propriété de sortie} La majoration avec un variant est un classique de l’oral : décris-le explicitement, puis justifie qu’il est borné inférieurement. Diviser pour régner, sans récursion infinie 03 · Découper Un algorithme diviser-pour-régner se reconnaît à trois étapes : diviser, résoudre récursivement, recombiner. La complexité émerge de l’équation de récurrence, pas du nombre de lignes de code. Le tri fusion en est l’exemple canonique : division en deux, tri des moitiés, fusion linéaire. Son coût total est en n log n. T(n)=2T\\!\\left(\\frac{n}{2}\\right)+O(n)=\\Theta(n\\log n) Pour appliquer le master theorem, identifie le coût de recombinaison. Une fusion en O(n) n’est pas la même chose qu’une fusion en O(n²)."
+  },
+  {
+    "type": "course",
+    "id": "python-prepa",
+    "text": "Python pour la prépa Listes, dictionnaires, classes et complexité : écrire du code propre et lisible le jour du concours. Python Informatique MPSI Choisir la structure Python adaptée. Écrire une fonction documentée et testable. Comprendre le coût réel des opérations courantes. Syntaxe essentielle Listes et compréhensions Dictionnaires Classes et objets Récursivité Bonnes pratiques Penser en structures, pas en boucles 01 · Les bases Le choix d’une structure de données est souvent plus déterminant que la micro-optimisation d’une boucle. Une liste convient à un parcours ordonné, un dictionnaire à une recherche par clé, un ensemble à un test d’appartenance. Python ne rend pas impossible le calcul de complexité : il le déplace. Une recherche dans une liste est linéaire, une recherche dans un dictionnaire est en moyenne constante. T_{liste}(n)=O(n) \\qquad T_{dict}(n)=O(1) \\text{ en moyenne} Connais tes coûts : un `in` sur une liste est O(n), un `in` sur un set est O(1) en moyenne. Cette différence suffit souvent à passer un test de performance. Un code lisible est un code qui rapporte 02 · Écrire Nommer les variables, découper les responsabilités, documenter les hypothèses : ces habitudes font gagner des points à l’oral. Le correcteur doit pouvoir suivre l’intention sans exécuter mentalement tout le programme. En prépa, on privilégie la clarté. Un code de vingt lignes compréhensible vaut mieux qu’un code de huit lignes illisible, surtout lorsqu’il faut le corriger au tableau. \\texttt{def est\\_pair(n):\\n return n \\% 2 == 0} Évite les effets de bord dans une fonction de calcul. Une fonction qui modifie son argument doit le dire dans son nom ou sa documentation. Récursivité : élégante, mais bornée 03 · La profondeur Une fonction récursive se lit souvent mieux qu’une boucle. Mais chaque appel consume de la pile d’exécution. Une récursion profonde peut dépasser les limites de Python. La version itérative n’est pas toujours meilleure, mais elle évite ce risque. À l’écrit, on privilégie la version la plus lisible qui respecte les contraintes de taille. \\texttt{sys.getrecursionlimit()} \\approx 1000 Si une récursion peut dépasser la profondeur autorisée, transforme-la en boucle avec une pile explicite, ou utilise la mémoïsation si les sous-problèmes se répètent."
+  },
+  {
+    "type": "course",
+    "id": "topologie-evn",
+    "text": "Topologie & espaces vectoriels normés Normes, compacité et complétude : le langage qui rend l’analyse en dimension infinie contrôlable. Analyse Maths MP Manipuler les normes et les distances sans confusion. Identifier et utiliser la compacité. Comprendre la complétude comme une propriété de Cauchy. Normes et distances Ouverts et fermés Suites et adhérence Compacité Complétude Théorèmes de point fixe Toutes les normes ne se valent pas 01 · Mesurer En dimension finie, toutes les normes sont équivalentes. En dimension infinie, ce n’est plus vrai, et les phénomènes topologiques deviennent beaucoup plus riches. C’est là que la prépa bascule vers l’analyse fonctionnelle. Une norme doit satisfaire trois axiomes : positivité définie, homogénéité et inégalité triangulaire. Vérifier ces axiomes est un classique d’oral. \\lVert \\lambda x \\rVert = |\\lambda|\\,\\lVert x\\rVert L’équivalence des normes n’est pas l’égalité des normes. Elle dit seulement que les notions de convergence et de continuité sont les mêmes. Être compact, c’est être borné et complet 02 · Contrôler En dimension finie, compact équivaut à fermé borné (Bolzano–Weierstrass). En dimension infinie, cette équivalence tombe : la boule unité fermée d’un espace normé n’est jamais compacte sauf en dimension finie. La compacité est une arme d’existence : une fonction continue sur un compact atteint ses bornes, une suite d’un compact admet une sous-suite convergente. C’est souvent le chaînon manquant d’une preuve. K \\text{ compact},\\ f \\in \\mathcal{C}(K,\\mathbb{R}) \\Longrightarrow f \\text{ est bornée et atteint ses bornes} Garde en tête le théorème de Riesz : c’est lui qui explique pourquoi la dimension infinie change tout. Un énoncé de compacité doit toujours préciser l’espace ambiant. Complet, ou l’assurance de converger 03 · Converger Un espace complet garantit que toute suite de Cauchy converge. On peut alors montrer l’existence d’une limite sans deviner sa valeur à l’avance. C’est le cœur des théorèmes de point fixe. L’incomplétude classique de montre que la complétude n’est pas une évidence : elle dépend du corps et de la distance choisis. \\text{Toute suite de Cauchy converge} \\iff (E,d) \\text{ est complet} Pour appliquer Banach, il te faut une application contractante d’un espace complet dans lui-même. L’hypothèse de contraction stricte, avec un coefficient k &lt; 1 , est indispensable."
+  },
+  {
+    "type": "exercise",
+    "id": "nilpotente-inversible",
+    "text": "Quand nilpotence rime avec inverse Un énoncé court, une preuve élégante et une leçon à garder pour la suite. Soit telle que . Montrer que est inversible et exprimer son inverse comme un polynôme en . Pense à l’identité remarquable . I_n - A + A^2 Faire apparaître la relation On calcule le produit . L’identité remarquable tronquée donne un reste cubique. (I+A)(I-A+A^2)=I+A^3=I Conclure l’inversibilité Comme , le produit vaut l’identité. De même, dans l’autre sens, le produit vaut l’identité. Ainsi admet un inverse à gauche et à droite, donc est inversible. (I-A+A^2)(I+A)=I+A^3=I La morale du problème Toute matrice nilpotente est « proche » d’une matrice invertible : est toujours inversible. La preuve est un exemple modèle de troncature polynomiale."
+  },
+  {
+    "type": "exercise",
+    "id": "sinus-racine",
+    "text": "Un sinus qui joue avec les racines Une série aux allures inoffensives, un développement asymptotique décisif. Étudier la nature de la série . Écris puis regarde la parité de n. Convergente, mais pas absolument. Développer la racine On factorise par n et on développe en puissances de 1/n². Le terme principal permet de comprendre le comportement de l’argument. \\sqrt{n^2+1}=n+\\frac1{2n}+O\\!\\left(\\frac1{n^3}\\right) Séparer selon la parité Pour n pair, le sinus est proche de π/(2n). Pour n impair, il est proche de −π/(2n). Dans les deux cas, le terme général est équivalent à ±π/(2n). En regroupant par paires, la série se comporte comme une série harmonique alternée. \\sin\\!\\left(\\pi\\sqrt{n^2+1}\\right)=(-1)^n\\frac{\\pi}{2n}+O(n^{-2}) Conclure avec précaution La série brute ne converge pas absolument. Après regroupement par paires, on obtient une série convergente par le critère spécial des séries alternées. On en déduit que la série initiale converge."
+  },
+  {
+    "type": "exercise",
+    "id": "marche-aleatoire",
+    "text": "Le retour du marcheur Une marche aléatoire, un coefficient binomial et un équivalent à retrouver. On lance une pièce équilibrée à chaque étape : est la différence entre le nombre de piles et de faces. Montrer que . Exprime l’événement en termes de coefficients binomiaux, puis utilise la formule de Stirling. \\sim \\frac{1}{\\sqrt{\\pi n}} Compter les chemins Revenir à zéro en 2n pas signifie avoir exactement n piles et n faces. Le nombre de trajectoires favorables est donc le coefficient binomial central. \\mathbb{P}(S_{2n}=0)=\\binom{2n}{n}\\,\\frac{1}{2^{2n}} Appliquer Stirling On remplace les factorielles par leur équivalent de Stirling, puis on simplifie les puissances de 2 et de n. \\binom{2n}{n}\\frac{1}{2^{2n}}\\sim \\frac{4^n}{\\sqrt{\\pi n}}\\cdot\\frac{1}{2^{2n}} Conclure Les puissances se compensent et on obtient l’équivalent attendu. La probabilité de retour tend vers zéro, mais assez lentement pour que la marche soit récurrente en dimension 1."
+  },
+  {
+    "type": "exercise",
+    "id": "lunette-astronomique",
+    "text": "La lunette, sans faux foyer Grossissement, cercle oculaire et condition de vision confortable. On considère une lunette astronomique afocale constituée d’un objectif de focale et d’un oculaire de focale . Déterminer le grossissement et la position du cercle oculaire. Le foyer image de l’objectif coïncide avec le foyer objet de l’oculaire. G = -f′₁/f′₂ ; cercle oculaire derrière l’oculaire. Schéma avant calcul La lunette est afocale : le foyer image de l’objectif et le foyer objet de l’oculaire coïncident. Un rayon parallèle à l’axe émerge parallèle à l’axe. Relier les angles Pour un objet à l’infini, le grossissement compare les angles sous lesquels on voit l’image et l’objet. La relation de conjugaison pour l’oculaire donne le facteur de rapport des focales. G = \\frac{\\alpha'}{\\alpha} = -\\frac{f'_1}{f'_2} Placer le cercle oculaire Le cercle oculaire est l’image de l’objectif à travers l’oculaire. Sa position s’obtient par la relation de conjugaison appliquée à l’objectif vu par l’oculaire. \\overline{O_2 A'} = \\frac{f'_2(f'_1+f'_2)}{f'_1}"
+  },
+  {
+    "type": "exercise",
+    "id": "effet-tunnel",
+    "text": "Traverser l’interdit Une barrière, des exponentielles et une probabilité qui ne s’annule jamais. Une particule d’énergie rencontre une barrière rectangulaire de hauteur et de largeur . Justifier qualitativement l’effet tunnel et donner l’expression du coefficient de transmission. Dans la barrière, la solution est une combinaison d’exponentielles réelles. La continuité impose un recouvrement non nul. T ≠ 0, décroissance exponentielle avec la largeur. Écrire l’équation dans les trois zones À gauche et à droite, les solutions sont des ondes planes. Dans la barrière, l’énergie cinétique est négative : les solutions sont exponentielles. \\psi_{\\rm II}(x)=Ae^{\\kappa x}+Be^{-\\kappa x},\\quad \\kappa=\\sqrt{\\frac{2m(V_0-E)}{\\hbar^2}} Raccorder les solutions Les conditions de continuité de ψ et de sa dérivée aux deux interfaces donnent quatre équations. Le coefficient de transmission est le rapport des courants de probabilité à droite et à gauche. Lire le résultat Le coefficient décroît exponentiellement avec la largeur et la hauteur de la barrière. Il n’est jamais strictement nul pour une barrière de largeur finie : c’est l’effet tunnel. T\\sim e^{-2\\kappa a}"
+  },
+  {
+    "type": "exercise",
+    "id": "sous-tableau-somme-nulle",
+    "text": "Le sous-tableau qui s’annule Un problème de tableau qui se résout en un seul passage. Étant donné un tableau d’entiers, déterminer s’il existe un sous-tableau contigu non vide dont la somme est nulle. Proposer un algorithme en temps. Deux sommes préfixes égales signalent un sous-tableau de somme nulle. Un dictionnaire de sommes préfixes donne O(n). Sommes préfixes On note . Un sous-tableau de i à j a une somme nulle si et seulement si . \\sum_{k=i}^{j} a_k = 0 \\iff S_i = S_{j+1} Un dictionnaire On parcourt le tableau en maintenant la somme courante. À chaque étape, on vérifie si cette somme a déjà été rencontrée ; sinon on l’insère dans un ensemble. Initialement, la somme 0 correspond au sous-tableau vide. \\texttt{if s in seen: return True; seen.add(s)} Complexité Chaque élément est traité une fois et chaque opération de dictionnaire est en moyenne constante. Le temps total est linéaire, l’espace auxiliaire est au pire linéaire."
+  },
+  {
+    "type": "exercise",
+    "id": "matrice-trace",
+    "text": "La trace ne ment jamais Une preuve courte et un critère d’impossibilité très utile. Montrer que si , alors est impossible. Prends la trace des deux côtés. Impossible car tr([A,B]) = 0 ≠ n. Une égalité de traces La trace est linéaire et vérifie l’identité de cyclicité. On en déduit que la trace du commutateur est nulle. \\operatorname{tr}(AB-BA)=0 Contradiction La trace de l’identité vaut n, qui est strictement positif. L’égalité demandée impliquerait donc 0 = n, ce qui est absurde. 0 = \\operatorname{tr}(I_n)=n Généralisation Dans un corps de caractéristique non nulle, l’argument tombe. C’est un rappel utile : une preuve dépend toujours de son contexte."
+  },
+  {
+    "type": "exercise",
+    "id": "suite-convergence-uniforme",
+    "text": "Une limite qui n’aime pas le sup Trouver la limite, puis comprendre pourquoi la convergence n’est pas uniforme. Pour , on pose . Déterminer la limite simple et montrer que la convergence n’est pas uniforme. La limite simple est nulle partout. Pour l’uniformité, évalue en . Limite nulle, mais convergence non uniforme. Limite simple Pour x = 0 et x = 1, la suite est nulle. Pour x ∈ ]0,1[, (1−x)^n tend vers 0, donc f_n(x) tend vers 0. Un contretemps On évalue la suite au point 1/n, dans [0,1]. La valeur ne tend pas vers zéro. f_n(1/n)=\\frac{1}{n}\\left(1-\\frac1n\\right)^n\\to \\frac1e \\neq 0 Conclusion Une suite peut converger en tout point sans que la distance uniforme à sa limite tende vers zéro. C’est exactement le fossé entre convergence simple et uniforme."
+  },
+  {
+    "type": "exercise",
+    "id": "gaz-parfait",
+    "text": "Le détour par l’entropie Un gaz parfait, une détente et un bilan qui repose sur une fonction d’état. Une mole de gaz parfait subit une détente isotherme réversible à température de à . Calculer le travail reçu, la chaleur reçue et la variation d’entropie. Pour un gaz parfait, U ne dépend que de T. Utilise l’identité thermodynamique. W = −RT ln(V₂/V₁), Q = RT ln(V₂/V₁), ΔS = R ln(V₂/V₁). Bilan d’énergie La transformation est isotherme et le gaz est parfait : ΔU = 0. Le travail reçu vaut donc l’opposé du travail des forces de pression. W=-nRT\\ln\\frac{V_2}{V_1} Chaleur Par le premier principe, ΔU = Q + W, donc Q = −W. Le gaz reçoit de la chaleur pendant la détente. Entropie L’entropie est une fonction d’état. Pour un gaz parfait à température constante, l’identité thermodynamique donne le résultat. \\Delta S = nR\\ln\\frac{V_2}{V_1}"
+  },
+  {
+    "type": "exercise",
+    "id": "dichotomie",
+    "text": "Couper en deux, conquérir La dichotomie, ses invariants et le piège des bornes. Écrire une recherche dichotomique itérative qui renvoie l’indice d’une valeur dans un tableau trié, ou −1. Prouver la terminaison et la correction. Maintiens un invariant sur l’intervalle [g, d] et réduis strictement sa taille à chaque itération. Recherche dichotomique en O(log n), avec invariant et terminaison. Invariant On maintient que si la valeur est présente, alors son indice appartient à l’intervalle de recherche. La valeur médiane permet d’éliminer une moitié. Terminaison La quantité d − g diminue strictement à chaque itération. Elle est minorée par −1, donc la boucle termine. T(n)=T(n/2)+O(1)=O(\\log n) Pièges Attention aux débordements arithmétiques dans le calcul du milieu et à la mise à jour des bornes. Utilise plutôt que dans les langages à entiers bornés."
+  },
+  {
+    "type": "paper",
+    "id": "x-ens-2025-maths-a",
+    "text": "Épreuve de mathématiques A X/ENS 2025 Maths MP 2 problèmes"
+  },
+  {
+    "type": "paper",
+    "id": "x-ens-2025-maths-b",
+    "text": "Épreuve de mathématiques B X/ENS 2025 Maths MP 3 parties"
+  },
+  {
+    "type": "paper",
+    "id": "x-ens-2024-info-a",
+    "text": "Épreuve d’informatique A X/ENS 2024 Informatique MP 2 problèmes"
+  },
+  {
+    "type": "paper",
+    "id": "mines-2024-maths-2",
+    "text": "Épreuve de mathématiques 2 Mines-Ponts 2024 Maths MP 2 problèmes"
+  },
+  {
+    "type": "paper",
+    "id": "mines-2024-physique-1",
+    "text": "Épreuve de physique 1 Mines-Ponts 2024 Physique MP 3 parties"
+  },
+  {
+    "type": "paper",
+    "id": "centrale-2024-maths-1",
+    "text": "Épreuve de mathématiques 1 Centrale 2024 Maths MP 2 problèmes"
+  },
+  {
+    "type": "paper",
+    "id": "centrale-2023-physique-chimie",
+    "text": "Épreuve de physique-chimie Centrale 2023 Physique MP 3 parties"
+  },
+  {
+    "type": "paper",
+    "id": "ccinp-2025-maths-1",
+    "text": "Épreuve de mathématiques 1 CCINP 2025 Maths MP 3 problèmes"
+  },
+  {
+    "type": "paper",
+    "id": "ccinp-2025-physique",
+    "text": "Épreuve de physique CCINP 2025 Physique MP 2 parties"
+  },
+  {
+    "type": "paper",
+    "id": "ccinp-2024-info",
+    "text": "Épreuve d’informatique CCINP 2024 Informatique MP 2 problèmes"
+  },
+  {
+    "type": "paper",
+    "id": "e3a-2024-maths-a",
+    "text": "Épreuve de mathématiques A e3a 2024 Maths MP 3 exercices"
+  },
+  {
+    "type": "paper",
+    "id": "e3a-2023-physique",
+    "text": "Épreuve de physique e3a 2023 Physique MP 3 exercices"
+  },
+  {
+    "type": "paper",
+    "id": "x-ens-2024-maths-a",
+    "text": "Épreuve de mathématiques A X/ENS 2024 Maths MP 2 problèmes"
+  },
+  {
+    "type": "paper",
+    "id": "mines-2023-info",
+    "text": "Épreuve d’informatique Mines-Ponts 2023 Informatique MP 2 problèmes"
+  },
+  {
+    "type": "paper",
+    "id": "centrale-2025-maths-2",
+    "text": "Épreuve de mathématiques 2 Centrale 2025 Maths MP 2 problèmes"
+  },
+  {
+    "type": "paper",
+    "id": "ccinp-2023-maths-2",
+    "text": "Épreuve de mathématiques 2 CCINP 2023 Maths MP 3 problèmes"
+  },
+  {
+    "type": "thread",
+    "id": "colles-maths-mp",
+    "text": "Comment vous gérez vraiment les colles de maths en MP* ? Je sors de colle avec l’impression de comprendre en salle et de tout perdre au tableau. Vous avez des rituels de préparation qui marchent ? Lina B. Méthode khôlle méthode oral Ce qui a tout changé pour moi : refaire les démonstrations à voix haute, sans support, en 3 minutes chrono. Au début c’est humiliant, puis tu construis des automatismes. Je note les trous dans un carnet à part. Demande à ton colleur de te laisser 30 secondes de réflexion silencieuse avant d’écrire. Ça paraît bête, mais ça m’a évité de partir dans une mauvaise direction devant tout le monde. Je prépare chaque colle en 2 temps : 20 min de cours actif (je ferme le livre et je résume), puis 20 min d’exercice au tableau. Le plus dur, c’est de tenir la régularité."
+  },
+  {
+    "type": "thread",
+    "id": "endomorphismes-qui-commutent",
+    "text": "Une CNS pour que f∘g = g∘f, sans diagonaliser Je bloque sur un exercice d’oral : on demande une condition nécessaire et suffisante sur les noyaux. Quelqu’un a une piste propre ? Adam K. Maths algèbre oral endomorphismes Pense aux projecteurs spectraux. Si f est diagonalisable, les projecteurs sur ses espaces propres sont des polynômes en f. Commuter avec f revient à stabiliser ces espaces propres. Et si tu veux une CNS sans diagonaliser : f et g commutent ssi pour tout polynôme P, ker P(f) est stable par g (quand P(f) = 0 sur le spectre, il faut ajuster). C’est plus élégant à l’oral qu’on ne le pense."
+  },
+  {
+    "type": "thread",
+    "id": "banque-ccinp-astuces",
+    "text": "Vos meilleures astuces pour attaquer la banque CCINP Les sujets sont longs et la gestion du temps me tue. Vous commencez par quoi : les petites questions ou le problème principal ? Sofia M. Concours CCINP stratégie annales Je survole 5 minutes pour repérer les questions accessibles. Ensuite, je fais les questions courtes de chaque problème avant d’attaquer les gros morceaux. L’objectif est de sécuriser des points tôt, pas de finir un problème entier. Une règle simple : jamais plus de 10 minutes bloqué sur une question. Je note l’idée en une ligne et je passe. À la fin, je reviens avec un regard neuf. Ça m’a fait gagner au moins 2 points."
+  },
+  {
+    "type": "thread",
+    "id": "fiches-electromagnetisme",
+    "text": "Fiches d’électromagnétisme : on mutualise ? Je commence une fiche de synthèse sur Maxwell et l’induction. Je peux partager mon LaTeX ici, et on corrige à plusieurs ? Nour H. Physique LaTeX électromagnétisme fiches Partante pour la relecture ! Je peux ajouter la partie induction et les conventions de signe, c’est là que je fais toujours des erreurs."
+  },
+  {
+    "type": "thread",
+    "id": "choisir-livre-info",
+    "text": "Quel livre pour progresser en informatique sans se noyer ? Le cours de mon lycée est très léger. Je cherche un livre accessible pour consolider les algos et Python avant les concours. Mehdi A. Informatique Python livres algorithmes Le cours d’info de la prépa + les annales suffisent largement. Si tu veux un supplément, regarde les ressources de France IOI pour les algos, c’est très progressif et gratuit."
+  }
+]

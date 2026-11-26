@@ -1,0 +1,69 @@
+{
+  "id": "algorithmique-complexite",
+  "title": "Algorithmique & complexité",
+  "tag": "Informatique",
+  "subject": "Informatique",
+  "level": "MP",
+  "color": "mint",
+  "coverType": "code",
+  "coverEq": "O(n\\log n)",
+  "chaptersCount": 11,
+  "duration": "3 h 40",
+  "students": "1,2k",
+  "rating": 4.8,
+  "featured": true,
+  "description": "Diviser pour régner, structures de données et preuves de correction : le bagage informatique de l’écrit et de l’oral.",
+  "formula": "T(n)=2T(n/2)+O(n)",
+  "objectives": [
+    "Mesurer une complexité en fonction de la taille d’entrée.",
+    "Prouver la correction d’un algorithme par invariant.",
+    "Choisir la bonne structure de données selon la complexité visée."
+  ],
+  "toc": [
+    "Complexité asymptotique",
+    "Preuves par invariant",
+    "Diviser pour régner",
+    "Structures de données",
+    "Graphes",
+    "Algorithmes gloutons"
+  ],
+  "sections": [
+    {
+      "id": "complexite",
+      "kicker": "01 · Mesurer",
+      "title": "La complexité n’est pas un temps d’exécution",
+      "paragraphs": [
+        "La complexité décrit l’évolution du coût lorsque la taille de l’entrée grandit. Elle demande de choisir une unité : nombre de comparaisons, d’affectations, d’opérations élémentaires. Cette unité doit être annoncée.",
+        "On distingue le pire cas, le cas moyen et le meilleur cas. Pour un concours, le pire cas est la convention par défaut, sauf indication contraire de l’énoncé."
+      ],
+      "formula": "T(n) = 3n^2 + 5n + 7 = O(n^2)",
+      "note": "Les constantes disparaissent dans le O, mais elles peuvent compter dans la vraie vie. Ne confonds pas une amélioration asymptotique avec une optimisation pertinente sur toutes les tailles."
+    },
+    {
+      "id": "invariant",
+      "kicker": "02 · Prouver",
+      "title": "Un invariant pour verrouiller la boucle",
+      "paragraphs": [
+        "Un invariant de boucle est une propriété vraie avant la boucle, préservée à chaque itération, et utile à la sortie. Il transforme une intuition en preuve.",
+        "La terminaison se prouve séparément, avec une quantité positive qui décroît à chaque itération. Correction partielle et terminaison forment deux obligations distinctes."
+      ],
+      "formula": "\\text{Invariant} \\land \\text{condition d’arrêt} \\Longrightarrow \\text{propriété de sortie}",
+      "note": "La majoration avec un variant est un classique de l’oral : décris-le explicitement, puis justifie qu’il est borné inférieurement."
+    },
+    {
+      "id": "divide",
+      "kicker": "03 · Découper",
+      "title": "Diviser pour régner, sans récursion infinie",
+      "paragraphs": [
+        "Un algorithme diviser-pour-régner se reconnaît à trois étapes : diviser, résoudre récursivement, recombiner. La complexité émerge de l’équation de récurrence, pas du nombre de lignes de code.",
+        "Le tri fusion en est l’exemple canonique : division en deux, tri des moitiés, fusion linéaire. Son coût total est en n log n."
+      ],
+      "formula": "T(n)=2T\\!\\left(\\frac{n}{2}\\right)+O(n)=\\Theta(n\\log n)",
+      "note": "Pour appliquer le master theorem, identifie le coût de recombinaison. Une fusion en O(n) n’est pas la même chose qu’une fusion en O(n²)."
+    }
+  ],
+  "exercise": {
+    "prompt": "Soit un tableau trié. Écrire une recherche dichotomique itérative et justifier sa complexité en <span class=\"inline-tex\" data-tex=\"O(\\log n)\"></span>.",
+    "answer": "Chaque itération divise par deux la taille de l’intervalle de recherche."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": "ccinp-2025-physique",
+  "school": "CCINP",
+  "short": "CC",
+  "year": 2025,
+  "subject": "Physique",
+  "title": "Épreuve de physique",
+  "track": "MP",
+  "duration": "4 h",
+  "difficulty": 3,
+  "parts": "2 parties",
+  "hot": false,
+  "correction": true,
+  "color": "butter"
+}

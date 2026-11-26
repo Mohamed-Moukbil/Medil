@@ -1,0 +1,33 @@
+{
+  "id": "matrice-trace",
+  "title": "La trace ne ment jamais",
+  "subject": "Maths",
+  "tag": "Algèbre",
+  "source": "Centrale · 2023",
+  "level": "MP",
+  "stars": 3,
+  "minutes": 18,
+  "equation": "\\operatorname{tr}(AB)=\\operatorname{tr}(BA)",
+  "teaser": "Une preuve courte et un critère d’impossibilité très utile.",
+  "statement": "Montrer que si <span class=\"inline-tex\" data-tex=\"A,B\\in\\mathrm{M}_n(\\mathbb{R})\"></span>, alors <span class=\"inline-tex\" data-tex=\"AB-BA=I_n\"></span> est impossible.",
+  "hint": "Prends la trace des deux côtés.",
+  "solution": [
+    {
+      "title": "Une égalité de traces",
+      "text": "La trace est linéaire et vérifie l’identité de cyclicité. On en déduit que la trace du commutateur <span class=\"inline-tex\" data-tex=\"[A,B]\"></span> est nulle.",
+      "equation": "\\operatorname{tr}(AB-BA)=0"
+    },
+    {
+      "title": "Contradiction",
+      "text": "La trace de l’identité vaut n, qui est strictement positif. L’égalité demandée impliquerait donc 0 = n, ce qui est absurde.",
+      "equation": "0 = \\operatorname{tr}(I_n)=n"
+    },
+    {
+      "title": "Généralisation",
+      "text": "Dans un corps de caractéristique non nulle, l’argument tombe. C’est un rappel utile : une preuve dépend toujours de son contexte."
+    }
+  ],
+  "answer": "Impossible car tr([A,B]) = 0 ≠ n.",
+  "solves": 1560,
+  "verified": true
+}

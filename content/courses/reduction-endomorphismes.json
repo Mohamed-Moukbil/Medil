@@ -1,0 +1,70 @@
+{
+  "id": "reduction-endomorphismes",
+  "title": "Réduction des endomorphismes",
+  "tag": "Algèbre",
+  "subject": "Maths",
+  "level": "MP",
+  "color": "lime",
+  "coverType": "matrix",
+  "coverEq": "A = PDP^{-1}",
+  "chaptersCount": 18,
+  "duration": "6 h 20",
+  "students": "2,4k",
+  "rating": 4.9,
+  "progress": 68,
+  "featured": true,
+  "description": "Polynômes d'endomorphismes, diagonalisation, trigonalisation et forme de Jordan : la réduction racontée sans trous.",
+  "formula": "A = PDP^{-1}",
+  "objectives": [
+    "Manipuler les polynômes d’un endomorphisme avec assurance.",
+    "Savoir quand diagonaliser — et quoi faire quand ce n’est pas possible.",
+    "Construire une réduction de Jordan sans réciter un théorème."
+  ],
+  "toc": [
+    "Polynômes d’endomorphismes",
+    "Le lemme des noyaux",
+    "Diagonalisation",
+    "Trigonalisation",
+    "Réduction de Jordan",
+    "Applications aux suites et aux matrices"
+  ],
+  "sections": [
+    {
+      "id": "poly",
+      "kicker": "01 · Le socle",
+      "title": "Faire agir un polynôme sur un endomorphisme",
+      "paragraphs": [
+        "Soit <span class=\"inline-tex\" data-tex=\"u \\in \\mathcal{L}(E)\"></span>. Pour <span class=\"inline-tex\" data-tex=\"P = \\sum a_k X^k \\in \\mathbb{K}[X]\"></span>, on définit naturellement <span class=\"inline-tex\" data-tex=\"P(u) = \\sum a_k u^k\"></span>. Cette petite construction transforme un problème de géométrie en un problème d’algèbre commutative.",
+        "L’objet central est l’idéal annulateur <span class=\"inline-tex\" data-tex=\"I_u = \\{P \\in \\mathbb{K}[X] \\mid P(u)=0\\}\"></span>. Comme <span class=\"inline-tex\" data-tex=\"\\mathbb{K}[X]\"></span> est principal, cet idéal admet un unique générateur unitaire : le polynôme minimal <span class=\"inline-tex\" data-tex=\"\\pi_u\"></span>."
+      ],
+      "formula": "\\chi_u(u)=0 \\quad \\text{et} \\quad \\pi_u \\mid \\chi_u",
+      "note": "Cayley–Hamilton n’est pas une astuce de calcul : c’est l’énoncé qui relie spectre, trace et réduction. Garde toujours en tête que <strong>π<sub>u</sub></strong> divise <strong>χ<sub>u</sub></strong>, et qu’ils ont les mêmes racines."
+    },
+    {
+      "id": "noyaux",
+      "kicker": "02 · La mécanique",
+      "title": "Le lemme des noyaux, votre meilleur ami",
+      "paragraphs": [
+        "Si <span class=\"inline-tex\" data-tex=\"P = P_1 \\cdots P_r\"></span> avec les <span class=\"inline-tex\" data-tex=\"P_i\"></span> deux à deux premiers entre eux, alors <span class=\"inline-tex\" data-tex=\"\\ker P(u) = \\bigoplus_{i=1}^{r} \\ker P_i(u)\"></span>. C’est ce résultat, bien plus que la formule de changement de base, qui fait vivre toute la réduction.",
+        "En particulier, on récupère les sous-espaces caractéristiques et l’on décompose l’espace en morceaux stables sur lesquels l’endomorphisme est plus simple."
+      ],
+      "formula": "\\ker\\bigl((P_1P_2)(u)\\bigr) = \\ker P_1(u) \\oplus \\ker P_2(u)",
+      "note": "Réflexe de rédaction : vérifie toujours l’hypothèse de coprimalité avant d’écrire une somme directe de noyaux. Sans elle, le lemme peut tomber en défaut."
+    },
+    {
+      "id": "diagonalisation",
+      "kicker": "03 · Le critère",
+      "title": "Diagonaliser, vraiment",
+      "paragraphs": [
+        "Un endomorphisme est diagonalisable si et seulement si son polynôme minimal est scindé à racines simples. En pratique, on cherche le spectre, puis on teste si la somme des dimensions des espaces propres vaut <span class=\"inline-tex\" data-tex=\"\\dim E\"></span>.",
+        "La matrice de passage n’est pas un détail : ses colonnes sont des vecteurs propres. Une réduction correctement rédigée se termine donc toujours par une phrase du type « après regroupement des colonnes en bases adaptées »."
+      ],
+      "formula": "E = \\bigoplus_{\\lambda \\in \\operatorname{Sp}(u)} \\ker(u-\\lambda \\mathrm{Id})",
+      "note": "Astuce anti-erreur : diagonaliser <strong>u</strong> et diagonaliser sa matrice dans une base donnée sont deux énoncés différents. Le second nécessite la matrice de passage."
+    }
+  ],
+  "exercise": {
+    "prompt": "Soit <span class=\"inline-tex\" data-tex=\"A \\in \\mathrm{M}_n(\\mathbb{R})\"></span> telle que <span class=\"inline-tex\" data-tex=\"A^3 = 0\"></span>. Montrer que <span class=\"inline-tex\" data-tex=\"I_n + A\"></span> est inversible et exprimer son inverse comme un polynôme en <span class=\"inline-tex\" data-tex=\"A\"></span>.",
+    "answer": "I_n - A + A^2"
+  }
+}

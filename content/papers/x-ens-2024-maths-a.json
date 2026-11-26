@@ -1,0 +1,15 @@
+{
+  "id": "x-ens-2024-maths-a",
+  "school": "X/ENS",
+  "short": "X",
+  "year": 2024,
+  "subject": "Maths",
+  "title": "Épreuve de mathématiques A",
+  "track": "MP",
+  "duration": "4 h",
+  "difficulty": 5,
+  "parts": "2 problèmes",
+  "hot": false,
+  "correction": true,
+  "color": "lime"
+}

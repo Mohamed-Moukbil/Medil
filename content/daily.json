@@ -1,0 +1,14 @@
+{
+  "id": "nilpotente-inversible",
+  "eyebrow": "Défi du jour · MP · Algèbre",
+  "title": "La nilpotence cache toujours un inverse.",
+  "statement": "Soit <span class=\"inline-tex\" data-tex=\"A \\in \\mathrm{M}_n(\\mathbb{R})\"></span> telle que <span class=\"inline-tex\" data-tex=\"A^3 = 0\"></span>. Montrer que <span class=\"inline-tex\" data-tex=\"I_n + A\"></span> est inversible et exprimer son inverse.",
+  "equation": "A^3 = 0",
+  "participants": 184,
+  "xp": 40,
+  "steps": [
+    "Calcule le produit <span class=\"inline-tex\" data-tex=\"(I+A)(I-A+A^2)\"></span>.",
+    "La relation <span class=\"inline-tex\" data-tex=\"A^3=0\"></span> fait disparaître le reste cubique.",
+    "Tu obtiens <span class=\"inline-tex\" data-tex=\"I\"></span> à gauche et à droite : l’inverse est <span class=\"inline-tex\" data-tex=\"I-A+A^2\"></span>."
+  ]
+}

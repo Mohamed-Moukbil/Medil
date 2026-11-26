@@ -1,0 +1,33 @@
+{
+  "id": "choisir-livre-info",
+  "category": "Informatique",
+  "title": "Quel livre pour progresser en informatique sans se noyer ?",
+  "excerpt": "Le cours de mon lycée est très léger. Je cherche un livre accessible pour consolider les algos et Python avant les concours.",
+  "author": "Mehdi A.",
+  "initials": "MA",
+  "avatarColor": "sky",
+  "grade": "MP · Hoche",
+  "time": "hier",
+  "replies": 9,
+  "views": "412",
+  "upvotes": 24,
+  "tags": [
+    "Python",
+    "livres",
+    "algorithmes"
+  ],
+  "pinned": false,
+  "content": "Le cours de mon lycée est très léger. Je cherche un livre accessible pour consolider les algos et Python avant les concours, sans tomber dans un traité de 900 pages.\n\nVous avez des références qui vous ont vraiment servi ?",
+  "answers": [
+    {
+      "id": "r9",
+      "author": "Adam K.",
+      "initials": "AK",
+      "avatarColor": "lilac",
+      "grade": "MP · Louis-le-Grand",
+      "time": "hier",
+      "text": "Le cours d’info de la prépa + les annales suffisent largement. Si tu veux un supplément, regarde les ressources de France IOI pour les algos, c’est très progressif et gratuit.",
+      "upvotes": 14
+    }
+  ]
+}

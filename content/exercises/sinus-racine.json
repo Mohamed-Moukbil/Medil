@@ -1,0 +1,33 @@
+{
+  "id": "sinus-racine",
+  "title": "Un sinus qui joue avec les racines",
+  "subject": "Maths",
+  "tag": "Analyse",
+  "source": "Mines-Ponts · 2022",
+  "level": "MP",
+  "stars": 5,
+  "minutes": 40,
+  "equation": "\\sum \\sin\\!\\left(\\pi\\sqrt{n^2+1}\\right)",
+  "teaser": "Une série aux allures inoffensives, un développement asymptotique décisif.",
+  "statement": "Étudier la nature de la série <span class=\"inline-tex\" data-tex=\"\\sum_{n\\ge 1}\\sin\\!\\left(\\pi\\sqrt{n^2+1}\\right)\"></span>.",
+  "hint": "Écris <span class=\"inline-tex\" data-tex=\"\\sqrt{n^2+1}=n+\\frac{1}{2n}+O(n^{-3})\"></span> puis regarde la parité de n.",
+  "solution": [
+    {
+      "title": "Développer la racine",
+      "text": "On factorise par n et on développe en puissances de 1/n². Le terme principal permet de comprendre le comportement de l’argument.",
+      "equation": "\\sqrt{n^2+1}=n+\\frac1{2n}+O\\!\\left(\\frac1{n^3}\\right)"
+    },
+    {
+      "title": "Séparer selon la parité",
+      "text": "Pour n pair, le sinus est proche de π/(2n). Pour n impair, il est proche de −π/(2n). Dans les deux cas, le terme général est équivalent à ±π/(2n). En regroupant par paires, la série se comporte comme une série harmonique alternée.",
+      "equation": "\\sin\\!\\left(\\pi\\sqrt{n^2+1}\\right)=(-1)^n\\frac{\\pi}{2n}+O(n^{-2})"
+    },
+    {
+      "title": "Conclure avec précaution",
+      "text": "La série brute ne converge pas absolument. Après regroupement par paires, on obtient une série convergente par le critère spécial des séries alternées. On en déduit que la série initiale converge."
+    }
+  ],
+  "answer": "Convergente, mais pas absolument.",
+  "solves": 846,
+  "verified": true
+}

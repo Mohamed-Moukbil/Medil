@@ -1,0 +1,15 @@
+{
+  "id": "e3a-2023-physique",
+  "school": "e3a",
+  "short": "e3a",
+  "year": 2023,
+  "subject": "Physique",
+  "title": "Épreuve de physique",
+  "track": "MP",
+  "duration": "4 h",
+  "difficulty": 2,
+  "parts": "3 exercices",
+  "hot": false,
+  "correction": true,
+  "color": "mint"
+}

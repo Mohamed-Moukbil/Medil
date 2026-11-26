@@ -1,0 +1,33 @@
+{
+  "id": "effet-tunnel",
+  "title": "Traverser l’interdit",
+  "subject": "Physique",
+  "tag": "Quantique",
+  "source": "Mines-Ponts · 2023",
+  "level": "MP",
+  "stars": 5,
+  "minutes": 45,
+  "equation": "T \\approx 16\\frac{E(V_0-E)}{V_0^2}e^{-2\\kappa a}",
+  "teaser": "Une barrière, des exponentielles et une probabilité qui ne s’annule jamais.",
+  "statement": "Une particule d’énergie <span class=\"inline-tex\" data-tex=\"E&lt;V_0\"></span> rencontre une barrière rectangulaire de hauteur <span class=\"inline-tex\" data-tex=\"V_0\"></span> et de largeur <span class=\"inline-tex\" data-tex=\"a\"></span>. Justifier qualitativement l’effet tunnel et donner l’expression du coefficient de transmission.",
+  "hint": "Dans la barrière, la solution est une combinaison d’exponentielles réelles. La continuité impose un recouvrement non nul.",
+  "solution": [
+    {
+      "title": "Écrire l’équation dans les trois zones",
+      "text": "À gauche et à droite, les solutions sont des ondes planes. Dans la barrière, l’énergie cinétique est négative : les solutions sont exponentielles.",
+      "equation": "\\psi_{\\rm II}(x)=Ae^{\\kappa x}+Be^{-\\kappa x},\\quad \\kappa=\\sqrt{\\frac{2m(V_0-E)}{\\hbar^2}}"
+    },
+    {
+      "title": "Raccorder les solutions",
+      "text": "Les conditions de continuité de ψ et de sa dérivée aux deux interfaces donnent quatre équations. Le coefficient de transmission est le rapport des courants de probabilité à droite et à gauche."
+    },
+    {
+      "title": "Lire le résultat",
+      "text": "Le coefficient décroît exponentiellement avec la largeur et la hauteur de la barrière. Il n’est jamais strictement nul pour une barrière de largeur finie : c’est l’effet tunnel.",
+      "equation": "T\\sim e^{-2\\kappa a}"
+    }
+  ],
+  "answer": "T ≠ 0, décroissance exponentielle avec la largeur.",
+  "solves": 488,
+  "verified": true
+}

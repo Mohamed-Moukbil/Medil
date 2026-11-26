@@ -1,0 +1,32 @@
+{
+  "id": "suite-convergence-uniforme",
+  "title": "Une limite qui n’aime pas le sup",
+  "subject": "Maths",
+  "tag": "Analyse",
+  "source": "CCINP · 2025",
+  "level": "MP",
+  "stars": 4,
+  "minutes": 30,
+  "equation": "f_n(x)=x(1-x)^n",
+  "teaser": "Trouver la limite, puis comprendre pourquoi la convergence n’est pas uniforme.",
+  "statement": "Pour <span class=\"inline-tex\" data-tex=\"x\\in[0,1]\"></span>, on pose <span class=\"inline-tex\" data-tex=\"f_n(x)=x(1-x)^n\"></span>. Déterminer la limite simple et montrer que la convergence n’est pas uniforme.",
+  "hint": "La limite simple est nulle partout. Pour l’uniformité, évalue en <span class=\"inline-tex\" data-tex=\"x=1/n\"></span>.",
+  "solution": [
+    {
+      "title": "Limite simple",
+      "text": "Pour x = 0 et x = 1, la suite est nulle. Pour x ∈ ]0,1[, (1−x)^n tend vers 0, donc f_n(x) tend vers 0."
+    },
+    {
+      "title": "Un contretemps",
+      "text": "On évalue la suite au point 1/n, dans [0,1]. La valeur ne tend pas vers zéro.",
+      "equation": "f_n(1/n)=\\frac{1}{n}\\left(1-\\frac1n\\right)^n\\to \\frac1e \\neq 0"
+    },
+    {
+      "title": "Conclusion",
+      "text": "Une suite peut converger en tout point sans que la distance uniforme à sa limite tende vers zéro. C’est exactement le fossé entre convergence simple et uniforme."
+    }
+  ],
+  "answer": "Limite nulle, mais convergence non uniforme.",
+  "solves": 745,
+  "verified": true
+}

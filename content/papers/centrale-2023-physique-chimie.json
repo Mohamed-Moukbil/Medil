@@ -1,0 +1,15 @@
+{
+  "id": "centrale-2023-physique-chimie",
+  "school": "Centrale",
+  "short": "C",
+  "year": 2023,
+  "subject": "Physique",
+  "title": "Épreuve de physique-chimie",
+  "track": "MP",
+  "duration": "4 h",
+  "difficulty": 3,
+  "parts": "3 parties",
+  "hot": false,
+  "correction": true,
+  "color": "peach"
+}

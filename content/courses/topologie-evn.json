@@ -1,0 +1,69 @@
+{
+  "id": "topologie-evn",
+  "title": "Topologie & espaces vectoriels normés",
+  "tag": "Analyse",
+  "subject": "Maths",
+  "level": "MP",
+  "color": "ink",
+  "coverType": "norm",
+  "coverEq": "\\lVert x+y\\rVert \\le \\lVert x\\rVert + \\lVert y\\rVert",
+  "chaptersCount": 15,
+  "duration": "6 h 50",
+  "students": "840",
+  "rating": 4.9,
+  "featured": false,
+  "description": "Normes, compacité et complétude : le langage qui rend l’analyse en dimension infinie contrôlable.",
+  "formula": "\\lVert x+y\\rVert \\le \\lVert x\\rVert + \\lVert y\\rVert",
+  "objectives": [
+    "Manipuler les normes et les distances sans confusion.",
+    "Identifier et utiliser la compacité.",
+    "Comprendre la complétude comme une propriété de Cauchy."
+  ],
+  "toc": [
+    "Normes et distances",
+    "Ouverts et fermés",
+    "Suites et adhérence",
+    "Compacité",
+    "Complétude",
+    "Théorèmes de point fixe"
+  ],
+  "sections": [
+    {
+      "id": "normes",
+      "kicker": "01 · Mesurer",
+      "title": "Toutes les normes ne se valent pas",
+      "paragraphs": [
+        "En dimension finie, toutes les normes sont équivalentes. En dimension infinie, ce n’est plus vrai, et les phénomènes topologiques deviennent beaucoup plus riches. C’est là que la prépa bascule vers l’analyse fonctionnelle.",
+        "Une norme doit satisfaire trois axiomes : positivité définie, homogénéité et inégalité triangulaire. Vérifier ces axiomes est un classique d’oral."
+      ],
+      "formula": "\\lVert \\lambda x \\rVert = |\\lambda|\\,\\lVert x\\rVert",
+      "note": "L’équivalence des normes n’est pas l’égalité des normes. Elle dit seulement que les notions de convergence et de continuité sont les mêmes."
+    },
+    {
+      "id": "compacite",
+      "kicker": "02 · Contrôler",
+      "title": "Être compact, c’est être borné et complet",
+      "paragraphs": [
+        "En dimension finie, compact équivaut à fermé borné (Bolzano–Weierstrass). En dimension infinie, cette équivalence tombe : la boule unité fermée d’un espace normé n’est jamais compacte sauf en dimension finie.",
+        "La compacité est une arme d’existence : une fonction continue sur un compact atteint ses bornes, une suite d’un compact admet une sous-suite convergente. C’est souvent le chaînon manquant d’une preuve."
+      ],
+      "formula": "K \\text{ compact},\\ f \\in \\mathcal{C}(K,\\mathbb{R}) \\Longrightarrow f \\text{ est bornée et atteint ses bornes}",
+      "note": "Garde en tête le théorème de Riesz : c’est lui qui explique pourquoi la dimension infinie change tout. Un énoncé de compacité doit toujours préciser l’espace ambiant."
+    },
+    {
+      "id": "complete",
+      "kicker": "03 · Converger",
+      "title": "Complet, ou l’assurance de converger",
+      "paragraphs": [
+        "Un espace complet garantit que toute suite de Cauchy converge. On peut alors montrer l’existence d’une limite sans deviner sa valeur à l’avance. C’est le cœur des théorèmes de point fixe.",
+        "L’incomplétude classique de <span class=\"inline-tex\" data-tex=\"\\mathbb{Q}\"></span> montre que la complétude n’est pas une évidence : elle dépend du corps et de la distance choisis."
+      ],
+      "formula": "\\text{Toute suite de Cauchy converge} \\iff (E,d) \\text{ est complet}",
+      "note": "Pour appliquer Banach, il te faut une application contractante d’un espace complet dans lui-même. L’hypothèse de contraction stricte, avec un coefficient <strong>k &lt; 1</strong>, est indispensable."
+    }
+  ],
+  "exercise": {
+    "prompt": "Montrer que dans un espace normé, toute suite convergente est de Cauchy. La réciproque est-elle vraie ?",
+    "answer": "Vrai : utiliser l’inégalité triangulaire. Non : Q n’est pas complet."
+  }
+}

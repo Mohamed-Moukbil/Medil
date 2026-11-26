@@ -1,0 +1,15 @@
+{
+  "id": "mines-2024-physique-1",
+  "school": "Mines-Ponts",
+  "short": "MP",
+  "year": 2024,
+  "subject": "Physique",
+  "title": "Épreuve de physique 1",
+  "track": "MP",
+  "duration": "4 h",
+  "difficulty": 4,
+  "parts": "3 parties",
+  "hot": false,
+  "correction": true,
+  "color": "sky"
+}

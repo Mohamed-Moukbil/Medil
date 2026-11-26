@@ -1,0 +1,33 @@
+{
+  "id": "sous-tableau-somme-nulle",
+  "title": "Le sous-tableau qui s’annule",
+  "subject": "Informatique",
+  "tag": "Algorithmes",
+  "source": "ENS Info · 2024",
+  "level": "MP",
+  "stars": 4,
+  "minutes": 20,
+  "equation": "\\text{sommes préfixes} + \\text{dictionnaire}",
+  "teaser": "Un problème de tableau qui se résout en un seul passage.",
+  "statement": "Étant donné un tableau d’entiers, déterminer s’il existe un sous-tableau contigu non vide dont la somme est nulle. Proposer un algorithme en <span class=\"inline-tex\" data-tex=\"O(n)\"></span> temps.",
+  "hint": "Deux sommes préfixes égales signalent un sous-tableau de somme nulle.",
+  "solution": [
+    {
+      "title": "Sommes préfixes",
+      "text": "On note <span class=\"inline-tex\" data-tex=\"S_k=\\sum_{i=0}^{k-1}a_i\"></span>. Un sous-tableau de i à j a une somme nulle si et seulement si <span class=\"inline-tex\" data-tex=\"S_i=S_{j+1}\"></span>.",
+      "equation": "\\sum_{k=i}^{j} a_k = 0 \\iff S_i = S_{j+1}"
+    },
+    {
+      "title": "Un dictionnaire",
+      "text": "On parcourt le tableau en maintenant la somme courante. À chaque étape, on vérifie si cette somme a déjà été rencontrée ; sinon on l’insère dans un ensemble. Initialement, la somme 0 correspond au sous-tableau vide.",
+      "equation": "\\texttt{if s in seen: return True; seen.add(s)}"
+    },
+    {
+      "title": "Complexité",
+      "text": "Chaque élément est traité une fois et chaque opération de dictionnaire est en moyenne constante. Le temps total est linéaire, l’espace auxiliaire est au pire linéaire."
+    }
+  ],
+  "answer": "Un dictionnaire de sommes préfixes donne O(n).",
+  "solves": 972,
+  "verified": true
+}

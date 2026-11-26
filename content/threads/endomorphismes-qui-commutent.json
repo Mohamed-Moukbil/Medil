@@ -1,0 +1,43 @@
+{
+  "id": "endomorphismes-qui-commutent",
+  "category": "Maths",
+  "title": "Une CNS pour que f∘g = g∘f, sans diagonaliser",
+  "excerpt": "Je bloque sur un exercice d’oral : on demande une condition nécessaire et suffisante sur les noyaux. Quelqu’un a une piste propre ?",
+  "author": "Adam K.",
+  "initials": "AK",
+  "avatarColor": "lilac",
+  "grade": "MP · Louis-le-Grand",
+  "time": "il y a 4 h",
+  "replies": 18,
+  "views": "864",
+  "upvotes": 52,
+  "tags": [
+    "algèbre",
+    "oral",
+    "endomorphismes"
+  ],
+  "pinned": false,
+  "content": "Je bloque sur un exercice d’oral : on demande une CNS pour que deux endomorphismes diagonalisables commutent, sans passer par une diagonalisation simultanée. J’ai essayé de regarder ce qui se passe sur les noyaux de P(f) et P(g), mais je ne vois pas où utiliser la diagonalisabilité.\n\nUne piste ou un contre-exemple à me donner ?",
+  "answers": [
+    {
+      "id": "r4",
+      "author": "Lina B.",
+      "initials": "LB",
+      "avatarColor": "lime",
+      "grade": "MP* · Ginette",
+      "time": "il y a 3 h",
+      "text": "Pense aux projecteurs spectraux. Si f est diagonalisable, les projecteurs sur ses espaces propres sont des polynômes en f. Commuter avec f revient à stabiliser ces espaces propres.",
+      "upvotes": 33
+    },
+    {
+      "id": "r5",
+      "author": "Mehdi A.",
+      "initials": "MA",
+      "avatarColor": "sky",
+      "grade": "MP · Hoche",
+      "time": "il y a 2 h",
+      "text": "Et si tu veux une CNS sans diagonaliser : f et g commutent ssi pour tout polynôme P, ker P(f) est stable par g (quand P(f) = 0 sur le spectre, il faut ajuster). C’est plus élégant à l’oral qu’on ne le pense.",
+      "upvotes": 16
+    }
+  ]
+}

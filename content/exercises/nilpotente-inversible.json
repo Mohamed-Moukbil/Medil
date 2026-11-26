@@ -1,0 +1,33 @@
+{
+  "id": "nilpotente-inversible",
+  "title": "Quand nilpotence rime avec inverse",
+  "subject": "Maths",
+  "tag": "Algèbre",
+  "source": "Oral X · 2023",
+  "level": "MP*",
+  "stars": 4,
+  "minutes": 25,
+  "equation": "A^3 = 0 \\Rightarrow (I+A)^{-1} = I-A+A^2",
+  "teaser": "Un énoncé court, une preuve élégante et une leçon à garder pour la suite.",
+  "statement": "Soit <span class=\"inline-tex\" data-tex=\"A \\in \\mathrm{M}_n(\\mathbb{R})\"></span> telle que <span class=\"inline-tex\" data-tex=\"A^3=0\"></span>. Montrer que <span class=\"inline-tex\" data-tex=\"I_n + A\"></span> est inversible et exprimer son inverse comme un polynôme en <span class=\"inline-tex\" data-tex=\"A\"></span>.",
+  "hint": "Pense à l’identité remarquable <span class=\"inline-tex\" data-tex=\"(1+x)(1-x+x^2)=1+x^3\"></span>.",
+  "solution": [
+    {
+      "title": "Faire apparaître la relation",
+      "text": "On calcule le produit <span class=\"inline-tex\" data-tex=\"(I+A)(I-A+A^2)\"></span>. L’identité remarquable tronquée donne un reste cubique.",
+      "equation": "(I+A)(I-A+A^2)=I+A^3=I"
+    },
+    {
+      "title": "Conclure l’inversibilité",
+      "text": "Comme <span class=\"inline-tex\" data-tex=\"A^3=0\"></span>, le produit vaut l’identité. De même, dans l’autre sens, le produit vaut l’identité. Ainsi <span class=\"inline-tex\" data-tex=\"I+A\"></span> admet un inverse à gauche et à droite, donc est inversible.",
+      "equation": "(I-A+A^2)(I+A)=I+A^3=I"
+    },
+    {
+      "title": "La morale du problème",
+      "text": "Toute matrice nilpotente est « proche » d’une matrice invertible : <span class=\"inline-tex\" data-tex=\"I+A\"></span> est toujours inversible. La preuve est un exemple modèle de troncature polynomiale."
+    }
+  ],
+  "answer": "I_n - A + A^2",
+  "solves": 1284,
+  "verified": true
+}

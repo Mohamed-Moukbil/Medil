@@ -1,0 +1,33 @@
+{
+  "id": "marche-aleatoire",
+  "title": "Le retour du marcheur",
+  "subject": "Maths",
+  "tag": "Probabilités",
+  "source": "Épreuve X · 2021",
+  "level": "MP",
+  "stars": 4,
+  "minutes": 35,
+  "equation": "\\mathbb{P}(S_{2n}=0)=\\binom{2n}{n}2^{-2n}",
+  "teaser": "Une marche aléatoire, un coefficient binomial et un équivalent à retrouver.",
+  "statement": "On lance une pièce équilibrée à chaque étape : <span class=\"inline-tex\" data-tex=\"S_n\"></span> est la différence entre le nombre de piles et de faces. Montrer que <span class=\"inline-tex\" data-tex=\"\\mathbb{P}(S_{2n}=0)\\sim \\frac{1}{\\sqrt{\\pi n}}\"></span>.",
+  "hint": "Exprime l’événement en termes de coefficients binomiaux, puis utilise la formule de Stirling.",
+  "solution": [
+    {
+      "title": "Compter les chemins",
+      "text": "Revenir à zéro en 2n pas signifie avoir exactement n piles et n faces. Le nombre de trajectoires favorables est donc le coefficient binomial central.",
+      "equation": "\\mathbb{P}(S_{2n}=0)=\\binom{2n}{n}\\,\\frac{1}{2^{2n}}"
+    },
+    {
+      "title": "Appliquer Stirling",
+      "text": "On remplace les factorielles par leur équivalent de Stirling, puis on simplifie les puissances de 2 et de n.",
+      "equation": "\\binom{2n}{n}\\frac{1}{2^{2n}}\\sim \\frac{4^n}{\\sqrt{\\pi n}}\\cdot\\frac{1}{2^{2n}}"
+    },
+    {
+      "title": "Conclure",
+      "text": "Les puissances se compensent et on obtient l’équivalent attendu. La probabilité de retour tend vers zéro, mais assez lentement pour que la marche soit récurrente en dimension 1."
+    }
+  ],
+  "answer": "\\sim \\frac{1}{\\sqrt{\\pi n}}",
+  "solves": 1102,
+  "verified": true
+}

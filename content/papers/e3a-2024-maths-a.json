@@ -1,0 +1,15 @@
+{
+  "id": "e3a-2024-maths-a",
+  "school": "e3a",
+  "short": "e3a",
+  "year": 2024,
+  "subject": "Maths",
+  "title": "Épreuve de mathématiques A",
+  "track": "MP",
+  "duration": "4 h",
+  "difficulty": 2,
+  "parts": "3 exercices",
+  "hot": false,
+  "correction": false,
+  "color": "mint"
+}

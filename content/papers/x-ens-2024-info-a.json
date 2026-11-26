@@ -1,0 +1,15 @@
+{
+  "id": "x-ens-2024-info-a",
+  "school": "X/ENS",
+  "short": "X",
+  "year": 2024,
+  "subject": "Informatique",
+  "title": "Épreuve d’informatique A",
+  "track": "MP",
+  "duration": "4 h",
+  "difficulty": 4,
+  "parts": "2 problèmes",
+  "hot": false,
+  "correction": true,
+  "color": "lilac"
+}
