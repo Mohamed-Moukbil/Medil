@@ -328,6 +328,8 @@ async function signInWithSocial(providerKey, trigger) {
     toast('Connexion Supabase indisponible. Vérifie config.js et le chargement du script Supabase.', { type: 'error' });
     return;
   }
+  // Mémorise la page en cours pour y revenir après le retour OAuth.
+  try { sessionStorage.setItem('medil.returnHash', location.hash || '#/'); } catch (error) { /* Navigation privée. */ }
   const provider = providerKey === 'github' ? 'github' : 'google';
   const restore = trigger ? { html: trigger.innerHTML, disabled: trigger.disabled } : null;
   if (trigger) trigger.disabled = true;
@@ -335,6 +337,7 @@ async function signInWithSocial(providerKey, trigger) {
     const { error } = await client.auth.signInWithOAuth({ provider, options: { redirectTo: authRedirectUrl() } });
     if (error) throw error;
   } catch (error) {
+    try { sessionStorage.removeItem('medil.returnHash'); } catch (e) { /* Navigation privée. */ }
     if (trigger && restore) { trigger.disabled = restore.disabled; trigger.innerHTML = restore.html; }
     reportAuthError(error);
   }
@@ -3303,6 +3306,16 @@ function bindGlobalEvents() {
 }
 
 function init() {
+  // Restaure la page d'origine après un retour OAuth (qui atterrit sur l'URL racine).
+  try {
+    const returnHash = sessionStorage.getItem('medil.returnHash');
+    if (returnHash) {
+      sessionStorage.removeItem('medil.returnHash');
+      if (returnHash !== (location.hash || '')) {
+        history.replaceState(history.state, '', location.pathname + location.search + returnHash);
+      }
+    }
+  } catch (error) { /* Navigation privée. */ }
   initSupabaseAuth();
   updateYear();
   updateHeaderUser();
