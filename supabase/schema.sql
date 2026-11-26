@@ -9,7 +9,7 @@
 -- ---------------------------------------------------------------------------
 create table if not exists profiles (
   id uuid primary key references auth.users(id) on delete cascade,
-  name text not null,
+  name text not null default 'Utilisateur',
   grade text,
   avatar_url text,
   is_admin boolean default false,
@@ -29,13 +29,25 @@ create policy "profiles self update"
   using (auth.uid() = id);
 
 -- Trigger : création du profil automatique à l'inscription
+-- (robuste : ne jamais laisser `name` à NULL, sinon l'inscription échoue
+-- avec « Database error saving new user »)
 create or replace function handle_new_user() returns trigger as $$
 begin
   insert into profiles (id, name)
-  values (new.id, coalesce(new.raw_user_meta_data->>'full_name', new.email));
+  values (
+    new.id,
+    coalesce(
+      new.raw_user_meta_data->>'full_name',
+      new.raw_user_meta_data->>'name',
+      new.raw_user_meta_data->>'user_name',
+      new.email,
+      'Utilisateur'
+    )
+  );
   return new;
 end;
-$$ language plpgsql security definer;
+$$ language plpgsql security definer
+set search_path = public;
 
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
