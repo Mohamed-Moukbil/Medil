@@ -9,10 +9,10 @@ Le projet est un site statique sans build step : HTML, CSS et JavaScript natifs.
 Depuis le dossier du projet :
 
 ```bash
-npm run serve
+python3 -m http.server 8000
 ```
 
-Puis ouvrir <http://127.0.0.1:8000>. Le serveur de dev gère le repli SPA (URL propres sans `#`), ce que `python3 -m http.server` ne fait pas.
+Puis ouvrir <http://127.0.0.1:8000>. (Le routage utilise le hash `#/`, donc aucun repli serveur n’est nécessaire.)
 
 ## Outils de développement
 
