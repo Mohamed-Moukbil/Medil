@@ -1010,7 +1010,7 @@ function renderHome() {
         <div class="hero-stage" aria-label="Aperçu d’un cours MEDIL">
           <div class="hero-orbit hero-orbit--outer" aria-hidden="true"></div>
           <div class="hero-orbit hero-orbit--inner" aria-hidden="true"></div>
-          <a class="mini-card mini-card--exam" href="${heroPaper ? `#/concours/${escapeAttr(heroPaper.id)}` : '#/concours'}">
+          <a class="mini-card mini-card--exam" href="${heroPaper ? `/concours/${escapeAttr(heroPaper.id)}` : '/concours'}">
             <span class="mini-card-label">${heroPaper ? `${escapeHTML(heroPaper.school)} · ${heroPaper.year}` : 'Banque de concours'}</span>
             <span class="mini-card-title">${escapeHTML(heroPaperTitle)}</span>
             <span class="mini-card-meta">${heroPaper ? `${escapeHTML(heroPaper.duration)} · ${escapeHTML(heroPaper.track)}` : 'Toutes les filières'} <span class="mini-arrow">${icon('arrowUpRight')}</span></span>
@@ -1029,7 +1029,7 @@ function renderHome() {
             <div class="progress-track"><span style="width:${heroCourse?.progress ?? 0}%"></span></div>
             <div class="study-footer">
               <span>${icon('clock')} ${heroCourse ? `${escapeHTML(heroCourse.duration)} de lecture` : 'Bibliothèque complète'}</span>
-              <a href="${heroCourse ? `#/cours/${escapeAttr(heroCourse.id)}` : '#/cours'}">${heroCourse ? 'Reprendre' : 'Explorer'} ${icon('arrowRight')}</a>
+              <a href="${heroCourse ? `/cours/${escapeAttr(heroCourse.id)}` : '/cours'}">${heroCourse ? 'Reprendre' : 'Explorer'} ${icon('arrowRight')}</a>
             </div>
           </div>
           <a class="mini-card mini-card--challenge" href="/exercices" data-open-daily>
@@ -1616,7 +1616,7 @@ function renderForumPage() {
       description: 'Un espace d’entraide entre taupins : démonstrations, méthodes, annales, coups de mou et victoires. Modéré, bienveillant, utile.',
       meta: `<span class="hero-meta-pill">${icon('users')} 4 800 membres</span><span class="hero-meta-pill">${icon('forum')} ${forumThreads.length} discussions</span><span class="hero-meta-pill"><span class="live-dot"></span> 128 en ligne</span>`,
       className: 'page-hero--forum',
-      children: `<div class="page-hero-actions"><button class="btn btn--lime btn--lg" data-new-thread>${icon('plus')} Nouveau sujet</button><a class="btn btn--ghost btn--lg" href="${topThreads[0] ? `#/forum/${escapeAttr(topThreads[0].id)}` : '#/forum'}">Voir une discussion</a></div><div class="page-hero-deco page-hero-deco--forum" aria-hidden="true">?</div>`
+      children: `<div class="page-hero-actions"><button class="btn btn--lime btn--lg" data-new-thread>${icon('plus')} Nouveau sujet</button><a class="btn btn--ghost btn--lg" href="${topThreads[0] ? `/forum/${escapeAttr(topThreads[0].id)}` : '/forum'}">Voir une discussion</a></div><div class="page-hero-deco page-hero-deco--forum" aria-hidden="true">?</div>`
     })}
     <section class="section forum-page-section">
       <div class="container">
@@ -1685,7 +1685,7 @@ function renderForumPage() {
 
 function renderThreadPage(id) {
   const thread = forumThreads.find(item => item.id === id);
-  if (!thread) return renderNotFound('Cette discussion est introuvable.', 'Elle a peut-être été archivée. Le forum est grand, mais tu peux retrouver le chemin.', '#/forum', 'Retour au forum');
+  if (!thread) return renderNotFound('Cette discussion est introuvable.', 'Elle a peut-être été archivée. Le forum est grand, mais tu peux retrouver le chemin.', '/forum', 'Retour au forum');
   if (!thread.content) {
     loadThreadDetail(id).then(() => renderRoute()).catch(() => {});
     return `
