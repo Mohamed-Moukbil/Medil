@@ -48,14 +48,20 @@ Le studio permet de :
 
 ### Persistance
 
-Les modifications sont enregistrées dans le `localStorage` du navigateur (clé `medil.content.v1`, et `medil.threads` pour le forum). Elles sont donc :
+Le studio d’administration et le forum éditorial restent enregistrés dans le `localStorage` du navigateur (clés `medil.content.v1` et `medil.threads`). Ces contenus éditoriaux sont donc :
 
 - visibles immédiatement dans le site ;
-- conservées après rechargement et fermeture du navigateur sur le même profil ;
-- limitées à ce navigateur et à cet appareil ;
-- non partagées entre plusieurs visiteurs.
+- conservés après rechargement et fermeture du navigateur sur le même profil ;
+- limités à ce navigateur et à cet appareil ;
+- non partagés entre plusieurs visiteurs.
 
-Le studio est un outil de démonstration **sans backend**. Son mot de passe protège l’interface locale, mais ne constitue pas une authentification serveur : pour un site public avec plusieurs administrateurs, il faut ajouter un vrai backend et une authentification côté serveur.
+En revanche, **l’authentification et les données personnelles ne sont plus stockées localement** : profil, favoris (cours et exercices), cours terminés, likes du forum et série du défi du jour sont lus et écrits directement dans Supabase, puis gardés en mémoire pendant la session. Les anciennes clés `medil.user`, `medil.saved.courses`, `medil.saved.exercises`, `medil.completed`, `medil.liked.threads` et `medil.liked.replies` sont supprimées au démarrage.
+
+Un visiteur non connecté peut consulter le site, mais doit se connecter pour enregistrer un favori, marquer un cours comme terminé, réagir à une discussion ou valider le défi du jour.
+
+La session Supabase (jeton d’authentification) est conservée par la bibliothèque Supabase dans le stockage du navigateur afin de garder l’utilisateur connecté après un rechargement. Ce n’est pas une donnée personnelle applicative : elle est gérée et révoquée par Supabase à la déconnexion.
+
+Le studio d’administration reste un outil local **sans backend** : son mot de passe protège l’interface locale, mais ne constitue pas une authentification serveur. Pour un site public avec plusieurs administrateurs, il faut ajouter un vrai backend et une authentification côté serveur.
 
 ### Sauvegarder et publier
 
@@ -82,8 +88,8 @@ Supprime la clé `medil.admin.hash` du `localStorage` du site via les outils de 
 
 - Routage par hash (`#/cours`, `#/cours/:id`, `#/exercices`, `#/concours`, `#/forum`, `#/forum/:id`, `#/admin`).
 - Recherche globale avec navigation clavier (`Ctrl/⌘ + K`, flèches, Entrée).
-- Filtres, favoris, cours terminés et profil persistés dans `localStorage`.
-- Inscription / connexion de démonstration, newsletter et notifications toast.
+- Filtres, favoris, cours terminés et profil synchronisés avec Supabase (aucune donnée personnelle en `localStorage`).
+- Inscription / connexion Supabase (e-mail, Google, GitHub), newsletter et notifications toast.
 - Modales accessibles au clavier (fermeture par `Échap` ou clic sur le fond).
 - Version imprimable / PDF des cours et des sujets via l’impression du navigateur.
 - Design responsive desktop, tablette et mobile, polices et KaTeX servis localement.
@@ -100,7 +106,9 @@ Supprime la clé `medil.admin.hash` du `localStorage` du site via les outils de 
 
 ## Authentification (Supabase)
 
-Le site utilise **Supabase Authentication** pour les connexions Google et GitHub (et e-mail/mot de passe). Tant que `config.js` contient les valeurs `YOUR_...`, le site reste en **mode démo local** (compte stocké dans le navigateur), comme avant.
+Le site utilise **Supabase Authentication** pour les connexions Google, GitHub et e-mail/mot de passe. `config.js` doit contenir l’URL du projet et la clé publique `anon` / `publishable`. Il n’y a plus de compte de démonstration local : si Supabase est indisponible, la connexion affiche une erreur explicite.
+
+Le flux OAuth utilise **PKCE** (compatible avec le routage par hash) et revient sur l’URL du site sans query ni hash : `origine + chemin`. En local, la redirection est donc exactement `http://127.0.0.1:8000/`.
 
 ### 1. Créer le projet Supabase
 
@@ -108,11 +116,16 @@ Le site utilise **Supabase Authentication** pour les connexions Google et GitHub
 2. Dans **Authentication → Providers**, active **Email**, **Google** et **GitHub**.
 3. Dans **Project Settings → API**, récupère l’URL du projet et la clé `anon` (publique).
 4. Colle ces valeurs dans `config.js` (remplace les `YOUR_...`).
+5. Dans **Authentication → URL Configuration**, renseigne :
+   - **Site URL** : `https://medil.io`
+   - **Redirect URLs** : `https://medil.io/**` et `http://127.0.0.1:8000/**`
+   - Si tu ouvres le site via `http://localhost:8000`, ajoute aussi `http://localhost:8000/**` : Supabase compare les URLs au caractère près (`localhost` ≠ `127.0.0.1`).
 
 ### 2. Configurer Google
 
 - Crée un client OAuth dans Google Cloud Console, puis colle le client id/secret dans Supabase.
 - Ajoute le redirect `https://<project>.supabase.co/auth/v1/callback` et ton origine de site.
+- Si l’écran de consentement Google est en mode « test », ajoute ton compte dans les testeurs.
 
 ### 3. Configurer GitHub
 
@@ -123,10 +136,26 @@ Le site utilise **Supabase Authentication** pour les connexions Google et GitHub
 ### 4. Déployer
 
 - Héberge le site en HTTPS (GitHub Pages convient, le `CNAME` est déjà présent).
-- Google et GitHub fonctionnent en local une fois le domaine `localhost` autorisé dans Supabase (URL Configuration).
+- L’URL de retour doit correspondre à l’adresse réellement ouverte : `https://medil.io/**` pour le domaine, et l’URL exacte en local.
+- Sur un site GitHub Pages de type `https://<user>.github.io/<repo>/`, ajoute aussi cette origine complète dans **Redirect URLs**.
+
+### Dépannage
+
+Les erreurs OAuth sont maintenant affichées dans un toast (avant, elles étaient silencieuses et pouvaient afficher une page 404).
+
+| Symptôme | Cause probable | Correction |
+| --- | --- | --- |
+| `access_denied` | Consentement annulé, ou compte non autorisé (écran Google en mode test) | Réessaie, ou ajoute le compte aux testeurs Google |
+| `bad_oauth_state` / « session expirée » | Lien de retour ouvert trop tard ou dans un autre navigateur | Relance la connexion depuis le navigateur d’origine |
+| « code verifier » / « connexion expirée » | Retour sur une autre origine que celle du départ (`localhost` vs `127.0.0.1`, http vs https) | Utilise la même URL et ajoute-la dans **Redirect URLs** |
+| « URL de redirection non autorisée » | URL absente de **Redirect URLs** | Ajoute l’URL exacte (avec `/**`) |
+| « fournisseur non activé » | Provider désactivé dans Supabase | Active Google/GitHub dans **Authentication → Providers** |
+| Connexion e-mail impossible après inscription | Confirmation e-mail activée (par défaut) | Clique sur le lien reçu, puis connecte-toi |
 
 ### Remarques
 
-- Les boutons « Continuer avec Google / GitHub » sont dans la modale d’authentification. Sans config Supabase, ils affichent un message et le mode démo reste actif.
-- La déconnexion passe par Supabase si l’utilisateur est connecté via un provider, sinon elle efface simplement le compte démo local.
+- Les boutons « Continuer avec Google / GitHub » sont dans la modale d’authentification. Si Supabase n’est pas configuré ou si le script ne se charge pas, un message d’erreur explicite s’affiche.
+- Avec la confirmation e-mail activée, l’inscription ne connecte pas immédiatement : un message demande de cliquer sur le lien reçu. L’utilisateur n’est marqué connecté qu’une fois la session réellement créée.
+- La déconnexion passe par Supabase et efface les données personnelles gardées en mémoire (favoris, progression, likes, série). Si le serveur est injoignable, la session locale est quand même supprimée.
+- Les données personnelles ne sont jamais écrites dans `localStorage` ; seuls les contenus éditoriaux du studio et du forum y restent.
 - Ne commite jamais la clé `service_role` : seule la clé `anon` doit figurer dans `config.js`.

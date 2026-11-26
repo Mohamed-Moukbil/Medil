@@ -1299,8 +1299,6 @@
     try {
       savedCourses.delete(id);
       completedItems.delete(id);
-      localStorage.setItem('medil.saved.courses', JSON.stringify([...savedCourses]));
-      localStorage.setItem('medil.completed', JSON.stringify([...completedItems]));
     } catch (error) {
       /* Nettoyage best-effort. */
     }
@@ -1327,7 +1325,6 @@
       replaceArray(EXERCISES, EXERCISES.filter(item => item.id !== id));
       try {
         savedExercises.delete(id);
-        localStorage.setItem('medil.saved.exercises', JSON.stringify([...savedExercises]));
       } catch (error) {
         /* Best-effort. */
       }
@@ -1351,7 +1348,6 @@
       if (!thread || !window.confirm(`Supprimer définitivement la discussion « ${thread.title} » ?`)) return;
       replaceArray(forumThreads, forumThreads.filter(item => item.id !== id));
       likedThreads.delete(id);
-      try { localStorage.setItem('medil.liked.threads', JSON.stringify([...likedThreads])); } catch (error) { /* Best-effort. */ }
       persistForum();
       finishEditing('Discussion supprimée.', 'forum');
     }

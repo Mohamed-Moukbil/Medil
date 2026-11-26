@@ -138,16 +138,29 @@ function paragraphs(text) {
 
 /* --------------------------------------------------------------------------
    Persistance locale
+   Seul le forum éditorial reste en localStorage. L’authentification et les
+   données personnelles (favoris, progression, likes, série) vivent dans
+   Supabase et sont gardées en mémoire uniquement.
    -------------------------------------------------------------------------- */
 const STORAGE = {
-  courses: 'medil.saved.courses',
-  exercises: 'medil.saved.exercises',
-  threads: 'medil.threads',
-  likedThreads: 'medil.liked.threads',
-  likedReplies: 'medil.liked.replies',
-  user: 'medil.user',
-  completed: 'medil.completed'
+  threads: 'medil.threads'
 };
+
+const LEGACY_PERSONAL_KEYS = [
+  'medil.user',
+  'medil.saved.courses',
+  'medil.saved.exercises',
+  'medil.completed',
+  'medil.liked.threads',
+  'medil.liked.replies'
+];
+
+function clearLegacyPersonalStorage() {
+  LEGACY_PERSONAL_KEYS.forEach(key => {
+    try { localStorage.removeItem(key); } catch (error) { /* Navigation privée. */ }
+  });
+}
+clearLegacyPersonalStorage();
 
 function readJSON(key, fallback) {
   try {
@@ -166,13 +179,22 @@ function writeJSON(key, value) {
   }
 }
 
-let savedCourses = new Set(readJSON(STORAGE.courses, []));
-let savedExercises = new Set(readJSON(STORAGE.exercises, []));
-let likedThreads = new Set(readJSON(STORAGE.likedThreads, []));
-let likedReplies = new Set(readJSON(STORAGE.likedReplies, []));
-let completedItems = new Set(readJSON(STORAGE.completed, []));
-let currentUser = readJSON(STORAGE.user, null);
+let savedCourses = new Set();
+let savedExercises = new Set();
+let likedThreads = new Set();
+let likedReplies = new Set();
+let completedItems = new Set();
+let currentUser = null;
+let personalDataUserId = null;
 let forumThreads = readJSON(STORAGE.threads, null) || JSON.parse(JSON.stringify(SEED_THREADS));
+
+function resetPersonalData() {
+  savedCourses.clear();
+  savedExercises.clear();
+  likedThreads.clear();
+  likedReplies.clear();
+  completedItems.clear();
+}
 
 /* --------------------------------------------------------------------------
    Authentification (Supabase) — Google & GitHub
@@ -186,49 +208,214 @@ function getSupabase() {
   if (!supabaseConfigured()) return null;
   if (!window.__medilSupabase) {
     try { window.__medilSupabase = window.supabase.createClient(cfg.url, cfg.anonKey, { auth: { flowType: 'pkce', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }); }
-    catch (error) { window.__medilSupabase = null; }
+    catch (error) { console.error('Initialisation Supabase impossible :', error); window.__medilSupabase = null; }
   }
   return window.__medilSupabase || null;
 }
+
+// URL de retour OAuth : origine + chemin, sans query ni hash (compatible GitHub Pages).
+function authRedirectUrl() {
+  const url = new URL(window.location.href);
+  url.hash = '';
+  url.search = '';
+  return url.toString();
+}
+
+// Supabase renvoie les erreurs OAuth dans la query ET dans le hash ; on lit les deux.
+function authCallbackError() {
+  const read = params => {
+    const error = params.get('error');
+    const description = params.get('error_description');
+    const code = params.get('error_code');
+    return (error || description || code) ? { error, error_description: description, error_code: code } : null;
+  };
+  const fromSearch = read(new URLSearchParams(window.location.search));
+  if (fromSearch) return fromSearch;
+  return read(new URLSearchParams(window.location.hash.replace(/^#\/?/, '')));
+}
+
+function clearAuthParamsFromUrl() {
+  const url = new URL(window.location.href);
+  url.search = '';
+  if (/(?:^|[#&])(?:error|error_code|error_description|sb)=/.test(url.hash)) url.hash = '#/';
+  window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
+}
+
+function authErrorMessage(error) {
+  const raw = String((error && (error.message || error.error_description || error.msg || error.error)) || '').trim();
+  const code = String((error && (error.code || error.error_code || error.error)) || '');
+  const text = `${code} ${raw}`.toLowerCase();
+  if (code === 'invalid_credentials' || text.includes('invalid login credentials')) return 'E-mail ou mot de passe incorrect.';
+  if (code === 'email_not_confirmed' || text.includes('email not confirmed')) return 'Confirme d’abord ton adresse e-mail : le lien t’a été envoyé à l’inscription.';
+  if (text.includes('user already registered')) return 'Un compte existe déjà avec cet e-mail. Connecte-toi plutôt.';
+  if (text.includes('password should be at least')) return 'Le mot de passe doit contenir au moins 8 caractères.';
+  if (text.includes('for security purposes') || text.includes('rate limit')) return 'Trop de tentatives. Patiente quelques minutes avant de réessayer.';
+  if (text.includes('access_denied') || text.includes('access denied')) return 'Connexion annulée. Tu peux réessayer quand tu veux.';
+  if (text.includes('bad_oauth_state') || text.includes('state parameter')) return 'La session de connexion a expiré. Relance la connexion.';
+  if (text.includes('code verifier')) return 'La connexion a expiré ou a été ouverte dans un autre navigateur. Relance-la depuis ce navigateur.';
+  if (text.includes('refresh token') || text.includes('session missing') || text.includes('session_not_found') || text.includes('invalid jwt')) return 'Ta session a expiré. Reconnecte-toi.';
+  if (text.includes('provider is not enabled')) return 'Ce fournisseur de connexion n’est pas activé dans Supabase.';
+  if (text.includes('redirect') && (text.includes('not allowed') || text.includes('whitelist'))) return 'URL de redirection non autorisée. Ajoute cette adresse dans Supabase → Authentication → URL Configuration.';
+  if (text.includes('failed to fetch') || text.includes('networkerror') || text.includes('network error')) return 'Serveur injoignable. Vérifie ta connexion internet et réessaie.';
+  return raw || 'La connexion a échoué. Réessaie.';
+}
+
+function reportAuthError(error) {
+  console.error(error);
+  toast(authErrorMessage(error), { type: 'error', duration: 6000 });
+}
+
 function mapSupabaseUser(user) {
-  if (!user) { currentUser = null; writeJSON(STORAGE.user, currentUser); updateHeaderUser(); return; }
+  if (!user) {
+    currentUser = null;
+    resetPersonalData();
+    personalDataUserId = null;
+    updateHeaderUser();
+    return;
+  }
+  const previous = currentUser;
   currentUser = {
     id: user.id,
-    name: (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name)) || (user.email ? user.email.split('@')[0] : 'Taupin MEDIL'),
+    name: (user.user_metadata && (user.user_metadata.full_name || user.user_metadata.name || user.user_metadata.user_name || user.user_metadata.preferred_username)) || (user.email ? user.email.split('@')[0] : 'Taupin MEDIL'),
     email: user.email || '',
     photoURL: (user.user_metadata && (user.user_metadata.avatar_url || user.user_metadata.picture)) || null,
     provider: (user.app_metadata && user.app_metadata.provider) || 'email',
     joined: user.created_at || new Date().toISOString(),
-    streak: (currentUser && currentUser.streak) || 0
+    streak: (previous && previous.id === user.id && previous.streak) || 0
   };
-  writeJSON(STORAGE.user, currentUser);
   updateHeaderUser();
   void loadPersonalDataFromCloud();
 }
+
 function initSupabaseAuth() {
   const client = getSupabase();
-  if (!client) return;
-  client.auth.getSession().then(({ data }) => {
+  if (!client) {
+    if (!window.supabase) console.warn('Supabase JS indisponible : la connexion et la synchronisation des données personnelles sont désactivées.');
+    return;
+  }
+  const callbackError = authCallbackError();
+  const callbackHadCode = new URLSearchParams(window.location.search).has('code') || new URLSearchParams(window.location.hash.replace(/^#\/?/, '')).has('code');
+  if (callbackError) {
+    clearAuthParamsFromUrl();
+    setTimeout(() => reportAuthError(callbackError), 250);
+  }
+  client.auth.getSession().then(({ data, error }) => {
+    if (error) {
+      clearAuthParamsFromUrl();
+      mapSupabaseUser(null);
+      reportAuthError(error);
+      return;
+    }
     mapSupabaseUser(data && data.session ? data.session.user : null);
-  }).catch(() => {});
+    if (callbackHadCode && !(data && data.session)) {
+      clearAuthParamsFromUrl();
+      toast('La connexion n’a pas abouti. Relance-la depuis ce navigateur.', { type: 'error', duration: 6000 });
+    }
+  }).catch(error => {
+    clearAuthParamsFromUrl();
+    mapSupabaseUser(null);
+    reportAuthError(error);
+  });
   client.auth.onAuthStateChange((_event, session) => {
-    mapSupabaseUser(session ? session.user : null);
+    // Ne pas appeler d’autres méthodes Supabase dans ce callback (verrou interne) : on diffère.
+    setTimeout(() => mapSupabaseUser(session ? session.user : null), 0);
   });
 }
-async function signInWithSocial(providerKey) {
+
+async function signInWithSocial(providerKey, trigger) {
   const client = getSupabase();
   if (!client) {
-    toast('Authentification Supabase non configurée. Renseigne config.js (voir README).', { type: 'error' });
+    toast('Connexion Supabase indisponible. Vérifie config.js et le chargement du script Supabase.', { type: 'error' });
     return;
   }
   const provider = providerKey === 'github' ? 'github' : 'google';
+  const restore = trigger ? { html: trigger.innerHTML, disabled: trigger.disabled } : null;
+  if (trigger) trigger.disabled = true;
   try {
-    const { error } = await client.auth.signInWithOAuth({ provider, options: { redirectTo: window.location.origin } });
+    const { error } = await client.auth.signInWithOAuth({ provider, options: { redirectTo: authRedirectUrl() } });
     if (error) throw error;
   } catch (error) {
-    console.error(error);
-    toast((error && error.message) ? error.message : 'Échec de la connexion.', { type: 'error' });
+    if (trigger && restore) { trigger.disabled = restore.disabled; trigger.innerHTML = restore.html; }
+    reportAuthError(error);
   }
+}
+
+async function handleAuthSubmit(form) {
+  const formData = new FormData(form);
+  const mode = form.dataset.authForm;
+  const email = String(formData.get('email') || '').trim();
+  const password = String(formData.get('password') || '');
+  const submittedName = String(formData.get('name') || '').trim();
+  const client = getSupabase();
+  const submit = form.querySelector('button[type="submit"]');
+  const original = submit ? submit.innerHTML : '';
+  if (submit) { submit.disabled = true; submit.textContent = mode === 'login' ? 'Connexion…' : 'Création du compte…'; }
+  try {
+    if (!client) throw new Error('Authentification Supabase indisponible. Vérifie config.js et le chargement du script Supabase.');
+    if (mode === 'signup') {
+      const result = await client.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name: submittedName }, emailRedirectTo: authRedirectUrl() }
+      });
+      if (result.error) throw result.error;
+      const session = result.data && result.data.session;
+      if (session && session.user) {
+        mapSupabaseUser(session.user);
+        closeModal();
+        toast(`Bienvenue dans la promo, ${currentUser.name.split(' ')[0]} !`, { type: 'success' });
+        return;
+      }
+      // Confirmation e-mail activée : pas de session tant que le lien n’est pas cliqué.
+      const user = result.data && result.data.user;
+      const alreadyExists = !!(user && Array.isArray(user.identities) && user.identities.length === 0);
+      closeModal();
+      toast(
+        alreadyExists
+          ? 'Un compte existe peut-être déjà avec cet e-mail. Vérifie ta boîte mail ou connecte-toi.'
+          : 'Compte créé ! Vérifie ta boîte mail et clique sur le lien de confirmation avant de te connecter.',
+        { type: 'success', duration: 7000 }
+      );
+      return;
+    }
+    const result = await client.auth.signInWithPassword({ email, password });
+    if (result.error) throw result.error;
+    if (!result.data || !result.data.session || !result.data.session.user) throw new Error('Session introuvable après la connexion.');
+    mapSupabaseUser(result.data.session.user);
+    closeModal();
+    toast(`Content de te revoir, ${currentUser.name.split(' ')[0]} !`, { type: 'success' });
+  } catch (error) {
+    reportAuthError(error);
+  } finally {
+    if (submit && document.contains(submit)) {
+      submit.disabled = false;
+      submit.innerHTML = original;
+    }
+  }
+}
+
+async function signOutUser() {
+  const client = getSupabase();
+  if (client) {
+    try {
+      const { error } = await client.auth.signOut();
+      if (error) {
+        console.warn('Déconnexion Supabase :', error);
+        // Le serveur est injoignable : on supprime au moins la session locale.
+        await client.auth.signOut({ scope: 'local' }).catch(() => {});
+      }
+    } catch (error) {
+      console.error(error);
+      await client.auth.signOut({ scope: 'local' }).catch(() => {});
+    }
+  }
+  currentUser = null;
+  resetPersonalData();
+  personalDataUserId = null;
+  updateHeaderUser();
+  closeModal();
+  renderRoute();
+  toast('À bientôt sur MEDIL.');
 }
 
 /* --------------------------------------------------------------------------
@@ -237,35 +424,44 @@ async function signInWithSocial(providerKey) {
 async function syncSave(type, id, saved) {
   const client = getSupabase();
   if (!client || !currentUser) return;
+  const userId = currentUser.id;
   try {
-    if (saved) {
-      await client.from('user_saves').upsert({ user_id: currentUser.id, item_type: type, item_id: id }, { onConflict: 'user_id,item_type,item_id' });
-    } else {
-      await client.from('user_saves').delete().match({ user_id: currentUser.id, item_type: type, item_id: id });
-    }
-  } catch (error) { console.error(error); }
+    const { error } = saved
+      ? await client.from('user_saves').upsert({ user_id: userId, item_type: type, item_id: id }, { onConflict: 'user_id,item_type,item_id' })
+      : await client.from('user_saves').delete().match({ user_id: userId, item_type: type, item_id: id });
+    if (error) throw error;
+  } catch (error) {
+    console.error(error);
+    toast('Impossible de synchroniser tes favoris avec Supabase.', { type: 'error' });
+  }
 }
 async function syncCompleted(id, completed) {
   const client = getSupabase();
   if (!client || !currentUser) return;
+  const userId = currentUser.id;
   try {
-    if (completed) {
-      await client.from('user_completed').upsert({ user_id: currentUser.id, item_id: id }, { onConflict: 'user_id,item_id' });
-    } else {
-      await client.from('user_completed').delete().match({ user_id: currentUser.id, item_id: id });
-    }
-  } catch (error) { console.error(error); }
+    const { error } = completed
+      ? await client.from('user_completed').upsert({ user_id: userId, item_id: id }, { onConflict: 'user_id,item_id' })
+      : await client.from('user_completed').delete().match({ user_id: userId, item_id: id });
+    if (error) throw error;
+  } catch (error) {
+    console.error(error);
+    toast('Impossible de synchroniser ta progression avec Supabase.', { type: 'error' });
+  }
 }
 async function syncLike(targetType, id, liked) {
   const client = getSupabase();
   if (!client || !currentUser) return;
+  const userId = currentUser.id;
   try {
-    if (liked) {
-      await client.from('user_likes').upsert({ user_id: currentUser.id, target_type: targetType, target_id: id }, { onConflict: 'user_id,target_type,target_id' });
-    } else {
-      await client.from('user_likes').delete().match({ user_id: currentUser.id, target_type: targetType, target_id: id });
-    }
-  } catch (error) { console.error(error); }
+    const { error } = liked
+      ? await client.from('user_likes').upsert({ user_id: userId, target_type: targetType, target_id: id }, { onConflict: 'user_id,target_type,target_id' })
+      : await client.from('user_likes').delete().match({ user_id: userId, target_type: targetType, target_id: id });
+    if (error) throw error;
+  } catch (error) {
+    console.error(error);
+    toast('Impossible de synchroniser tes réactions avec Supabase.', { type: 'error' });
+  }
 }
 function computeStreak(dates) {
   if (!Array.isArray(dates) || !dates.length) return 0;
@@ -284,17 +480,24 @@ function computeStreak(dates) {
 }
 async function markDailyChallengeDone() {
   const client = getSupabase();
-  if (!client || !currentUser) {
-    toast('Connecte-toi pour enregistrer ta série.', { type: 'error' });
+  if (!currentUser) {
+    ensureLoggedIn('Connecte-toi pour enregistrer ta série.');
     return;
   }
+  if (!client) {
+    toast('Synchronisation Supabase indisponible. Vérifie ta connexion et réessaie.', { type: 'error' });
+    return;
+  }
+  const userId = currentUser.id;
   const today = new Date().toISOString().slice(0, 10);
   try {
-    await client.from('challenge_completions').upsert({ user_id: currentUser.id, challenge_date: today }, { onConflict: 'user_id,challenge_date' });
-    const { data } = await client.from('challenge_completions').select('challenge_date').eq('user_id', currentUser.id);
+    const { error: upsertError } = await client.from('challenge_completions').upsert({ user_id: userId, challenge_date: today }, { onConflict: 'user_id,challenge_date' });
+    if (upsertError) throw upsertError;
+    const { data, error: selectError } = await client.from('challenge_completions').select('challenge_date').eq('user_id', userId);
+    if (selectError) throw selectError;
+    if (!currentUser || currentUser.id !== userId) return;
     const streak = computeStreak((data || []).map(row => row.challenge_date));
     currentUser.streak = streak;
-    writeJSON(STORAGE.user, currentUser);
     updateHeaderUser();
     toast(`Défi du jour validé. Série : ${streak} jour${streak > 1 ? 's' : ''}.`, { type: 'success' });
   } catch (error) {
@@ -305,13 +508,24 @@ async function markDailyChallengeDone() {
 async function loadPersonalDataFromCloud() {
   const client = getSupabase();
   if (!client || !currentUser) return;
+  const userId = currentUser.id;
+  // Évite d’afficher les données d’un compte précédent pendant le chargement.
+  if (personalDataUserId !== userId) {
+    resetPersonalData();
+    personalDataUserId = userId;
+  }
   try {
     const [savesRes, completedRes, likesRes, completionsRes] = await Promise.all([
-      client.from('user_saves').select('item_type,item_id').eq('user_id', currentUser.id),
-      client.from('user_completed').select('item_id').eq('user_id', currentUser.id),
-      client.from('user_likes').select('target_type,target_id').eq('user_id', currentUser.id),
-      client.from('challenge_completions').select('challenge_date').eq('user_id', currentUser.id)
+      client.from('user_saves').select('item_type,item_id').eq('user_id', userId),
+      client.from('user_completed').select('item_id').eq('user_id', userId),
+      client.from('user_likes').select('target_type,target_id').eq('user_id', userId),
+      client.from('challenge_completions').select('challenge_date').eq('user_id', userId)
     ]);
+    const failure = [savesRes, completedRes, likesRes, completionsRes].find(result => result.error);
+    if (failure) throw failure.error;
+    // L’utilisateur a pu se déconnecter ou changer pendant les requêtes.
+    if (!currentUser || currentUser.id !== userId) return;
+    resetPersonalData();
     (savesRes.data || []).forEach(row => {
       if (row.item_type === 'course') savedCourses.add(row.item_id);
       else if (row.item_type === 'exercise') savedExercises.add(row.item_id);
@@ -321,17 +535,14 @@ async function loadPersonalDataFromCloud() {
       if (row.target_type === 'thread') likedThreads.add(row.target_id);
       else if (row.target_type === 'reply') likedReplies.add(row.target_id);
     });
-    writeJSON(STORAGE.courses, [...savedCourses]);
-    writeJSON(STORAGE.exercises, [...savedExercises]);
-    writeJSON(STORAGE.completed, [...completedItems]);
-    writeJSON(STORAGE.likedThreads, [...likedThreads]);
-    writeJSON(STORAGE.likedReplies, [...likedReplies]);
     const streak = computeStreak((completionsRes.data || []).map(row => row.challenge_date));
     currentUser.streak = streak;
-    writeJSON(STORAGE.user, currentUser);
     updateHeaderUser();
     renderRoute();
-  } catch (error) { console.error(error); }
+  } catch (error) {
+    console.error(error);
+    toast('Impossible de charger tes données personnelles depuis Supabase.', { type: 'error' });
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -2242,13 +2453,20 @@ function initPageFilterUI() {
 /* --------------------------------------------------------------------------
    Actions dynamiques
    -------------------------------------------------------------------------- */
+function ensureLoggedIn(message) {
+  if (currentUser) return true;
+  toast(message, { type: 'error' });
+  openAuthModal('login');
+  return false;
+}
+
 function saveCourse(id) {
   const course = COURSES.find(item => item.id === id);
   if (!course) return;
+  if (!ensureLoggedIn('Connecte-toi pour enregistrer ce cours.')) return;
   const wasSaved = savedCourses.has(id);
   if (wasSaved) savedCourses.delete(id);
   else savedCourses.add(id);
-  writeJSON(STORAGE.courses, [...savedCourses]);
   syncSave('course', id, !wasSaved);
   $$(`[data-save-course="${CSS.escape(id)}"]`).forEach(button => {
     button.classList.toggle('is-saved', !wasSaved);
@@ -2265,10 +2483,10 @@ function saveCourse(id) {
 function saveExercise(id) {
   const exercise = EXERCISES.find(item => item.id === id);
   if (!exercise) return;
+  if (!ensureLoggedIn('Connecte-toi pour ajouter cet exercice à tes favoris.')) return;
   const wasSaved = savedExercises.has(id);
   if (wasSaved) savedExercises.delete(id);
   else savedExercises.add(id);
-  writeJSON(STORAGE.exercises, [...savedExercises]);
   syncSave('exercise', id, !wasSaved);
   $$(`[data-save-exercise="${CSS.escape(id)}"]`).forEach(button => {
     button.classList.toggle('is-saved', !wasSaved);
@@ -2324,6 +2542,7 @@ function copyThreadLink() {
 function handleThreadLike(id) {
   const thread = forumThreads.find(item => item.id === id);
   if (!thread) return;
+  if (!ensureLoggedIn('Connecte-toi pour réagir aux discussions.')) return;
   const wasLiked = likedThreads.has(id);
   if (wasLiked) {
     likedThreads.delete(id);
@@ -2332,7 +2551,6 @@ function handleThreadLike(id) {
     likedThreads.add(id);
     thread.upvotes = (Number(thread.upvotes) || 0) + 1;
   }
-  writeJSON(STORAGE.likedThreads, [...likedThreads]);
   writeJSON(STORAGE.threads, forumThreads);
   syncLike('thread', id, !wasLiked);
   const button = $(`[data-like-thread="${CSS.escape(id)}"]`);
@@ -2348,6 +2566,7 @@ function handleReplyUpvote(button) {
   if (!replyId) return;
   const countSpan = button.querySelector('span');
   if (!countSpan) return;
+  if (!ensureLoggedIn('Connecte-toi pour réagir aux réponses.')) return;
   const thread = forumThreads.find(item => Array.isArray(item.answers) && item.answers.some(answer => answer.id === replyId));
   const answer = thread?.answers?.find(item => item.id === replyId);
   const wasLiked = likedReplies.has(replyId);
@@ -2358,7 +2577,6 @@ function handleReplyUpvote(button) {
     likedReplies.add(replyId);
     if (answer) answer.upvotes = (Number(answer.upvotes) || 0) + 1;
   }
-  writeJSON(STORAGE.likedReplies, [...likedReplies]);
   writeJSON(STORAGE.threads, forumThreads);
   syncLike('reply', replyId, !wasLiked);
   button.classList.toggle('is-active', !wasLiked);
@@ -2807,6 +3025,7 @@ function bindGlobalEvents() {
     }
     const doneButton = target.closest('[data-mark-course-done]');
     if (doneButton) {
+      if (!ensureLoggedIn('Connecte-toi pour suivre ta progression.')) return;
       const id = doneButton.dataset.markCourseDone;
       if (completedItems.has(id)) {
         completedItems.delete(id);
@@ -2815,7 +3034,6 @@ function bindGlobalEvents() {
         completedItems.add(id);
         toast('Cours terminé. Bien joué !', { type: 'success' });
       }
-      writeJSON(STORAGE.completed, [...completedItems]);
       syncCompleted(id, completedItems.has(id));
       const course = COURSES.find(item => item.id === id);
       const baseProgress = course?.progress || 0;
@@ -2860,7 +3078,7 @@ function bindGlobalEvents() {
     // Auth & profil
     const socialTrigger = target.closest('[data-social-auth]');
     if (socialTrigger) {
-      signInWithSocial(socialTrigger.dataset.socialAuth);
+      signInWithSocial(socialTrigger.dataset.socialAuth, socialTrigger);
       return;
     }
     const authTrigger = target.closest('[data-open-auth]');
@@ -2874,16 +3092,7 @@ function bindGlobalEvents() {
       return;
     }
     if (target.closest('[data-logout]')) {
-      const client = getSupabase();
-      if (client) {
-        client.auth.signOut().then(() => { currentUser = null; localStorage.removeItem(STORAGE.user); updateHeaderUser(); closeModal(); toast('À bientôt sur MEDIL.'); }).catch(() => { toast('Erreur lors de la déconnexion.', { type: 'error' }); });
-      } else {
-        currentUser = null;
-        localStorage.removeItem(STORAGE.user);
-        updateHeaderUser();
-        closeModal();
-        toast('À bientôt sur MEDIL.');
-      }
+      signOutUser();
       return;
     }
 
@@ -2904,40 +3113,7 @@ function bindGlobalEvents() {
     if (form.matches('[data-auth-form]')) {
       event.preventDefault();
       if (!form.reportValidity()) return;
-      const formData = new FormData(form);
-      const mode = form.dataset.authForm;
-      const email = String(formData.get('email') || '').trim();
-      const password = String(formData.get('password') || '');
-      const submittedName = String(formData.get('name') || '').trim();
-      const client = getSupabase();
-      if (client) {
-        try {
-          let result;
-          if (mode === 'signup') {
-            result = await client.auth.signUp({ email, password, options: { data: { full_name: submittedName } } });
-          } else {
-            result = await client.auth.signInWithPassword({ email, password });
-          }
-          if (result.error) throw result.error;
-          if (result.data && result.data.user) mapSupabaseUser(result.data.user);
-          closeModal();
-          toast(mode === 'login' ? 'Content de te revoir !' : 'Bienvenue dans la promo !', { type: 'success' });
-        } catch (error) {
-          toast((error && error.message) ? error.message : 'Échec de la connexion.', { type: 'error' });
-        }
-        return;
-      }
-      const fallbackName = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, letter => letter.toUpperCase());
-      currentUser = {
-        name: submittedName || fallbackName || 'Taupin MEDIL',
-        email,
-        joined: new Date().toISOString(),
-        streak: 3
-      };
-      writeJSON(STORAGE.user, currentUser);
-      updateHeaderUser();
-      closeModal();
-      toast(mode === 'login' ? `Content de te revoir, ${currentUser.name.split(' ')[0]} !` : `Bienvenue dans la promo, ${currentUser.name.split(' ')[0]} !`, { type: 'success' });
+      await handleAuthSubmit(form);
       return;
     }
 
