@@ -1906,6 +1906,19 @@ kbd { font-family: var(--sans); font-size: 9px; font-weight: 700; color: rgba(25
   body.printing-course a { text-decoration: none; }
 }
 
+@media print {
+  body.printing-exercise > *:not(#modal-root) { display: none !important; }
+  body.printing-exercise .site-header,
+  body.printing-exercise .site-footer,
+  body.printing-exercise #toast-stack { display: none !important; }
+  body.printing-exercise .modal-backdrop { position: static !important; background: #fff !important; padding: 0 !important; opacity: 1 !important; display: block !important; overflow: visible !important; backdrop-filter: none !important; }
+  body.printing-exercise .modal { max-height: none !important; max-width: 100% !important; overflow: visible !important; border-radius: 0 !important; box-shadow: none !important; border: 0 !important; background: #fff !important; display: block !important; }
+  body.printing-exercise .modal-close,
+  body.printing-exercise .exercise-modal-footer { display: none !important; }
+  body.printing-exercise .exercise-modal { padding: 0 !important; }
+  body.printing-exercise iframe { display: none !important; }
+}
+
 /* ==========================================================================
    Studio MEDIL — administration locale
    ========================================================================== */

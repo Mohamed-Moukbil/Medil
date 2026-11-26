@@ -790,6 +790,14 @@
         ${adminField({ label: 'Résolutions', name: 'solves', type: 'number', value: exercise.solves ?? 0, min: 0 })}
         ${adminCheckbox({ name: 'verified', label: 'Corrigé vérifié', checked: Boolean(exercise.verified) })}
       </div>`)}
+      ${editorSection('PDF associé (optionnel)', 'Affiche un PDF dans l’exercice au lieu de (ou en plus de) la correction tapée.', `<div class="admin-form-grid">
+        ${adminField({ label: 'URL du PDF', name: 'pdf', value: exercise.pdf || '', full: true, help: 'Lien http(s) ou chemin local (ex. content/pdfs/exo.pdf).' })}
+        <div class="admin-field admin-field--full">
+          <label class="field-label">Importer un PDF</label>
+          <input type="file" accept="application/pdf" data-admin-pdf-file="exercise">
+          <p class="field-help">Le fichier est converti en données embarquées (peut être volumineux).</p>
+        </div>
+      </div>`)}
       ${saveBar('Enregistrer l’exercice')}
     </form>`;
   }
@@ -811,6 +819,14 @@
         ${adminField({ label: 'Couleur', name: 'color', type: 'select', value: paper.color || 'lime', options: colorOptions() })}
         ${adminCheckbox({ name: 'hot', label: 'Marquer comme incontournable', checked: Boolean(paper.hot) })}
         ${adminCheckbox({ name: 'correction', label: 'Corrigé disponible', checked: Boolean(paper.correction) })}
+      </div>`)}
+      ${editorSection('PDF associé (optionnel)', 'Affiche le sujet/corrigé en PDF dans la banque de concours.', `<div class="admin-form-grid">
+        ${adminField({ label: 'URL du PDF', name: 'pdf', value: paper.pdf || '', full: true, help: 'Lien http(s) ou chemin local (ex. content/pdfs/sujet.pdf).' })}
+        <div class="admin-field admin-field--full">
+          <label class="field-label">Importer un PDF</label>
+          <input type="file" accept="application/pdf" data-admin-pdf-file="paper">
+          <p class="field-help">Le fichier est converti en données embarquées (peut être volumineux).</p>
+        </div>
       </div>`)}
       ${saveBar('Enregistrer le sujet')}
     </form>`;
@@ -979,7 +995,8 @@
       solution,
       answer: valueOf(form, 'answer', false),
       solves: Math.max(0, Number(valueOf(form, 'solves')) || 0),
-      verified: new FormData(form).has('verified')
+      verified: new FormData(form).has('verified'),
+      pdf: valueOf(form, 'pdf') || existing?.pdf || ''
     };
   }
 
@@ -1004,7 +1021,8 @@
       parts: valueOf(form, 'parts'),
       hot: new FormData(form).has('hot'),
       correction: new FormData(form).has('correction'),
-      color: valueOf(form, 'color') || 'lime'
+      color: valueOf(form, 'color') || 'lime',
+      pdf: valueOf(form, 'pdf') || existing?.pdf || ''
     };
   }
 
@@ -1712,6 +1730,20 @@
     const input = event.target;
     if (input.matches('[data-admin-import]')) {
       importFile(input.files?.[0]);
+      input.value = '';
+      return true;
+    }
+    if (input.matches('[data-admin-pdf-file]')) {
+      const file = input.files?.[0];
+      if (!file) return true;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const form = input.closest('form');
+        const pdfInput = form?.querySelector('[name="pdf"]');
+        if (pdfInput) pdfInput.value = String(reader.result || '');
+        adminState.dirty = true;
+      };
+      reader.readAsDataURL(file);
       input.value = '';
       return true;
     }

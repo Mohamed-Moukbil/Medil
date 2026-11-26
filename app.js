@@ -1491,8 +1491,10 @@ function openExerciseModal(id) {
       <div class="exercise-modal-footer">
         <div class="exercise-modal-actions">
           <button class="btn btn--outline ${saved ? 'is-saved' : ''}" data-save-exercise="${exercise.id}" data-modal-save aria-pressed="${saved}">${icon('bookmark')} ${saved ? 'Enregistré' : 'Enregistrer'}</button>
+          <button class="btn btn--outline" data-print-exercise>${icon('print')} Imprimer / PDF</button>
           ${course ? `<a class="btn btn--dark" href="#/cours/${course.id}" data-close-and-nav>Voir le cours lié ${icon('arrowUpRight')}</a>` : ''}
         </div>
+        ${exercise.pdf ? `<div class="exercise-pdf-preview"><p class="panel-label">${icon('file')} PDF associé</p><iframe data-lazy-pdf="${escapeAttr(exercise.pdf)}" title="PDF de l’exercice" loading="lazy"></iframe><a class="text-link" href="${escapeAttr(exercise.pdf)}" target="_blank" rel="noopener">Ouvrir le PDF ${icon('arrowUpRight')}</a></div>` : ''}
         <button class="modal-secondary-link" data-close-modal>Fermer ${icon('close')}</button>
       </div>
     </div>`, { size: 'wide', label: `Exercice : ${exercise.title}`, className: 'modal--exercise' });
@@ -1573,11 +1575,13 @@ function openPaperModal(id) {
         ${paper.correction ? `<div data-paper-panel="corrige" hidden>${paperCorrection(paper)}</div>` : ''}
         <div data-paper-panel="sujet">${paperSheet(paper)}</div>
       </div>
+      ${paper.pdf ? `<div class="paper-pdf-preview"><p class="panel-label">${icon('file')} PDF associé</p><iframe data-lazy-pdf="${escapeAttr(paper.pdf)}" title="PDF du sujet" loading="lazy"></iframe><a class="text-link" href="${escapeAttr(paper.pdf)}" target="_blank" rel="noopener">Ouvrir le PDF ${icon('arrowUpRight')}</a></div>` : ''}
       <div class="paper-modal-footer">
         <div class="paper-modal-note">${icon('download')} Téléchargement disponible en PDF haute qualité.</div>
         <div class="paper-modal-actions">
           <button class="btn btn--outline" data-print-paper>${icon('print')} Imprimer / PDF</button>
           <button class="btn btn--lime" data-soon="Le téléchargement complet arrive avec la version bêta.">Télécharger ${icon('download')}</button>
+          ${paper.pdf ? `<a class="btn btn--dark" href="${escapeAttr(paper.pdf)}" target="_blank" rel="noopener">${icon('file')} Ouvrir le PDF</a>` : ''}
         </div>
       </div>
     </div>`, { size: 'wide', label: `Sujet : ${paper.title} ${paper.year}`, className: 'modal--paper' });
@@ -2520,6 +2524,12 @@ function bindGlobalEvents() {
     }
     if (target.closest('[data-print-paper]')) {
       document.body.classList.add('printing-paper');
+      toast('Choisis « Enregistrer au format PDF » dans la boîte d’impression.', { duration: 4500 });
+      setTimeout(() => window.print(), 350);
+      return;
+    }
+    if (target.closest('[data-print-exercise]')) {
+      document.body.classList.add('printing-exercise');
       toast('Choisis « Enregistrer au format PDF » dans la boîte d’impression.', { duration: 4500 });
       setTimeout(() => window.print(), 350);
       return;
