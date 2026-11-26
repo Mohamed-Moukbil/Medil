@@ -4,9 +4,10 @@
  * 2. Récupère l'URL du projet et la clé anon (Project Settings → API).
  * 3. Remplace les valeurs ci-dessous par les tiennes.
  *
- * Laisse ce fichier tel quel (valeurs "YOUR_...") pour garder le mode démo local.
+ * Ces valeurs sont celles du projet MEDIL : Auth + sync des données
+ * personnelles (user_saves, user_completed, user_likes, challenge_completions).
  */
 window.MEDIL_SUPABASE_CONFIG = {
-  url: "YOUR_SUPABASE_URL",
-  anonKey: "YOUR_SUPABASE_ANON_KEY"
+  url: "https://zeadwyyzftbsyxtcbpql.supabase.co",
+  anonKey: "sb_publishable_adHlT6_QgQ57C841b29Vug_vezLuzAU"
 };

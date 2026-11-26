@@ -199,10 +199,11 @@ function mapSupabaseUser(user) {
     photoURL: (user.user_metadata && (user.user_metadata.avatar_url || user.user_metadata.picture)) || null,
     provider: (user.app_metadata && user.app_metadata.provider) || 'email',
     joined: user.created_at || new Date().toISOString(),
-    streak: (currentUser && currentUser.streak) || 3
+    streak: (currentUser && currentUser.streak) || 0
   };
   writeJSON(STORAGE.user, currentUser);
   updateHeaderUser();
+  void loadPersonalDataFromCloud();
 }
 function initSupabaseAuth() {
   const client = getSupabase();
@@ -228,6 +229,109 @@ async function signInWithSocial(providerKey) {
     console.error(error);
     toast((error && error.message) ? error.message : 'Échec de la connexion.', { type: 'error' });
   }
+}
+
+/* --------------------------------------------------------------------------
+   Synchronisation cloud des données personnelles (Phase 3)
+   -------------------------------------------------------------------------- */
+async function syncSave(type, id, saved) {
+  const client = getSupabase();
+  if (!client || !currentUser) return;
+  try {
+    if (saved) {
+      await client.from('user_saves').upsert({ user_id: currentUser.id, item_type: type, item_id: id }, { onConflict: 'user_id,item_type,item_id' });
+    } else {
+      await client.from('user_saves').delete().match({ user_id: currentUser.id, item_type: type, item_id: id });
+    }
+  } catch (error) { console.error(error); }
+}
+async function syncCompleted(id, completed) {
+  const client = getSupabase();
+  if (!client || !currentUser) return;
+  try {
+    if (completed) {
+      await client.from('user_completed').upsert({ user_id: currentUser.id, item_id: id }, { onConflict: 'user_id,item_id' });
+    } else {
+      await client.from('user_completed').delete().match({ user_id: currentUser.id, item_id: id });
+    }
+  } catch (error) { console.error(error); }
+}
+async function syncLike(targetType, id, liked) {
+  const client = getSupabase();
+  if (!client || !currentUser) return;
+  try {
+    if (liked) {
+      await client.from('user_likes').upsert({ user_id: currentUser.id, target_type: targetType, target_id: id }, { onConflict: 'user_id,target_type,target_id' });
+    } else {
+      await client.from('user_likes').delete().match({ user_id: currentUser.id, target_type: targetType, target_id: id });
+    }
+  } catch (error) { console.error(error); }
+}
+function computeStreak(dates) {
+  if (!Array.isArray(dates) || !dates.length) return 0;
+  const set = new Set(dates);
+  const today = new Date();
+  let cursor = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  if (!set.has(cursor.toISOString().slice(0, 10))) {
+    cursor.setUTCDate(cursor.getUTCDate() - 1);
+  }
+  let streak = 0;
+  while (set.has(cursor.toISOString().slice(0, 10))) {
+    streak += 1;
+    cursor.setUTCDate(cursor.getUTCDate() - 1);
+  }
+  return streak;
+}
+async function markDailyChallengeDone() {
+  const client = getSupabase();
+  if (!client || !currentUser) {
+    toast('Connecte-toi pour enregistrer ta série.', { type: 'error' });
+    return;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  try {
+    await client.from('challenge_completions').upsert({ user_id: currentUser.id, challenge_date: today }, { onConflict: 'user_id,challenge_date' });
+    const { data } = await client.from('challenge_completions').select('challenge_date').eq('user_id', currentUser.id);
+    const streak = computeStreak((data || []).map(row => row.challenge_date));
+    currentUser.streak = streak;
+    writeJSON(STORAGE.user, currentUser);
+    updateHeaderUser();
+    toast(`Défi du jour validé. Série : ${streak} jour${streak > 1 ? 's' : ''}.`, { type: 'success' });
+  } catch (error) {
+    console.error(error);
+    toast((error && error.message) ? error.message : 'Échec de l’enregistrement.', { type: 'error' });
+  }
+}
+async function loadPersonalDataFromCloud() {
+  const client = getSupabase();
+  if (!client || !currentUser) return;
+  try {
+    const [savesRes, completedRes, likesRes, completionsRes] = await Promise.all([
+      client.from('user_saves').select('item_type,item_id').eq('user_id', currentUser.id),
+      client.from('user_completed').select('item_id').eq('user_id', currentUser.id),
+      client.from('user_likes').select('target_type,target_id').eq('user_id', currentUser.id),
+      client.from('challenge_completions').select('challenge_date').eq('user_id', currentUser.id)
+    ]);
+    (savesRes.data || []).forEach(row => {
+      if (row.item_type === 'course') savedCourses.add(row.item_id);
+      else if (row.item_type === 'exercise') savedExercises.add(row.item_id);
+    });
+    (completedRes.data || []).forEach(row => completedItems.add(row.item_id));
+    (likesRes.data || []).forEach(row => {
+      if (row.target_type === 'thread') likedThreads.add(row.target_id);
+      else if (row.target_type === 'reply') likedReplies.add(row.target_id);
+    });
+    writeJSON(STORAGE.courses, [...savedCourses]);
+    writeJSON(STORAGE.exercises, [...savedExercises]);
+    writeJSON(STORAGE.completed, [...completedItems]);
+    writeJSON(STORAGE.likedThreads, [...likedThreads]);
+    writeJSON(STORAGE.likedReplies, [...likedReplies]);
+    const streak = computeStreak((completionsRes.data || []).map(row => row.challenge_date));
+    currentUser.streak = streak;
+    writeJSON(STORAGE.user, currentUser);
+    updateHeaderUser();
+    renderRoute();
+  } catch (error) { console.error(error); }
 }
 
 /* --------------------------------------------------------------------------
@@ -421,7 +525,9 @@ function updateHeaderUser() {
     const avatar = currentUser.photoURL
       ? `<img class="user-avatar user-avatar--photo" src="${escapeAttr(currentUser.photoURL)}" alt="" referrerpolicy="no-referrer">`
       : `<span class="user-avatar">${escapeHTML(initials(currentUser.name))}</span>`;
-    const markup = `<button class="profile-chip" data-open-profile>${avatar}<span>${firstName}</span>${icon('chevronDown')}</button>`;
+    const streak = currentUser ? (currentUser.streak || 0) : 0;
+    const streakBadge = streak > 0 ? `<span class="profile-streak">${icon('flame')} ${streak}</span>` : '';
+    const markup = `<button class="profile-chip" data-open-profile>${avatar}<span>${firstName}</span>${streakBadge}${icon('chevronDown')}</button>`;
     if (desktop) desktop.innerHTML = markup;
     if (mobile) mobile.innerHTML = markup;
   } else {
@@ -712,7 +818,7 @@ function renderHome() {
             </span>
             <span class="challenge-play">${icon('play')}</span>
           </a>
-          <span class="floating-note floating-note--streak">${icon('flame')} 12 jours de suite</span>
+          <span class="floating-note floating-note--streak">${icon('flame')} ${currentUser ? `${currentUser.streak || 0} jour${currentUser.streak > 1 ? 's' : ''} de suite` : 'Série MEDIL'}</span>
           <span class="floating-note floating-note--verified">${icon('checkCircle')} Corrigés vérifiés</span>
           <span class="hero-sticker">100%<br><small>LaTeX</small></span>
         </div>
@@ -880,7 +986,8 @@ function renderHome() {
             <p class="challenge-statement">${DAILY_CHALLENGE.statement}</p>
             <div class="challenge-equation">${tex(DAILY_CHALLENGE.equation, true)}</div>
             <div class="challenge-actions">
-              <button class="btn btn--lime" data-reveal-challenge>Voir la correction ${icon('arrowRight')}</button>
+              <button class="btn btn--lime" data-mark-daily>Valider le défi ${icon('checkCircle')}</button>
+              <button class="btn btn--ghost-dark" data-reveal-challenge>Voir la correction ${icon('arrowRight')}</button>
               <button class="btn btn--ghost-dark" data-exercise="${DAILY_CHALLENGE.id}">Version complète ${icon('arrowUpRight')}</button>
             </div>
             <div class="challenge-community">
@@ -1718,7 +1825,7 @@ function openProfileModal() {
       <div class="profile-stats">
         <div><strong>${savedCount}</strong><span>ressources sauvegardées</span></div>
         <div><strong>${completedCount}</strong><span>cours terminés</span></div>
-        <div><strong>${currentUser.streak || 3}</strong><span>jours de série</span></div>
+        <div><strong>${currentUser.streak || 0}</strong><span>jours de série</span></div>
       </div>
       <div class="profile-shortcuts">
         <a href="#/cours" data-close-and-nav class="profile-shortcut">${icon('book')} Continuer mes cours ${icon('arrowUpRight')}</a>
@@ -2142,6 +2249,7 @@ function saveCourse(id) {
   if (wasSaved) savedCourses.delete(id);
   else savedCourses.add(id);
   writeJSON(STORAGE.courses, [...savedCourses]);
+  syncSave('course', id, !wasSaved);
   $$(`[data-save-course="${CSS.escape(id)}"]`).forEach(button => {
     button.classList.toggle('is-saved', !wasSaved);
     button.setAttribute('aria-pressed', String(!wasSaved));
@@ -2161,6 +2269,7 @@ function saveExercise(id) {
   if (wasSaved) savedExercises.delete(id);
   else savedExercises.add(id);
   writeJSON(STORAGE.exercises, [...savedExercises]);
+  syncSave('exercise', id, !wasSaved);
   $$(`[data-save-exercise="${CSS.escape(id)}"]`).forEach(button => {
     button.classList.toggle('is-saved', !wasSaved);
     button.setAttribute('aria-pressed', String(!wasSaved));
@@ -2225,6 +2334,7 @@ function handleThreadLike(id) {
   }
   writeJSON(STORAGE.likedThreads, [...likedThreads]);
   writeJSON(STORAGE.threads, forumThreads);
+  syncLike('thread', id, !wasLiked);
   const button = $(`[data-like-thread="${CSS.escape(id)}"]`);
   if (button) {
     button.classList.toggle('is-active', !wasLiked);
@@ -2250,6 +2360,7 @@ function handleReplyUpvote(button) {
   }
   writeJSON(STORAGE.likedReplies, [...likedReplies]);
   writeJSON(STORAGE.threads, forumThreads);
+  syncLike('reply', replyId, !wasLiked);
   button.classList.toggle('is-active', !wasLiked);
   countSpan.textContent = answer ? (Number(answer.upvotes) || 0) : (wasLiked ? Math.max(0, (Number(countSpan.textContent) || 0) - 1) : (Number(countSpan.textContent) || 0) + 1);
   if (!wasLiked) toast('Réponse marquée comme utile.', { type: 'success' });
@@ -2613,6 +2724,11 @@ function bindGlobalEvents() {
       revealDailyChallenge();
       return;
     }
+    if (target.closest('[data-mark-daily]')) {
+      event.preventDefault();
+      markDailyChallengeDone();
+      return;
+    }
     if (target.closest('[data-open-daily]')) {
       event.preventDefault();
       openExerciseModal(DAILY_CHALLENGE.id);
@@ -2700,6 +2816,7 @@ function bindGlobalEvents() {
         toast('Cours terminé. Bien joué !', { type: 'success' });
       }
       writeJSON(STORAGE.completed, [...completedItems]);
+      syncCompleted(id, completedItems.has(id));
       const course = COURSES.find(item => item.id === id);
       const baseProgress = course?.progress || 0;
       const progressLabel = $('.reader-progress-top strong');
