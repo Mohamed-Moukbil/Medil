@@ -1,0 +1,21 @@
+# Local secrets / environment (never commit)
+.env
+.env.*
+*.local
+config.local.js
+
+# Dependencies (none used by the app, but keep out just in case)
+node_modules/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Playwright / test artifacts
+/test-results/
+/playwright-report/
+/screenshots/
