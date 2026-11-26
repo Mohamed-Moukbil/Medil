@@ -345,7 +345,7 @@
             <li>${icon('forum')} Forum et réponses des étudiants</li>
             <li>${icon('download')} Sauvegarde JSON et export data.js</li>
           </ul>
-          <a class="text-link admin-gate-back" href="#/">${icon('arrowLeft')} Retour au site</a>
+          <a class="text-link admin-gate-back" href="/">${icon('arrowLeft')} Retour au site</a>
         </div>
         <form class="admin-login-card" data-admin-login>
           <div class="admin-login-top">
@@ -407,7 +407,7 @@
         <p>Le contenu, les corrigés et la communauté. Sans quitter MEDIL.</p>
       </div>
       <div class="admin-masthead-actions">
-        <a class="btn btn--ghost" href="#/" target="_blank" rel="noopener">Voir le site ${icon('arrowUpRight')}</a>
+        <a class="btn btn--ghost" href="/" target="_blank" rel="noopener">Voir le site ${icon('arrowUpRight')}</a>
         <button class="btn btn--lime" type="button" data-admin-logout>${icon('logout')} Déconnexion</button>
       </div>
       <span class="admin-masthead-orbit" aria-hidden="true"></span>
@@ -514,7 +514,7 @@
       </div>
       <div class="admin-row-badges">${course.featured ? adminPill('Mis en avant', 'lime') : ''}${adminPill(`${course.progress || 0}%`, 'muted')}</div>
       <div class="admin-row-actions">
-        <a class="admin-mini-action" href="#/cours/${escapeAttr(course.id)}" target="_blank" rel="noopener">Voir</a>
+        <a class="admin-mini-action" href="/cours/${escapeAttr(course.id)}" target="_blank" rel="noopener">Voir</a>
         ${adminActionButton({ label: 'Modifier', action: 'edit', id: '', tone: '' }).replace('data-admin-edit=""', `data-admin-edit="course" data-admin-id="${escapeAttr(course.id)}"`)}
         ${adminActionButton({ label: 'Supprimer', action: 'delete', id: '', tone: 'danger' }).replace('data-admin-delete=""', `data-admin-delete="course" data-admin-id="${escapeAttr(course.id)}"`)}
       </div>
@@ -568,7 +568,7 @@
       </div>
       <div class="admin-row-badges">${thread.pinned ? adminPill('Épinglé', 'lime') : ''}${adminPill(`${thread.upvotes || 0} ↑`, 'muted')}</div>
       <div class="admin-row-actions">
-        <a class="admin-mini-action" href="#/forum/${escapeAttr(thread.id)}" target="_blank" rel="noopener">Voir</a>
+        <a class="admin-mini-action" href="/forum/${escapeAttr(thread.id)}" target="_blank" rel="noopener">Voir</a>
         <button class="admin-mini-action" type="button" data-admin-edit="thread" data-admin-id="${escapeAttr(thread.id)}">Modifier</button>
         <button class="admin-mini-action admin-mini-action--danger" type="button" data-admin-delete="thread" data-admin-id="${escapeAttr(thread.id)}">Supprimer</button>
       </div>

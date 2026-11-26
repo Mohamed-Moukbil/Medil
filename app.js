@@ -237,8 +237,8 @@ function authCallbackError() {
 function clearAuthParamsFromUrl() {
   const url = new URL(window.location.href);
   url.search = '';
-  if (/(?:^|[#&])(?:error|error_code|error_description|sb)=/.test(url.hash)) url.hash = '#/';
-  window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
+  url.hash = '';
+  window.history.replaceState(window.history.state, '', url.pathname + url.search);
 }
 
 function authErrorMessage(error) {
@@ -329,7 +329,7 @@ async function signInWithSocial(providerKey, trigger) {
     return;
   }
   // Mémorise la page en cours pour y revenir après le retour OAuth.
-  try { sessionStorage.setItem('medil.returnHash', location.hash || '#/'); } catch (error) { /* Navigation privée. */ }
+  try { sessionStorage.setItem('medil.returnPath', location.pathname + location.search || '/'); } catch (error) { /* Navigation privée. */ }
   const provider = providerKey === 'github' ? 'github' : 'google';
   const restore = trigger ? { html: trigger.innerHTML, disabled: trigger.disabled } : null;
   if (trigger) trigger.disabled = true;
@@ -337,7 +337,7 @@ async function signInWithSocial(providerKey, trigger) {
     const { error } = await client.auth.signInWithOAuth({ provider, options: { redirectTo: authRedirectUrl() } });
     if (error) throw error;
   } catch (error) {
-    try { sessionStorage.removeItem('medil.returnHash'); } catch (e) { /* Navigation privée. */ }
+    try { sessionStorage.removeItem('medil.returnPath'); } catch (e) { /* Navigation privée. */ }
     if (trigger && restore) { trigger.disabled = restore.disabled; trigger.innerHTML = restore.html; }
     reportAuthError(error);
   }
@@ -723,7 +723,11 @@ function currentRoute() {
 
 function navigate(path) {
   if (!path) return;
-  location.hash = path.startsWith('#') ? path : `#${path.startsWith('/') ? path : '/' + path}`;
+  const target = path.startsWith('/') ? path : `/${path}`;
+  const current = location.pathname + location.search;
+  if (target === current) { renderRoute(); return; }
+  history.pushState({}, '', target);
+  renderRoute();
 }
 
 function setActiveNav(page) {
@@ -866,7 +870,7 @@ function courseCard(course) {
       </div>
       <div class="course-card-body">
         <div class="course-kicker"><span>${escapeHTML(course.subject)}</span><span class="dot-sep"></span><span>${escapeHTML(course.tag)}</span></div>
-        <h3><a href="#/cours/${course.id}">${escapeHTML(course.title)}</a></h3>
+        <h3><a href="/cours/${course.id}">${escapeHTML(course.title)}</a></h3>
         <p>${escapeHTML(course.description)}</p>
         <div class="course-meta">
           <span>${icon('layers')} ${course.chaptersCount} ch.</span>
@@ -922,7 +926,7 @@ function paperCard(paper) {
 
 function threadRow(thread) {
   return `
-    <a class="thread-row" href="#/forum/${thread.id}" data-thread-row data-category="${thread.category}" data-search="${escapeAttr(normalizeSearch(`${thread.title} ${thread.excerpt} ${thread.author} ${thread.tags.join(' ')}`))}">
+    <a class="thread-row" href="/forum/${thread.id}" data-thread-row data-category="${thread.category}" data-search="${escapeAttr(normalizeSearch(`${thread.title} ${thread.excerpt} ${thread.author} ${thread.tags.join(' ')}`))}">
       <span class="thread-category cat--${normalizeCategory(thread.category)}">${escapeHTML(thread.category)}</span>
       <span class="thread-main">
         <span class="thread-title-line">
@@ -983,7 +987,7 @@ function renderHome() {
       <div class="hero-glow hero-glow--two" aria-hidden="true"></div>
       <div class="container hero-container">
         <div class="hero-copy">
-          <a class="hero-announce" href="#/concours">
+          <a class="hero-announce" href="/concours">
             <span class="announce-dot"></span>
             <span>${latestPaper ? `Banque <strong>${escapeHTML(latestPaper.school)} ${latestPaper.year}</strong> fraîchement ajoutée` : 'Toute la banque de concours, au même endroit'}</span>
             ${icon('arrowUpRight')}
@@ -995,8 +999,8 @@ function renderHome() {
           </h1>
           <p class="hero-description">Cours en LaTeX, exercices exigeants corrigés et banque de concours. De MPSI à MP, de CCINP à l’X — tout ce qu’il te faut, sans le bruit.</p>
           <div class="hero-actions">
-            <a class="btn btn--lime btn--lg" href="#/cours">Explorer les ressources <span class="btn-orb">${icon('arrowUpRight')}</span></a>
-            <a class="btn btn--ghost btn--lg" href="#/concours">Voir la banque de concours</a>
+            <a class="btn btn--lime btn--lg" href="/cours">Explorer les ressources <span class="btn-orb">${icon('arrowUpRight')}</span></a>
+            <a class="btn btn--ghost btn--lg" href="/concours">Voir la banque de concours</a>
           </div>
           <div class="hero-proof">
             ${avatarStack()}
@@ -1007,7 +1011,7 @@ function renderHome() {
         <div class="hero-stage" aria-label="Aperçu d’un cours MEDIL">
           <div class="hero-orbit hero-orbit--outer" aria-hidden="true"></div>
           <div class="hero-orbit hero-orbit--inner" aria-hidden="true"></div>
-          <a class="mini-card mini-card--exam" href="${heroPaper ? `#/concours/${escapeAttr(heroPaper.id)}` : '/concours'}">
+          <a class="mini-card mini-card--exam" href="${heroPaper ? `/concours/${escapeAttr(heroPaper.id)}` : '/concours'}">
             <span class="mini-card-label">${heroPaper ? `${escapeHTML(heroPaper.school)} · ${heroPaper.year}` : 'Banque de concours'}</span>
             <span class="mini-card-title">${escapeHTML(heroPaperTitle)}</span>
             <span class="mini-card-meta">${heroPaper ? `${escapeHTML(heroPaper.duration)} · ${escapeHTML(heroPaper.track)}` : 'Toutes les filières'} <span class="mini-arrow">${icon('arrowUpRight')}</span></span>
@@ -1026,10 +1030,10 @@ function renderHome() {
             <div class="progress-track"><span style="width:${heroCourse?.progress ?? 0}%"></span></div>
             <div class="study-footer">
               <span>${icon('clock')} ${heroCourse ? `${escapeHTML(heroCourse.duration)} de lecture` : 'Bibliothèque complète'}</span>
-              <a href="${heroCourse ? `#/cours/${escapeAttr(heroCourse.id)}` : '/cours'}">${heroCourse ? 'Reprendre' : 'Explorer'} ${icon('arrowRight')}</a>
+              <a href="${heroCourse ? `/cours/${escapeAttr(heroCourse.id)}` : '/cours'}">${heroCourse ? 'Reprendre' : 'Explorer'} ${icon('arrowRight')}</a>
             </div>
           </div>
-          <a class="mini-card mini-card--challenge" href="#/exercices" data-open-daily>
+          <a class="mini-card mini-card--challenge" href="/exercices" data-open-daily>
             <span class="challenge-flame">${icon('flame')}</span>
             <span>
               <span class="mini-card-label">Défi du jour</span>
@@ -1067,7 +1071,7 @@ function renderHome() {
           <p class="section-intro">Des parcours pensés pour les programmes MPSI et MP, avec des prérequis clairs, des démonstrations complètes et de quoi s’entraîner sérieusement.</p>
         </div>
         <div class="subject-grid">
-          <a class="subject-card subject-card--maths reveal" href="#/cours?subject=Maths">
+          <a class="subject-card subject-card--maths reveal" href="/cours?subject=Maths">
             <div class="subject-card-top">
               <span class="subject-number">01</span>
               <span class="subject-chip">${COURSES.filter(c => c.subject === 'Maths').length + EXERCISES.filter(e => e.subject === 'Maths').length + PAPERS.filter(p => p.subject === 'Maths').length} ressources</span>
@@ -1086,7 +1090,7 @@ function renderHome() {
               <span class="subject-footer">MPSI + MP ${icon('arrowRight')}</span>
             </div>
           </a>
-          <a class="subject-card subject-card--physics reveal" href="#/cours?subject=Physique">
+          <a class="subject-card subject-card--physics reveal" href="/cours?subject=Physique">
             <div class="subject-card-top">
               <span class="subject-number">02</span>
               <span class="subject-chip">${COURSES.filter(c => c.subject === 'Physique').length + EXERCISES.filter(e => e.subject === 'Physique').length + PAPERS.filter(p => p.subject === 'Physique').length} ressources</span>
@@ -1105,7 +1109,7 @@ function renderHome() {
               <span class="subject-footer">MPSI + MP ${icon('arrowRight')}</span>
             </div>
           </a>
-          <a class="subject-card subject-card--info reveal" href="#/cours?subject=Informatique">
+          <a class="subject-card subject-card--info reveal" href="/cours?subject=Informatique">
             <div class="subject-card-top">
               <span class="subject-number">03</span>
               <span class="subject-chip">${COURSES.filter(c => c.subject === 'Informatique').length + EXERCISES.filter(e => e.subject === 'Informatique').length + PAPERS.filter(p => p.subject === 'Informatique').length} ressources</span>
@@ -1140,14 +1144,14 @@ function renderHome() {
           </div>
           <div class="section-heading-side">
             <p class="section-intro">Rédigés en LaTeX, relus par des élèves de l’X et de l’ENS. Pas de résumé flou : des définitions nettes, des preuves complètes et des pièges signalés.</p>
-            <a class="text-link" href="#/cours">Voir les ${COURSES.length} cours ${icon('arrowUpRight')}</a>
+            <a class="text-link" href="/cours">Voir les ${COURSES.length} cours ${icon('arrowUpRight')}</a>
           </div>
         </div>
         <div class="course-grid course-grid--home">
           ${featured.map(courseCard).join('')}
         </div>
         <div class="bento-resources">
-          <a class="bento bento--latex reveal" href="#/cours/reduction-endomorphismes">
+          <a class="bento bento--latex reveal" href="/cours/reduction-endomorphismes">
             <div class="bento-copy">
               <span class="bento-tag">${icon('file')} Polycopiés soignés</span>
               <h3>Le LaTeX qui donne envie de réviser.</h3>
@@ -1163,7 +1167,7 @@ function renderHome() {
               <div class="latex-page-stamp">PDF</div>
             </div>
           </a>
-          <a class="bento bento--exos reveal" href="#/exercices">
+          <a class="bento bento--exos reveal" href="/exercices">
             <div class="bento-copy">
               <span class="bento-tag">${icon('target')} Pour progresser</span>
               <h3>Les exercices<br>qui font mal.</h3>
@@ -1181,7 +1185,7 @@ function renderHome() {
               <span class="bento-tag">${icon('users')} La communauté</span>
               <h3>Personne<br>ne bloque seul.</h3>
               <p>Pose ta question, débloque une démonstration, aide quelqu’un d’autre à comprendre.</p>
-              <a class="text-link" href="#/forum">Entrer dans le forum ${icon('arrowUpRight')}</a>
+              <a class="text-link" href="/forum">Entrer dans le forum ${icon('arrowUpRight')}</a>
             </div>
             <div class="community-orbs" aria-hidden="true">
               <span class="avatar avatar--xl avatar--lime">LB</span>
@@ -1244,7 +1248,7 @@ function renderHome() {
             <h2>De CCINP à l’X.<br><span class="serif-italic">Sans perdre le fil.</span></h2>
             <p>Retrouve les sujets et corrigés des concours qui comptent, filtres par école, filière et année. Une bibliothèque claire pour réviser intelligemment, pas juste accumuler des PDF.</p>
             <div class="concours-feature-actions">
-              <a class="btn btn--dark btn--lg" href="#/concours">Ouvrir la banque ${icon('arrowUpRight')}</a>
+              <a class="btn btn--dark btn--lg" href="/concours">Ouvrir la banque ${icon('arrowUpRight')}</a>
               <span class="concours-count"><strong>${PAPERS.length}</strong> sujets disponibles</span>
             </div>
           </div>
@@ -1286,7 +1290,7 @@ function renderHome() {
             </div>
             <div class="forum-preview-side">
               <p>Une question à 23 h ? Un blocage sur une démonstration ? Ici, on débloque ensemble, sans jugement et sans toxicité.</p>
-              <a class="btn btn--dark" href="#/forum">Explorer le forum ${icon('arrowUpRight')}</a>
+              <a class="btn btn--dark" href="/forum">Explorer le forum ${icon('arrowUpRight')}</a>
             </div>
           </div>
           <div class="forum-preview-grid">
@@ -1304,7 +1308,7 @@ function renderHome() {
                 <div><strong>4,8k</strong><span>membres</span></div>
                 <div><strong>97%</strong><span>de questions résolues</span></div>
               </div>
-              <a class="community-link" href="#/forum">Rejoindre la conversation ${icon('arrowRight')}</a>
+              <a class="community-link" href="/forum">Rejoindre la conversation ${icon('arrowRight')}</a>
             </aside>
           </div>
         </div>
@@ -1318,7 +1322,7 @@ function renderHome() {
           <p class="eyebrow eyebrow--light"><span class="eyebrow-dot"></span>Prêt·e à passer un cap ?</p>
           <h2>La prépa est dure.<br><span class="serif-italic">Ta façon de réviser</span><br>peut être meilleure.</h2>
           <div class="final-cta-actions">
-            <a class="btn btn--lime btn--lg" href="#/cours">Commencer gratuitement ${icon('arrowUpRight')}</a>
+            <a class="btn btn--lime btn--lg" href="/cours">Commencer gratuitement ${icon('arrowUpRight')}</a>
             <button class="btn btn--ghost btn--lg" data-open-auth="signup">Créer mon compte</button>
           </div>
           <p class="final-cta-note">Cours, exos, concours et forum. Sans carte bancaire, sans engagement.</p>
@@ -1372,7 +1376,7 @@ function renderCoursesPage() {
             <h3>Un chapitre te manque ?</h3>
             <p>Dis-nous ce qui bloque. Les prochains cours sont choisis avec la communauté.</p>
           </div>
-          <a class="btn btn--outline" href="#/forum">Proposer un sujet ${icon('arrowUpRight')}</a>
+          <a class="btn btn--outline" href="/forum">Proposer un sujet ${icon('arrowUpRight')}</a>
         </div>
       </div>
     </section>`;
@@ -1386,7 +1390,7 @@ function renderCourseDetail(id) {
     return `
       <section class="section">
         <div class="container">
-          <a class="back-link" href="#/cours">${icon('arrowLeft')} Tous les cours</a>
+          <a class="back-link" href="/cours">${icon('arrowLeft')} Tous les cours</a>
           <div class="loading-state">
             <span class="loading-spinner" aria-hidden="true"></span>
             <p>Chargement du cours…</p>
@@ -1402,7 +1406,7 @@ function renderCourseDetail(id) {
     <section class="reader-hero">
       <div class="reader-hero-glow" aria-hidden="true"></div>
       <div class="container">
-        <a class="back-link" href="#/cours">${icon('arrowLeft')} Tous les cours</a>
+        <a class="back-link" href="/cours">${icon('arrowLeft')} Tous les cours</a>
         <div class="reader-hero-grid">
           <div class="reader-hero-copy">
             <div class="reader-badges"><span class="reader-badge reader-badge--lime">${escapeHTML(course.subject)}</span><span class="reader-badge">${escapeHTML(course.level)}</span><span class="reader-badge">${escapeHTML(course.tag)}</span></div>
@@ -1466,7 +1470,7 @@ function renderCourseDetail(id) {
                 ${section.paragraphs.map(paragraph => `<p>${paragraph}</p>`).join('')}
                 <div class="reader-formula">${tex(section.formula, true)}</div>
                 <div class="reader-note"><span class="reader-note-icon">${icon('lightbulb')}</span><p><strong>À retenir.</strong> ${section.note}</p></div>
-                ${index === 0 ? `<div class="reader-small-example"><span class="example-label">Exemple éclair</span><p>Si <span class="inline-tex" data-tex="A^3=0"></span>, alors <span class="inline-tex" data-tex="I+A"></span> est inversible et <span class="inline-tex" data-tex="(I+A)^{-1}=I-A+A^2"></span>. C’est exactement l’exercice du jour.</p><a class="text-link text-link--dark" href="#/exercices" data-exercise="${linkedExercise.id}">Voir les exercices liés ${icon('arrowUpRight')}</a></div>` : ''}
+                ${index === 0 ? `<div class="reader-small-example"><span class="example-label">Exemple éclair</span><p>Si <span class="inline-tex" data-tex="A^3=0"></span>, alors <span class="inline-tex" data-tex="I+A"></span> est inversible et <span class="inline-tex" data-tex="(I+A)^{-1}=I-A+A^2"></span>. C’est exactement l’exercice du jour.</p><a class="text-link text-link--dark" href="/exercices" data-exercise="${linkedExercise.id}">Voir les exercices liés ${icon('arrowUpRight')}</a></div>` : ''}
               </article>`).join('')}
             <div class="reader-exercise">
               <div class="reader-exercise-head"><span class="bento-tag">${icon('target')} Exercice d’application</span><span class="source-badge">À faire maintenant</span></div>
@@ -1478,7 +1482,7 @@ function renderCourseDetail(id) {
               <button class="btn btn--dark" data-course-answer-toggle>${icon('sparkles')} Voir la réponse</button>
             </div>
             <div class="reader-pager">
-              <a href="#/cours" class="reader-pager-link">${icon('arrowLeft')}<span><small>Bibliothèque</small>Tous les cours</span></a>
+              <a href="/cours" class="reader-pager-link">${icon('arrowLeft')}<span><small>Bibliothèque</small>Tous les cours</span></a>
               <button class="reader-pager-link reader-pager-link--next" data-mark-course-done="${course.id}"><span><small>Prochaine étape</small>${isDone ? 'Cours terminé' : 'Marquer comme lu'}</span>${icon('arrowRight')}</button>
             </div>
           </div>
@@ -1594,7 +1598,7 @@ function renderConcoursPage() {
         <div class="papers-aside reveal">
           <div class="papers-aside-art">${icon('file')}</div>
           <div><h3>Une correction à signaler ?</h3><p>Nos corrigés sont relus, mais une coquille reste toujours possible. Signale-la sur le forum : on corrige vite.</p></div>
-          <a class="btn btn--outline" href="#/forum">Signaler une coquille ${icon('arrowUpRight')}</a>
+          <a class="btn btn--outline" href="/forum">Signaler une coquille ${icon('arrowUpRight')}</a>
         </div>
       </div>
     </section>`;
@@ -1613,7 +1617,7 @@ function renderForumPage() {
       description: 'Un espace d’entraide entre taupins : démonstrations, méthodes, annales, coups de mou et victoires. Modéré, bienveillant, utile.',
       meta: `<span class="hero-meta-pill">${icon('users')} 4 800 membres</span><span class="hero-meta-pill">${icon('forum')} ${forumThreads.length} discussions</span><span class="hero-meta-pill"><span class="live-dot"></span> 128 en ligne</span>`,
       className: 'page-hero--forum',
-      children: `<div class="page-hero-actions"><button class="btn btn--lime btn--lg" data-new-thread>${icon('plus')} Nouveau sujet</button><a class="btn btn--ghost btn--lg" href="${topThreads[0] ? `#/forum/${escapeAttr(topThreads[0].id)}` : '/forum'}">Voir une discussion</a></div><div class="page-hero-deco page-hero-deco--forum" aria-hidden="true">?</div>`
+      children: `<div class="page-hero-actions"><button class="btn btn--lime btn--lg" data-new-thread>${icon('plus')} Nouveau sujet</button><a class="btn btn--ghost btn--lg" href="${topThreads[0] ? `/forum/${escapeAttr(topThreads[0].id)}` : '/forum'}">Voir une discussion</a></div><div class="page-hero-deco page-hero-deco--forum" aria-hidden="true">?</div>`
     })}
     <section class="section forum-page-section">
       <div class="container">
@@ -1660,7 +1664,7 @@ function renderForumPage() {
                 <li><span>02</span>Explique ton raisonnement, pas seulement ton blocage.</li>
                 <li><span>03</span>Corrige, remercie, transmets.</li>
               </ul>
-              <a class="text-link text-link--dark" href="#/forum">Charte complète ${icon('arrowUpRight')}</a>
+              <a class="text-link text-link--dark" href="/forum">Charte complète ${icon('arrowUpRight')}</a>
             </div>
             <div class="forum-side-card forum-side-card--lime">
               <span class="forum-side-icon">${icon('sparkles')}</span>
@@ -1688,7 +1692,7 @@ function renderThreadPage(id) {
     return `
       <section class="section">
         <div class="container">
-          <a class="back-link" href="#/forum">${icon('arrowLeft')} Retour au forum</a>
+          <a class="back-link" href="/forum">${icon('arrowLeft')} Retour au forum</a>
           <div class="loading-state">
             <span class="loading-spinner" aria-hidden="true"></span>
             <p>Chargement de la discussion…</p>
@@ -1702,7 +1706,7 @@ function renderThreadPage(id) {
     <section class="thread-hero">
       <div class="thread-hero-glow" aria-hidden="true"></div>
       <div class="container">
-        <a class="back-link" href="#/forum">${icon('arrowLeft')} Retour au forum</a>
+        <a class="back-link" href="/forum">${icon('arrowLeft')} Retour au forum</a>
         <div class="thread-hero-inner">
           <div class="thread-hero-top">
             <span class="thread-category cat--${normalizeCategory(thread.category)}">${escapeHTML(thread.category)}</span>
@@ -1769,14 +1773,14 @@ function renderThreadPage(id) {
           <div class="forum-side-card">
             <p class="eyebrow"><span class="eyebrow-dot"></span>Dans le même esprit</p>
             <div class="related-threads">
-              ${related.map(item => `<a href="#/forum/${item.id}"><span class="related-category cat--${normalizeCategory(item.category)}">${escapeHTML(item.category)}</span><strong>${escapeHTML(item.title)}</strong><small>${item.replies} réponses · ${escapeHTML(item.time)}</small></a>`).join('')}
+              ${related.map(item => `<a href="/forum/${item.id}"><span class="related-category cat--${normalizeCategory(item.category)}">${escapeHTML(item.category)}</span><strong>${escapeHTML(item.title)}</strong><small>${item.replies} réponses · ${escapeHTML(item.time)}</small></a>`).join('')}
             </div>
           </div>
           <div class="forum-side-card forum-side-card--dark">
             <p class="eyebrow eyebrow--light"><span class="eyebrow-dot"></span>La maison</p>
             <h3>Une communauté, une charte.</h3>
             <p>Pas de moqueries, pas de réponses sèches. On explique, on cite ses sources, on laisse les autres chercher.</p>
-            <a class="text-link" href="#/forum">Lire la charte ${icon('arrowUpRight')}</a>
+            <a class="text-link" href="/forum">Lire la charte ${icon('arrowUpRight')}</a>
           </div>
           <div class="forum-side-card mini-stats-card">
             <p class="eyebrow"><span class="eyebrow-dot"></span>Ce sujet</p>
@@ -1805,7 +1809,7 @@ function replyMarkup(answer, isNew = false) {
     </article>`;
 }
 
-function renderNotFound(title, description, href = '#/', label = 'Retour à l’accueil') {
+function renderNotFound(title, description, href = '/', label = 'Retour à l’accueil') {
   return `
     <section class="not-found-section">
       <div class="not-found-art" aria-hidden="true">404</div>
@@ -1886,7 +1890,7 @@ function openExerciseModal(id) {
         <div class="exercise-modal-actions">
           <button class="btn btn--outline ${saved ? 'is-saved' : ''}" data-save-exercise="${exercise.id}" data-modal-save aria-pressed="${saved}">${icon('bookmark')} ${saved ? 'Enregistré' : 'Enregistrer'}</button>
           <button class="btn btn--outline" data-print-exercise>${icon('print')} Imprimer / PDF</button>
-          ${course ? `<a class="btn btn--dark" href="#/cours/${course.id}" data-close-and-nav>Voir le cours lié ${icon('arrowUpRight')}</a>` : ''}
+          ${course ? `<a class="btn btn--dark" href="/cours/${course.id}" data-close-and-nav>Voir le cours lié ${icon('arrowUpRight')}</a>` : ''}
         </div>
         ${exercise.pdf ? `<div class="exercise-pdf-preview"><p class="panel-label">${icon('file')} PDF associé</p><iframe data-lazy-pdf="${escapeAttr(exercise.pdf)}" title="PDF de l’exercice" loading="lazy"></iframe><a class="text-link" href="${escapeAttr(exercise.pdf)}" target="_blank" rel="noopener">Ouvrir le PDF ${icon('arrowUpRight')}</a></div>` : ''}
         <button class="modal-secondary-link" data-close-modal>Fermer ${icon('close')}</button>
@@ -2047,9 +2051,9 @@ function openProfileModal() {
         <div><strong>${currentUser.streak || 0}</strong><span>jours de série</span></div>
       </div>
       <div class="profile-shortcuts">
-        <a href="#/cours" data-close-and-nav class="profile-shortcut">${icon('book')} Continuer mes cours ${icon('arrowUpRight')}</a>
-        <a href="#/exercices" data-close-and-nav class="profile-shortcut">${icon('target')} Mes exercices ${icon('arrowUpRight')}</a>
-        <a href="#/forum" data-close-and-nav class="profile-shortcut">${icon('forum')} Mes discussions ${icon('arrowUpRight')}</a>
+        <a href="/cours" data-close-and-nav class="profile-shortcut">${icon('book')} Continuer mes cours ${icon('arrowUpRight')}</a>
+        <a href="/exercices" data-close-and-nav class="profile-shortcut">${icon('target')} Mes exercices ${icon('arrowUpRight')}</a>
+        <a href="/forum" data-close-and-nav class="profile-shortcut">${icon('forum')} Mes discussions ${icon('arrowUpRight')}</a>
       </div>
       <div class="profile-footer">
         <button class="btn btn--outline" data-logout>${icon('logout')} Se déconnecter</button>
@@ -2215,10 +2219,10 @@ function updateSearchResults(rawQuery) {
         </div>
         <p class="search-section-label">Aller directement</p>
         <div class="search-shortcuts">
-          <a href="#/cours" data-close-search>${icon('book')} <span><strong>Les cours</strong><small>${COURSES.length} cours complets</small></span>${icon('arrowRight')}</a>
-          <a href="#/exercices" data-close-search>${icon('target')} <span><strong>Les exercices</strong><small>Corrigés pas à pas</small></span>${icon('arrowRight')}</a>
-          <a href="#/concours" data-close-search>${icon('trophy')} <span><strong>La banque de concours</strong><small>${PAPERS.length} sujets</small></span>${icon('arrowRight')}</a>
-          <a href="#/forum" data-close-search>${icon('forum')} <span><strong>Le forum</strong><small>128 membres en ligne</small></span>${icon('arrowRight')}</a>
+          <a href="/cours" data-close-search>${icon('book')} <span><strong>Les cours</strong><small>${COURSES.length} cours complets</small></span>${icon('arrowRight')}</a>
+          <a href="/exercices" data-close-search>${icon('target')} <span><strong>Les exercices</strong><small>Corrigés pas à pas</small></span>${icon('arrowRight')}</a>
+          <a href="/concours" data-close-search>${icon('trophy')} <span><strong>La banque de concours</strong><small>${PAPERS.length} sujets</small></span>${icon('arrowRight')}</a>
+          <a href="/forum" data-close-search>${icon('forum')} <span><strong>Le forum</strong><small>128 membres en ligne</small></span>${icon('arrowRight')}</a>
         </div>
       </div>`;
     return;
@@ -2232,7 +2236,7 @@ function updateSearchResults(rawQuery) {
   const total = courses.length + exercises.length + papers.length + threads.length;
 
   if (!total) {
-    content.innerHTML = `<div class="search-empty"><span>${icon('search')}</span><h3>Aucun résultat pour « ${escapeHTML(query)} ».</h3><p>Essaie un mot-clé plus court, ou navigue directement dans la bibliothèque.</p><a class="btn btn--outline" href="#/cours" data-close-search>Voir tous les cours ${icon('arrowRight')}</a></div>`;
+    content.innerHTML = `<div class="search-empty"><span>${icon('search')}</span><h3>Aucun résultat pour « ${escapeHTML(query)} ».</h3><p>Essaie un mot-clé plus court, ou navigue directement dans la bibliothèque.</p><a class="btn btn--outline" href="/cours" data-close-search>Voir tous les cours ${icon('arrowRight')}</a></div>`;
     return;
   }
 
@@ -2437,7 +2441,7 @@ function applyForumFilters() {
 }
 
 function initPageFilterUI() {
-  const courseSearch = new URLSearchParams((location.hash.split('?')[1] || ''));
+  const courseSearch = new URLSearchParams(location.search || '');
   const subjectQuery = courseSearch.get('subject');
   if ($('#course-grid')) {
     if (subjectQuery && ['Maths', 'Physique', 'Informatique'].includes(subjectQuery)) {
@@ -3286,7 +3290,7 @@ function bindGlobalEvents() {
     }
   });
 
-  window.addEventListener('hashchange', () => renderRoute());
+  window.addEventListener('popstate', () => renderRoute());
   window.addEventListener('scroll', () => {
     const header = $('#site-header');
     if (header) header.classList.toggle('is-scrolled', window.scrollY > 12);
@@ -3334,11 +3338,16 @@ function loadContentFromSupabase() {
 function init() {
   // Restaure le chemin après un retour OAuth ou une redirection 404 (GitHub Pages).
   try {
-    const returnHash = sessionStorage.getItem('medil.returnHash');
-    if (returnHash) {
-      sessionStorage.removeItem('medil.returnHash');
-      if (returnHash !== (location.hash || '')) {
-        location.hash = returnHash;
+    const params = new URLSearchParams(location.search);
+    const p = params.get('p');
+    if (p) {
+      history.replaceState(history.state, '', decodeURIComponent(p));
+    }
+    const returnPath = sessionStorage.getItem('medil.returnPath');
+    if (returnPath) {
+      sessionStorage.removeItem('medil.returnPath');
+      if (returnPath !== (location.pathname + location.search)) {
+        history.replaceState(history.state, '', returnPath);
       }
     }
   } catch (error) { /* Navigation privée. */ }
@@ -3346,6 +3355,18 @@ function init() {
   updateYear();
   updateHeaderUser();
   bindGlobalEvents();
+  // Intercepte les liens internes pour éviter un rechargement complet (SPA).
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href]');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return;
+    if (!href.startsWith('/')) return;
+    event.preventDefault();
+    if (link.closest('[data-close-and-nav]')) closeModal();
+    if (link.closest('[data-close-search]')) closeSearch();
+    navigate(href);
+  }, true);
   renderRoute({ initial: true });
   const menuButton = $('#menu-toggle');
   if (menuButton) menuButton.innerHTML = icon('menu');
