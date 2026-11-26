@@ -8,6 +8,7 @@
     "check": "node --check app.js && node --check admin.js && node --check content/index.js",
     "validate:content": "node scripts/validate-content.mjs",
     "lint": "npm run check && npm run validate:content",
+    "serve": "node scripts/serve.mjs . 8000",
     "test": "npm run lint",
     "test:e2e": "node /tmp/opencode/medil-pw/functional.js"
   },
