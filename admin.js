@@ -1,7 +1,7 @@
 /* ==========================================================================
    MEDIL — Studio d’administration
    CMS local : contenus persistés dans localStorage, export JSON / data.js.
-   Chargé avant app.js pour appliquer les surcharges avant le premier rendu.
+   Chargé à la demande par app.js (studio admin), après hydration des surcharges locales.
    ========================================================================== */
 
 (() => {
@@ -14,7 +14,7 @@
   const DEFAULT_ADMIN_PASSWORD = 'medil-admin';
 
   const SUBJECTS = ['Maths', 'Physique', 'Informatique'];
-  const COURSE_LEVELS = ['MPSI', 'MP'];
+  const COURSE_LEVELS = ['MPSI', 'MP', 'MP*'];
   const EXERCISE_LEVELS = ['MPSI', 'MP', 'MP*'];
   const COLORS = ['lime', 'sky', 'rose', 'butter', 'lilac', 'peach', 'mint', 'ink'];
   const COVER_TYPES = ['matrix', 'graph', 'dots', 'field', 'wave', 'thermo', 'code', 'terminal', 'norm'];
@@ -166,6 +166,7 @@
     } else if (strict && data.dailyChallenge !== undefined) {
       return false;
     }
+    window.invalidateDetailCache?.();
     return true;
   }
 
@@ -1099,6 +1100,7 @@
     adminState.editing = null;
     adminState.dirty = false;
     adminState.section = section || adminState.section;
+    window.invalidateDetailCache?.();
     renderRoute();
     setTimeout(() => toast(message, { type: 'success' }), 40);
   }
@@ -1772,7 +1774,9 @@
      API utilisée par app.js
      -------------------------------------------------------------------------- */
   window.MEDIL_ADMIN = {
-    renderPage() {
+    // Le routeur passe la route courante, mais le studio pilote son état via adminState.
+    renderPage(route = null) {
+      void route;
       return isAdminUnlocked() ? renderStudio() : renderGate();
     },
     afterRender,

@@ -1,0 +1,17 @@
+{
+  "name": "medil",
+  "version": "1.0.0",
+  "description": "MEDIL — la prépa, sans angles morts (site statique)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check app.js && node --check admin.js && node --check content/index.js",
+    "validate:content": "node scripts/validate-content.mjs",
+    "lint": "npm run check && npm run validate:content",
+    "test": "npm run lint",
+    "test:e2e": "node /tmp/opencode/medil-pw/functional.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

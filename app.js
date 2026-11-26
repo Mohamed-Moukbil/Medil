@@ -64,7 +64,12 @@ const escapeHTML = (value = '') => String(value)
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#039;');
 
-const escapeAttr = (value = '') => String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+const escapeAttr = (value = '') => String(value)
+  .replace(/&/g, '&amp;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#039;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;');
 
 function tex(expression, display = false, className = '') {
   return `<span class="tex ${display ? 'tex-display' : ''} ${className}" data-tex="${escapeAttr(expression)}" data-display="${display}"></span>`;
@@ -130,7 +135,6 @@ function paragraphs(text) {
   return escapeHTML(text).split(/\n\n+/).map(part => `<p>${part.replace(/\n/g, '<br>')}</p>`).join('');
 }
 
-function timeAgoStub() { return 'à l’instant'; }
 
 /* --------------------------------------------------------------------------
    Persistance locale
@@ -140,6 +144,7 @@ const STORAGE = {
   exercises: 'medil.saved.exercises',
   threads: 'medil.threads',
   likedThreads: 'medil.liked.threads',
+  likedReplies: 'medil.liked.replies',
   user: 'medil.user',
   completed: 'medil.completed'
 };
@@ -164,6 +169,7 @@ function writeJSON(key, value) {
 let savedCourses = new Set(readJSON(STORAGE.courses, []));
 let savedExercises = new Set(readJSON(STORAGE.exercises, []));
 let likedThreads = new Set(readJSON(STORAGE.likedThreads, []));
+let likedReplies = new Set(readJSON(STORAGE.likedReplies, []));
 let completedItems = new Set(readJSON(STORAGE.completed, []));
 let currentUser = readJSON(STORAGE.user, null);
 let forumThreads = readJSON(STORAGE.threads, null) || JSON.parse(JSON.stringify(SEED_THREADS));
@@ -180,6 +186,13 @@ const detailCache = {
   exercises: new Map(),
   threads: new Map()
 };
+
+function invalidateDetailCache() {
+  detailCache.courses.clear();
+  detailCache.exercises.clear();
+  detailCache.threads.clear();
+}
+window.invalidateDetailCache = invalidateDetailCache;
 
 async function fetchJSONFile(path) {
   const response = await fetch(path);
@@ -250,6 +263,7 @@ async function loadThreadDetail(id) {
     return existing || null;
   }
 }
+
 
 // Précharge silencieusement les détails d’un cours/exercice lorsqu’il est survolé.
 function scheduleDetailPrefetch(type, id) {
@@ -507,7 +521,7 @@ function exerciseCard(exercise, index = 0) {
 
 function paperCard(paper) {
   return `
-    <article class="paper-card reveal" data-paper-card data-school="${paper.school}" data-subject="${paper.subject}" data-year="${paper.year}" data-search="${escapeAttr(`${paper.title} ${paper.school} ${paper.year} ${paper.subject}`.toLowerCase())}">
+    <article class="paper-card reveal" data-paper-card data-school="${paper.school}" data-subject="${paper.subject}" data-year="${paper.year}" data-search="${escapeAttr(normalizeSearch(`${paper.title} ${paper.school} ${paper.year} ${paper.subject}`))}">
       <button class="paper-open" data-paper="${paper.id}" aria-label="Ouvrir le sujet ${escapeAttr(paper.title)} ${paper.year}">
         <span class="paper-logo logo--${paper.color}">${escapeHTML(paper.short)}</span>
         <span class="paper-info">
@@ -525,7 +539,7 @@ function paperCard(paper) {
 
 function threadRow(thread) {
   return `
-    <a class="thread-row" href="#/forum/${thread.id}" data-thread-row data-category="${thread.category}" data-search="${escapeAttr(`${thread.title} ${thread.excerpt} ${thread.author} ${thread.tags.join(' ')}`.toLowerCase())}">
+    <a class="thread-row" href="#/forum/${thread.id}" data-thread-row data-category="${thread.category}" data-search="${escapeAttr(normalizeSearch(`${thread.title} ${thread.excerpt} ${thread.author} ${thread.tags.join(' ')}`))}">
       <span class="thread-category cat--${normalizeCategory(thread.category)}">${escapeHTML(thread.category)}</span>
       <span class="thread-main">
         <span class="thread-title-line">
@@ -535,7 +549,7 @@ function threadRow(thread) {
         <span class="thread-excerpt">${escapeHTML(thread.excerpt)}</span>
         <span class="thread-meta">
           <span class="mini-avatar avatar--${thread.avatarColor}">${escapeHTML(thread.initials || initials(thread.author))}</span>
-          ${escapeHTML(thread.author)} <span class="dot-sep"></span> ${escapeHTML(thread.time)}
+          ${escapeHTML(thread.author)} <span class="dot-sep"></span> ${escapeHTML(timeAgo(thread.createdAt) || thread.time)}
           ${thread.tags.slice(0, 2).map(tag => `<span class="thread-tag">#${escapeHTML(tag)}</span>`).join('')}
         </span>
       </span>
@@ -603,7 +617,7 @@ function renderHome() {
           </div>
           <div class="hero-proof">
             ${avatarStack()}
-            <p><strong>2 400+ taupins</strong> révisent déjà avec MEDIL <span class="proof-rating">${icon('star')} 4,9/5</span></p>
+            <p><strong>${totalResources} ressources</strong> pour réviser avec MEDIL <span class="proof-rating">${icon('star')} ${COURSES.length ? (COURSES.reduce((sum, course) => sum + (Number(course.rating) || 0), 0) / COURSES.length).toFixed(1) : '4.9'}/5</span></p>
           </div>
         </div>
 
@@ -673,7 +687,7 @@ function renderHome() {
           <a class="subject-card subject-card--maths reveal" href="#/cours?subject=Maths">
             <div class="subject-card-top">
               <span class="subject-number">01</span>
-              <span class="subject-chip">142 ressources</span>
+              <span class="subject-chip">${COURSES.filter(c => c.subject === 'Maths').length + EXERCISES.filter(e => e.subject === 'Maths').length + PAPERS.filter(p => p.subject === 'Maths').length} ressources</span>
               <span class="subject-arrow">${icon('arrowUpRight')}</span>
             </div>
             <div class="subject-art subject-art--maths" aria-hidden="true">
@@ -692,7 +706,7 @@ function renderHome() {
           <a class="subject-card subject-card--physics reveal" href="#/cours?subject=Physique">
             <div class="subject-card-top">
               <span class="subject-number">02</span>
-              <span class="subject-chip">98 ressources</span>
+              <span class="subject-chip">${COURSES.filter(c => c.subject === 'Physique').length + EXERCISES.filter(e => e.subject === 'Physique').length + PAPERS.filter(p => p.subject === 'Physique').length} ressources</span>
               <span class="subject-arrow">${icon('arrowUpRight')}</span>
             </div>
             <div class="subject-art subject-art--physics" aria-hidden="true">
@@ -711,7 +725,7 @@ function renderHome() {
           <a class="subject-card subject-card--info reveal" href="#/cours?subject=Informatique">
             <div class="subject-card-top">
               <span class="subject-number">03</span>
-              <span class="subject-chip">56 ressources</span>
+              <span class="subject-chip">${COURSES.filter(c => c.subject === 'Informatique').length + EXERCISES.filter(e => e.subject === 'Informatique').length + PAPERS.filter(p => p.subject === 'Informatique').length} ressources</span>
               <span class="subject-arrow">${icon('arrowUpRight')}</span>
             </div>
             <div class="subject-art subject-art--info" aria-hidden="true">
@@ -825,18 +839,11 @@ function renderHome() {
               <button class="solution-btn" data-reveal-challenge>${icon('lightbulb')} Révéler les 3 étapes</button>
             </div>
             <div class="solution-steps" data-solution-steps hidden>
+              ${(DAILY_CHALLENGE.steps || []).map((step, index) => `
               <div class="solution-step">
-                <span>01</span>
-                <div><strong>Construire le produit</strong><p>Calcule ${tex('(I+A)(I-A+A^2)')}.</p></div>
-              </div>
-              <div class="solution-step">
-                <span>02</span>
-                <div><strong>Faire disparaître le reste</strong><p>Utilise ${tex('A^3=0')} pour simplifier.</p></div>
-              </div>
-              <div class="solution-step">
-                <span>03</span>
-                <div><strong>Conclure</strong><p>Le produit vaut ${tex('I_n')} des deux côtés, donc ${tex('(I+A)^{-1}=I-A+A^2')}.</p></div>
-              </div>
+                <span>${String(index + 1).padStart(2, '0')}</span>
+                <div><p>${step}</p></div>
+              </div>`).join('')}
               <div class="solution-success">${icon('checkCircle')} Corrigé vérifié par l’équipe MEDIL</div>
             </div>
           </div>
@@ -940,6 +947,7 @@ function renderHome() {
    Page Cours
    -------------------------------------------------------------------------- */
 function renderCoursesPage() {
+  paginationState.courses.page = 1;
   const chapterCount = COURSES.reduce((sum, course) => sum + (Number(course.chaptersCount) || 0), 0);
   return `
     ${pageHero({
@@ -1099,6 +1107,7 @@ function renderCourseDetail(id) {
    Page Exercices
    -------------------------------------------------------------------------- */
 function renderExercisesPage() {
+  paginationState.exercises.page = 1;
   return `
     ${pageHero({
       eyebrow: 'La salle d’entraînement · MPSI / MP',
@@ -1146,6 +1155,7 @@ function renderExercisesPage() {
    Page Concours
    -------------------------------------------------------------------------- */
 function renderConcoursPage() {
+  paginationState.papers.page = 1;
   const schools = ['Tous', 'X/ENS', 'Mines-Ponts', 'Centrale', 'CCINP', 'e3a'];
   const subjects = ['Tous', 'Maths', 'Physique', 'Informatique'];
   const paperYears = PAPERS.map(paper => Number(paper.year)).filter(Boolean);
@@ -1153,7 +1163,7 @@ function renderConcoursPage() {
   const years = ['Tous', ...Array.from(new Set(PAPERS.map(paper => paper.year))).sort((a, b) => b - a)];
   return `
     ${pageHero({
-      eyebrow: 'La banque de concours · 2014 — 2026',
+      eyebrow: `La banque de concours · ${yearRange.replace(' → ', ' — ')}`,
       title: 'Tous les sujets.<br><span class="serif-italic">Le bon cap.</span>',
       description: 'X/ENS, Mines-Ponts, Centrale, CCINP et e3a. Les annales et les corrigés, réunis dans une interface qui ne te fait pas perdre une heure à chercher un PDF.',
       meta: `<span class="hero-meta-pill">${icon('file')} ${PAPERS.length} sujets</span><span class="hero-meta-pill">${icon('checkCircle')} Corrigés détaillés</span><span class="hero-meta-pill">${icon('calendar')} Sessions ${yearRange}</span>`,
@@ -1313,7 +1323,7 @@ function renderThreadPage(id) {
           <div class="thread-hero-top">
             <span class="thread-category cat--${normalizeCategory(thread.category)}">${escapeHTML(thread.category)}</span>
             ${thread.pinned ? `<span class="pin-label">${icon('target')} Épinglé</span>` : ''}
-            <span class="thread-time">${escapeHTML(thread.time)}</span>
+            <span class="thread-time">${escapeHTML(timeAgo(thread.createdAt) || thread.time)}</span>
           </div>
           <h1>${escapeHTML(thread.title)}</h1>
           <p class="thread-hero-excerpt">${escapeHTML(thread.excerpt)}</p>
@@ -1339,7 +1349,7 @@ function renderThreadPage(id) {
             <div class="post-content">${paragraphs(thread.content)}</div>
             <div class="post-tags">${thread.tags.map(tag => `<span>#${escapeHTML(tag)}</span>`).join('')}</div>
             <div class="post-actions">
-              <button class="post-action ${liked ? 'is-active' : ''}" data-like-thread="${thread.id}">${icon('heart')} <span data-like-count="${thread.id}">${thread.upvotes + (liked ? 1 : 0)}</span> utile${liked ? 's' : ''}</button>
+              <button class="post-action ${liked ? 'is-active' : ''}" data-like-thread="${thread.id}">${icon('heart')} <span data-like-count="${thread.id}">${thread.upvotes || 0}</span> utile${liked ? 's' : ''}</button>
               <button class="post-action" data-copy-link>${icon('arrowUpRight')} Partager</button>
               <button class="post-action" data-reply-focus>${icon('forum')} Répondre</button>
             </div>
@@ -1400,12 +1410,12 @@ function replyMarkup(answer, isNew = false) {
     <article class="reply-card ${isNew ? 'reply-card--new' : ''}" id="reply-${escapeAttr(answer.id)}">
       <div class="post-head">
         <span class="post-avatar avatar--${escapeAttr(answer.avatarColor || 'lime')}">${escapeHTML(answer.initials || initials(answer.author))}</span>
-        <div><strong>${escapeHTML(answer.author)}</strong><span>${escapeHTML(answer.grade || 'Membre MEDIL')} · ${escapeHTML(answer.time)}</span></div>
+        <div><strong>${escapeHTML(answer.author)}</strong><span>${escapeHTML(answer.grade || 'Membre MEDIL')} · ${escapeHTML(timeAgo(answer.createdAt) || answer.time)}</span></div>
         <span class="reply-number">#${String(answer.number || 1).padStart(2, '0')}</span>
       </div>
       <div class="post-content">${paragraphs(answer.text)}</div>
       <div class="reply-actions">
-        <button class="post-action" data-upvote-reply="${escapeAttr(answer.id)}">${icon('heart')} <span>${answer.upvotes || 0}</span> utile</button>
+        <button class="post-action ${likedReplies.has(answer.id) ? 'is-active' : ''}" data-upvote-reply="${escapeAttr(answer.id)}">${icon('heart')} <span>${answer.upvotes || 0}</span> utile</button>
         <button class="post-action" data-reply-focus>${icon('forum')} Répondre</button>
       </div>
     </article>`;
@@ -1749,6 +1759,18 @@ function normalizeSearch(value) {
   return String(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
+function timeAgo(timestamp) {
+  if (!timestamp) return null;
+  const seconds = Math.floor((Date.now() - Number(timestamp)) / 1000);
+  if (seconds < 60) return 'à l’instant';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `il y a ${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `il y a ${hours} h`;
+  const days = Math.floor(hours / 24);
+  return `il y a ${days} j`;
+}
+
 function exerciseSearchText(exercise) {
   const solutionText = (exercise.solution || []).map(step => `${step.title} ${step.text} ${step.equation || ''}`).join(' ');
   return `${exercise.title} ${exercise.teaser} ${exercise.source} ${exercise.tag} ${exercise.level} ${exercise.statement} ${exercise.hint || ''} ${exercise.answer || ''} ${solutionText}`.replace(/<[^>]*>/g, ' ');
@@ -1756,13 +1778,21 @@ function exerciseSearchText(exercise) {
 
 function highlightMatch(text, query) {
   if (!query) return escapeHTML(text);
-  const escapedText = escapeHTML(text);
   const normalizedText = normalizeSearch(text);
   const normalizedQuery = normalizeSearch(query);
   const index = normalizedText.indexOf(normalizedQuery);
-  if (index === -1) return escapedText;
-  // On travaille sur le texte brut, puis on échappe chaque segment.
-  return `${escapeHTML(text.slice(0, index))}<mark>${escapeHTML(text.slice(index, index + query.length))}</mark>${escapeHTML(text.slice(index + query.length))}`;
+  if (index === -1) return escapeHTML(text);
+  // Map each normalized character back to its original position so accents
+  // and case differences do not desynchronize the slices.
+  const map = [];
+  for (let i = 0; i < text.length; i++) {
+    const normalized = normalizeSearch(text[i]);
+    if (normalized.length === 0) map.push(i);
+    else for (let j = 0; j < normalized.length; j++) map.push(i);
+  }
+  const start = map[index];
+  const end = map[index + normalizedQuery.length - 1] + 1;
+  return `${escapeHTML(text.slice(0, start))}<mark>${escapeHTML(text.slice(start, end))}</mark>${escapeHTML(text.slice(end))}`;
 }
 
 function searchResultIcon(type) {
@@ -2117,13 +2147,19 @@ function handleThreadLike(id) {
   const thread = forumThreads.find(item => item.id === id);
   if (!thread) return;
   const wasLiked = likedThreads.has(id);
-  if (wasLiked) likedThreads.delete(id);
-  else likedThreads.add(id);
+  if (wasLiked) {
+    likedThreads.delete(id);
+    thread.upvotes = Math.max(0, (Number(thread.upvotes) || 0) - 1);
+  } else {
+    likedThreads.add(id);
+    thread.upvotes = (Number(thread.upvotes) || 0) + 1;
+  }
   writeJSON(STORAGE.likedThreads, [...likedThreads]);
+  writeJSON(STORAGE.threads, forumThreads);
   const button = $(`[data-like-thread="${CSS.escape(id)}"]`);
   if (button) {
     button.classList.toggle('is-active', !wasLiked);
-    button.innerHTML = `${icon('heart')} <span data-like-count="${thread.id}">${thread.upvotes + (wasLiked ? 0 : 1)}</span> utile${!wasLiked ? 's' : ''}`;
+    button.innerHTML = `${icon('heart')} <span data-like-count="${thread.id}">${thread.upvotes}</span> utile${!wasLiked ? 's' : ''}`;
   }
   toast(wasLiked ? 'Réaction retirée.' : 'Merci, ça aide la discussion à remonter.', { type: 'success' });
 }
@@ -2133,11 +2169,21 @@ function handleReplyUpvote(button) {
   if (!replyId) return;
   const countSpan = button.querySelector('span');
   if (!countSpan) return;
-  const isActive = button.classList.toggle('is-active');
-  let value = Number(countSpan.textContent) || 0;
-  value = isActive ? value + 1 : Math.max(0, value - 1);
-  countSpan.textContent = value;
-  if (isActive) toast('Réponse marquée comme utile.', { type: 'success' });
+  const thread = forumThreads.find(item => Array.isArray(item.answers) && item.answers.some(answer => answer.id === replyId));
+  const answer = thread?.answers?.find(item => item.id === replyId);
+  const wasLiked = likedReplies.has(replyId);
+  if (wasLiked) {
+    likedReplies.delete(replyId);
+    if (answer) answer.upvotes = Math.max(0, (Number(answer.upvotes) || 0) - 1);
+  } else {
+    likedReplies.add(replyId);
+    if (answer) answer.upvotes = (Number(answer.upvotes) || 0) + 1;
+  }
+  writeJSON(STORAGE.likedReplies, [...likedReplies]);
+  writeJSON(STORAGE.threads, forumThreads);
+  button.classList.toggle('is-active', !wasLiked);
+  countSpan.textContent = answer ? (Number(answer.upvotes) || 0) : (wasLiked ? Math.max(0, (Number(countSpan.textContent) || 0) - 1) : (Number(countSpan.textContent) || 0) + 1);
+  if (!wasLiked) toast('Réponse marquée comme utile.', { type: 'success' });
 }
 
 function toggleMobileMenu(force) {
@@ -2172,9 +2218,11 @@ function initReveals() {
   });
 }
 
+let tocObserver = null;
 function initTocProgress() {
   const links = $$('.toc-link');
   if (!links.length) return;
+  if (tocObserver) tocObserver.disconnect();
   const blocks = $$('.reader-block');
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -2188,6 +2236,7 @@ function initTocProgress() {
     });
   }, { rootMargin: '-25% 0px -60% 0px' });
   blocks.forEach(block => observer.observe(block));
+  tocObserver = observer;
 }
 
 /* --------------------------------------------------------------------------
@@ -2227,6 +2276,7 @@ async function loadAdminModule() {
       Object.assign(DAILY_CHALLENGE, clone(editorial.dailyChallenge));
     }
     forumThreads = readJSON(STORAGE.threads, null) || JSON.parse(JSON.stringify(SEED_THREADS));
+    invalidateDetailCache();
   }
   await new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -2257,6 +2307,10 @@ function renderRoute({ initial = false } = {}) {
   const querySubject = route.query.get('subject');
   if (pageKey === 'cours' && querySubject && ['Maths', 'Physique', 'Informatique'].includes(querySubject)) {
     courseFilterState.subject = querySubject;
+    courseFilterState.level = 'Tous';
+  } else {
+    courseFilterState.subject = 'Tous';
+    courseFilterState.level = 'Tous';
   }
 
   switch (pageKey) {
@@ -2316,6 +2370,19 @@ function renderRoute({ initial = false } = {}) {
   } else {
     window.scrollTo(0, 0);
   }
+  // Annonce les mises à jour dynamiques et gère le focus après navigation.
+  ['course-count', 'exercise-count', 'paper-count', 'forum-count'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.setAttribute('aria-live', 'polite');
+      el.setAttribute('aria-atomic', 'true');
+    }
+  });
+  const appRoot = $('#app');
+  if (appRoot) {
+    appRoot.setAttribute('tabindex', '-1');
+    appRoot.focus({ preventScroll: true });
+  }
   requestAnimationFrame(() => document.body.classList.add('page-ready'));
 }
 
@@ -2326,8 +2393,8 @@ function bindGlobalEvents() {
   document.addEventListener('click', event => {
     const target = event.target;
 
-    // Studio admin : gestion locale des contenus.
-    if (window.MEDIL_ADMIN?.handleClick(event, target)) return;
+    // Studio admin : gestion locale des contenus (uniquement en mode admin).
+    if (document.body.classList.contains('admin-mode') && window.MEDIL_ADMIN?.handleClick(event, target)) return;
 
     // Lien d’évitement : ne pas casser le routage par hash.
     if (target.closest('.skip-link')) {
@@ -2683,6 +2750,7 @@ function bindGlobalEvents() {
         avatarColor: colors[Math.floor(Math.random() * colors.length)],
         grade: `${data.get('level') || 'MP'} · MEDIL`,
         time: 'à l’instant',
+        createdAt: Date.now(),
         replies: 0,
         views: '1',
         upvotes: 1,
@@ -2717,6 +2785,7 @@ function bindGlobalEvents() {
         avatarColor: colors[Math.floor(Math.random() * colors.length)],
         grade: currentUser ? 'Membre MEDIL' : 'Invité MEDIL',
         time: 'à l’instant',
+        createdAt: Date.now(),
         text,
         upvotes: 0,
         number: thread.answers.length + 1
@@ -2824,8 +2893,22 @@ function bindGlobalEvents() {
     if (header) header.classList.toggle('is-scrolled', window.scrollY > 12);
   }, { passive: true });
   window.addEventListener('afterprint', () => {
-    document.body.classList.remove('printing-paper', 'printing-course');
+    document.body.classList.remove('printing-paper', 'printing-course', 'printing-exercise');
   });
+
+  // Précharge silencieusement les détails au survol (best-effort).
+  document.addEventListener('mouseover', event => {
+    const courseCard = event.target.closest('[data-course-id]');
+    if (courseCard) { scheduleDetailPrefetch('course', courseCard.dataset.courseId); return; }
+    const exerciseCard = event.target.closest('[data-exercise-card]');
+    if (exerciseCard) { scheduleDetailPrefetch('exercise', exerciseCard.getAttribute('data-exercise-card')); return; }
+    const threadRow = event.target.closest('[data-thread-row]');
+    if (threadRow) {
+      const href = threadRow.getAttribute('href') || '';
+      const id = href.split('/').pop();
+      if (id) scheduleDetailPrefetch('thread', id);
+    }
+  }, { passive: true });
 }
 
 function init() {

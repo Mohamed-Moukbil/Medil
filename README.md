@@ -14,12 +14,25 @@ python3 -m http.server 8000
 
 Puis ouvrir <http://127.0.0.1:8000>.
 
+## Outils de développement
+
+Le projet reste sans build step, mais fournit quelques vérifications légères :
+
+```bash
+npm run check              # vérification syntaxique (node --check)
+npm run validate:content   # validation du contenu JSON et du manifeste
+npm run lint               # check + validation du contenu
+npm test                   # alias de lint
+```
+
+Ces scripts utilisent uniquement Node.js (>= 18) et ne nécessitent aucune dépendance.
+
 ## Studio d’administration
 
 Le site possède un studio local pour gérer tout le contenu éditorial.
 
 - URL : <http://127.0.0.1:8000/#/admin> (ou lien **Studio admin** dans le pied de page)
-- Mot de passe par défaut : `medil-admin`
+- Mot de passe par défaut : défini dans `admin.js` (à changer dès le premier accès)
 
 Le studio permet de :
 
@@ -55,7 +68,7 @@ Le fichier JSON peut être réimporté depuis **Réglages → Importer une sauve
 
 ### Mot de passe oublié
 
-Supprime la clé `medil.admin.hash` du `localStorage` du site via les outils de développement du navigateur, puis recharge la page : le mot de passe par défaut `medil-admin` redevient actif. Cette opération ne supprime pas le contenu enregistré.
+Supprime la clé `medil.admin.hash` du `localStorage` du site via les outils de développement du navigateur, puis recharge la page : le mot de passe par défaut redevient actif. Cette opération ne supprime pas le contenu enregistré.
 
 ## Contenu de démonstration
 

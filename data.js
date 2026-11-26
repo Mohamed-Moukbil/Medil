@@ -963,38 +963,6 @@ window.MEDIL_EDITORIAL = {
   ],
   "papers": [
     {
-      "id": "x-ens-2026-d",
-      "school": "X/ENS",
-      "short": "X",
-      "year": 2026,
-      "subject": "Maths",
-      "title": "d",
-      "track": "MP",
-      "duration": "4 h",
-      "difficulty": 3,
-      "parts": "2 problèmes",
-      "hot": false,
-      "correction": false,
-      "color": "lime",
-      "pdf": ""
-    },
-    {
-      "id": "x-ens-2026-lx",
-      "school": "X/ENS",
-      "short": "X",
-      "year": 2026,
-      "subject": "Maths",
-      "title": "LX",
-      "track": "MP",
-      "duration": "4 h",
-      "difficulty": 3,
-      "parts": "2 problèmes",
-      "hot": false,
-      "correction": false,
-      "color": "lime",
-      "pdf": ""
-    },
-    {
       "id": "x-ens-2025-maths-a",
       "school": "X/ENS",
       "short": "X",
