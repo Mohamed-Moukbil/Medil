@@ -97,3 +97,36 @@ Supprime la clé `medil.admin.hash` du `localStorage` du site via les outils de 
 - `styles.css` — design system public et styles du studio.
 - `index.html` — point d’entrée statique.
 - `assets/` — polices et KaTeX.
+
+## Authentification (Supabase)
+
+Le site utilise **Supabase Authentication** pour les connexions Google et GitHub (et e-mail/mot de passe). Tant que `config.js` contient les valeurs `YOUR_...`, le site reste en **mode démo local** (compte stocké dans le navigateur), comme avant.
+
+### 1. Créer le projet Supabase
+
+1. Va sur <https://supabase.com> et crée un projet.
+2. Dans **Authentication → Providers**, active **Email**, **Google** et **GitHub**.
+3. Dans **Project Settings → API**, récupère l’URL du projet et la clé `anon` (publique).
+4. Colle ces valeurs dans `config.js` (remplace les `YOUR_...`).
+
+### 2. Configurer Google
+
+- Crée un client OAuth dans Google Cloud Console, puis colle le client id/secret dans Supabase.
+- Ajoute le redirect `https://<project>.supabase.co/auth/v1/callback` et ton origine de site.
+
+### 3. Configurer GitHub
+
+- Crée une OAuth App GitHub (Settings → Developer settings → OAuth Apps).
+- *Authorization callback URL* : `https://<project>.supabase.co/auth/v1/callback`.
+- Colle le client id/secret dans Supabase (Authentication → Providers → GitHub).
+
+### 4. Déployer
+
+- Héberge le site en HTTPS (GitHub Pages convient, le `CNAME` est déjà présent).
+- Google et GitHub fonctionnent en local une fois le domaine `localhost` autorisé dans Supabase (URL Configuration).
+
+### Remarques
+
+- Les boutons « Continuer avec Google / GitHub » sont dans la modale d’authentification. Sans config Supabase, ils affichent un message et le mode démo reste actif.
+- La déconnexion passe par Supabase si l’utilisateur est connecté via un provider, sinon elle efface simplement le compte démo local.
+- Ne commite jamais la clé `service_role` : seule la clé `anon` doit figurer dans `config.js`.

@@ -9,10 +9,12 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23c9f75a'/%3E%3Cpath d='M17 47V17h7l8 17 8-17h7v30h-8V31l-5.5 12h-3L25 31v16h-8Z' fill='%230b0e0c'/%3E%3C/svg%3E">
   <link rel="preload" href="assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/dm-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; frame-src 'self' https: data: blob:; font-src 'self' data:;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://*.supabase.co https://cdn.jsdelivr.net https://github.com; frame-src 'self' https: data: blob:; font-src 'self' data:;">
   <link rel="stylesheet" href="assets/katex/katex.min.css">
   <link rel="stylesheet" href="styles.css">
   <script defer src="assets/katex/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="config.js"></script>
   <script defer src="content/index.js"></script>
   <script defer src="app.js"></script>
 </head>

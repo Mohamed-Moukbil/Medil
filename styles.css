@@ -1207,6 +1207,15 @@ kbd { font-family: var(--sans); font-size: 9px; font-weight: 700; color: rgba(25
 .auth-bottom-note { margin-top: 16px; font-size: 8px; color: #94988d; }
 .auth-bottom-note button { font-weight: 750; color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
 
+.auth-socials { display: grid; gap: 8px; margin-top: 18px; }
+.auth-social-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; font-size: 9.5px; }
+.auth-social-icon { width: 16px; height: 16px; flex: 0 0 auto; }
+.auth-social-btn--github { background: #24292f; color: var(--white); border-color: #24292f; }
+.auth-social-btn--github:hover { background: #000; }
+.auth-divider { display: flex; align-items: center; gap: 10px; margin: 14px 0 4px; color: #9a9e92; font-size: 8px; font-weight: 650; text-transform: uppercase; letter-spacing: .08em; }
+.auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: #e3ddd0; }
+.user-avatar--photo, .profile-avatar--photo { object-fit: cover; }
+
 /* Profil */
 .modal--profile { max-width: 500px; padding: 34px; }
 .profile-head { display: flex; align-items: center; gap: 15px; padding-right: 35px; }
