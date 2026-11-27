@@ -28,16 +28,20 @@ export async function uploadFile(formData: FormData): Promise<UploadResult> {
     return { ok: false, error: "config", message: "Supabase non configuré." };
   }
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+  let profile: { is_admin?: boolean } | null = null;
+  try {
+    const res = await supabase.auth.getUser();
+    user = res.data?.user ?? null;
+    if (user) {
+      const p = await supabase.from("profiles").select("is_admin").eq("id", user.id).maybeSingle();
+      profile = p.data ?? null;
+    }
+  } catch (err) {
+    console.error("[storage] auth check threw:", err);
+    return { ok: false, error: "database", message: err instanceof Error ? err.message : "Erreur." };
+  }
   if (!user) return { ok: false, error: "auth", message: "Non authentifié." };
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("is_admin")
-    .eq("id", user.id)
-    .maybeSingle();
   if (!profile?.is_admin) {
     return { ok: false, error: "auth", message: "Accès refusé." };
   }

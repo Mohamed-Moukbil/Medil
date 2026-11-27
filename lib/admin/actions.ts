@@ -5,7 +5,12 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 async function requireAdmin() {
-  const supabase = await createClient();
+  let supabase;
+  try {
+    supabase = await createClient();
+  } catch {
+    return { ok: false as const, error: "config" as const, message: "Supabase non configuré." };
+  }
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -122,8 +127,8 @@ export async function deleteCourse(id: string) {
       return { ok: false as const, error: "database" as const, message: error.message };
     }
 
-    revalidatePath("/admin/courses");
-    revalidatePath("/cours");
+    try { revalidatePath("/admin/courses"); } catch {}
+    try { revalidatePath("/cours"); } catch {}
     return { ok: true as const };
   } catch (err) {
     console.error("[admin] deleteCourse threw:", err);
@@ -236,8 +241,8 @@ export async function deleteExercise(id: string) {
       return { ok: false as const, error: "database" as const, message: error.message };
     }
 
-    revalidatePath("/admin/exercises");
-    revalidatePath("/exercices");
+    try { revalidatePath("/admin/exercises"); } catch {}
+    try { revalidatePath("/exercices"); } catch {}
     return { ok: true as const };
   } catch (err) {
     console.error("[admin] deleteExercise threw:", err);
@@ -337,8 +342,8 @@ export async function deletePaper(id: string) {
       return { ok: false as const, error: "database" as const, message: error.message };
     }
 
-    revalidatePath("/admin/papers");
-    revalidatePath("/concours");
+    try { revalidatePath("/admin/papers"); } catch {}
+    try { revalidatePath("/concours"); } catch {}
     return { ok: true as const };
   } catch (err) {
     console.error("[admin] deletePaper threw:", err);

@@ -45,6 +45,6 @@ export async function toggleComplete(input: unknown): Promise<CompleteResult> {
     }
   }
 
-  revalidatePath("/profil");
+  try { revalidatePath("/profil"); } catch {}
   return { ok: true, completed };
 }

@@ -78,7 +78,7 @@ export async function createThread(input: unknown): Promise<ForumActionResult> {
     return { ok: false, error: "database" };
   }
 
-  revalidatePath("/forum");
+  try { revalidatePath("/forum"); } catch {}
   return { ok: true, id: data.id };
 }
 
@@ -138,7 +138,7 @@ export async function createReply(input: unknown): Promise<ForumActionResult> {
     return { ok: false, error: "database" };
   }
 
-  revalidatePath(`/forum/${parsed.data.threadId}`);
-  revalidatePath("/forum");
+  try { revalidatePath(`/forum/${parsed.data.threadId}`); } catch {}
+  try { revalidatePath("/forum"); } catch {}
   return { ok: true, id: data.id };
 }
