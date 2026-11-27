@@ -711,13 +711,12 @@ function closeModal() {
    Header & route utilities
    -------------------------------------------------------------------------- */
 function currentRoute() {
-  const raw = (location.hash || '#/').replace(/^#/, '');
-  const [pathPart, queryPart = ''] = raw.split('?');
-  const segments = pathPart.split('/').filter(Boolean);
+  const path = (location.pathname || '/').replace(/\/+$/, '') || '/';
+  const segments = path.split('/').filter(Boolean);
   return {
     page: segments[0] || 'home',
     id: segments[1] || null,
-    query: new URLSearchParams(queryPart)
+    query: new URLSearchParams(location.search)
   };
 }
 
