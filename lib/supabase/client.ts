@@ -1,16 +1,15 @@
 "use client";
 
 import { createBrowserClient } from "@supabase/ssr";
+import { getSupabaseConfig } from "./config";
 
+/**
+ * Browser Supabase client, or null when the project is not configured.
+ * Callers should render a graceful "not connected" state instead of throwing.
+ */
 export function createClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const config = getSupabaseConfig();
+  if (!config) return null;
 
-  if (!url || !anonKey) {
-    throw new Error(
-      "Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local.",
-    );
-  }
-
-  return createBrowserClient(url, anonKey);
+  return createBrowserClient(config.url, config.anonKey);
 }

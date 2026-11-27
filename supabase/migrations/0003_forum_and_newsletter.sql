@@ -70,5 +70,6 @@ create table if not exists public.newsletter_subscribers (
   created_at timestamptz not null default now()
 );
 
+-- Emails are normalized to lowercase by the server action before insert.
 create unique index if not exists newsletter_subscribers_email_unique
-  on public.newsletter_subscribers (lower(email));
+  on public.newsletter_subscribers (email);
