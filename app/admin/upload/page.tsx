@@ -15,11 +15,15 @@ export default function UploadPage() {
     const fd = new FormData(e.currentTarget);
 
     startTransition(async () => {
-      const res = await uploadFile(fd);
-      if (res.ok) {
-        setResult(res.url);
-      } else {
-        setError(res.message);
+      try {
+        const res = await uploadFile(fd);
+        if (res.ok) {
+          setResult(res.url);
+        } else {
+          setError(res.message);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Erreur inconnue.");
       }
     });
   }

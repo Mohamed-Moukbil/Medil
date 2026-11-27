@@ -36,12 +36,16 @@ export function ExerciseForm({ initial }: Props) {
     };
 
     startTransition(async () => {
-      const result = await upsertExercise(input);
-      if (result.ok) {
-        router.push("/admin/exercises");
-        router.refresh();
-      } else {
-        setError(result.message ?? "Erreur.");
+      try {
+        const result = await upsertExercise(input);
+        if (result.ok) {
+          router.push("/admin/exercises");
+          router.refresh();
+        } else {
+          setError(result.message ?? "Erreur.");
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Erreur inconnue.");
       }
     });
   }

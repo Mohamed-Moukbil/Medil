@@ -46,9 +46,16 @@ export async function uploadFile(formData: FormData): Promise<UploadResult> {
   const safeName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
   const path = `${bucket === "covers" ? "covers" : "papers"}/${safeName}`;
 
-  const { error: uploadError } = await supabase.storage
-    .from(bucket)
-    .upload(path, file, { contentType: file.type, upsert: false });
+  let uploadError: { message: string } | null = null;
+  try {
+    const { error } = await supabase.storage
+      .from(bucket)
+      .upload(path, file, { contentType: file.type || "application/octet-stream", upsert: false });
+    uploadError = error;
+  } catch (err) {
+    console.error("[storage] upload threw:", err);
+    return { ok: false, error: "database", message: err instanceof Error ? err.message : "Upload failed" };
+  }
 
   if (uploadError) {
     console.error("[storage] upload:", uploadError);

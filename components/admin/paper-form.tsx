@@ -34,12 +34,16 @@ export function PaperForm({ initial }: Props) {
     };
 
     startTransition(async () => {
-      const result = await upsertPaper(input);
-      if (result.ok) {
-        router.push("/admin/papers");
-        router.refresh();
-      } else {
-        setError(result.message ?? "Erreur.");
+      try {
+        const result = await upsertPaper(input);
+        if (result.ok) {
+          router.push("/admin/papers");
+          router.refresh();
+        } else {
+          setError(result.message ?? "Erreur.");
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Erreur inconnue.");
       }
     });
   }

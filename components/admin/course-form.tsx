@@ -42,12 +42,16 @@ export function CourseForm({ initial }: CourseFormProps) {
     };
 
     startTransition(async () => {
-      const result = await upsertCourse(input);
-      if (result.ok) {
-        router.push("/admin/courses");
-        router.refresh();
-      } else {
-        setError(result.message ?? "Erreur de validation.");
+      try {
+        const result = await upsertCourse(input);
+        if (result.ok) {
+          router.push("/admin/courses");
+          router.refresh();
+        } else {
+          setError(result.message ?? "Erreur de validation.");
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Erreur inconnue.");
       }
     });
   }
