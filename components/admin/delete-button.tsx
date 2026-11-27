@@ -23,11 +23,15 @@ export function DeleteButton({ action, label = "Supprimer" }: DeleteButtonProps)
         onClick={() => {
           if (!confirm("Confirmer la suppression ?")) return;
           startTransition(async () => {
-            const result = await action();
-            if (result.ok) {
-              router.refresh();
-            } else {
-              setError(result.message ?? "Erreur.");
+            try {
+              const result = await action();
+              if (result.ok) {
+                router.refresh();
+              } else {
+                setError(result.message ?? "Erreur.");
+              }
+            } catch (err) {
+              setError(err instanceof Error ? err.message : "Erreur inconnue.");
             }
           });
         }}

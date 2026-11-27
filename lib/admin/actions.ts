@@ -105,9 +105,9 @@ export async function upsertCourse(input: unknown) {
     return { ok: false as const, error: "database" as const, message: error.message };
   }
 
-  revalidatePath("/admin/courses");
-  revalidatePath("/cours");
-  revalidatePath(`/cours/${v.id}`);
+  try { revalidatePath("/admin/courses"); } catch {}
+  try { revalidatePath("/cours"); } catch {}
+  try { revalidatePath(`/cours/${v.id}`); } catch {}
   return { ok: true as const };
 }
 
@@ -144,8 +144,8 @@ export async function toggleCourseStatus(id: string, status: "draft" | "publishe
     return { ok: false as const, error: "database" as const, message: error.message };
   }
 
-  revalidatePath("/admin/courses");
-  revalidatePath("/cours");
+  try { revalidatePath("/admin/courses"); } catch {}
+  try { revalidatePath("/cours"); } catch {}
   return { ok: true as const };
 }
 
@@ -219,9 +219,9 @@ export async function upsertExercise(input: unknown) {
     return { ok: false as const, error: "database" as const, message: error.message };
   }
 
-  revalidatePath("/admin/exercises");
-  revalidatePath("/exercices");
-  revalidatePath(`/exercices/${v.id}`);
+  try { revalidatePath("/admin/exercises"); } catch {}
+  try { revalidatePath("/exercices"); } catch {}
+  try { revalidatePath(`/exercices/${v.id}`); } catch {}
   return { ok: true as const };
 }
 
@@ -258,8 +258,8 @@ export async function toggleExerciseStatus(id: string, status: "draft" | "publis
     return { ok: false as const, error: "database" as const, message: error.message };
   }
 
-  revalidatePath("/admin/exercises");
-  revalidatePath("/exercices");
+  try { revalidatePath("/admin/exercises"); } catch {}
+  try { revalidatePath("/exercices"); } catch {}
   return { ok: true as const };
 }
 
@@ -320,9 +320,9 @@ export async function upsertPaper(input: unknown) {
     return { ok: false as const, error: "database" as const, message: error.message };
   }
 
-  revalidatePath("/admin/papers");
-  revalidatePath("/concours");
-  revalidatePath(`/concours/${v.id}`);
+  try { revalidatePath("/admin/papers"); } catch {}
+  try { revalidatePath("/concours"); } catch {}
+  try { revalidatePath(`/concours/${v.id}`); } catch {}
   return { ok: true as const };
 }
 
@@ -359,8 +359,8 @@ export async function togglePaperStatus(id: string, status: "draft" | "published
     return { ok: false as const, error: "database" as const, message: error.message };
   }
 
-  revalidatePath("/admin/papers");
-  revalidatePath("/concours");
+  try { revalidatePath("/admin/papers"); } catch {}
+  try { revalidatePath("/concours"); } catch {}
   return { ok: true as const };
 }
 
@@ -378,8 +378,8 @@ export async function setThreadStatus(id: string, status: "published" | "hidden"
     return { ok: false as const, error: "database" as const, message: error.message };
   }
 
-  revalidatePath("/admin/forum");
-  revalidatePath("/forum");
+  try { revalidatePath("/admin/forum"); } catch {}
+  try { revalidatePath("/forum"); } catch {}
   return { ok: true as const };
 }
 
@@ -393,8 +393,8 @@ export async function deleteThread(id: string) {
     return { ok: false as const, error: "database" as const, message: error.message };
   }
 
-  revalidatePath("/admin/forum");
-  revalidatePath("/forum");
+  try { revalidatePath("/admin/forum"); } catch {}
+  try { revalidatePath("/forum"); } catch {}
   return { ok: true as const };
 }
 
@@ -408,7 +408,7 @@ export async function setReplyStatus(id: string, status: "published" | "hidden" 
     return { ok: false as const, error: "database" as const, message: error.message };
   }
 
-  revalidatePath("/admin/forum");
-  revalidatePath("/forum");
+  try { revalidatePath("/admin/forum"); } catch {}
+  try { revalidatePath("/forum"); } catch {}
   return { ok: true as const };
 }
