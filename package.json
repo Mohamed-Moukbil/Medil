@@ -1,18 +1,50 @@
 {
   "name": "medil",
-  "version": "1.0.0",
-  "description": "MEDIL — la prépa, sans angles morts (site statique)",
+  "version": "2.0.0",
+  "description": "MEDIL — la prépa, sans angles morts. Next.js + Supabase.",
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check app.js && node --check admin.js && node --check content/index.js",
-    "validate:content": "node scripts/validate-content.mjs",
-    "lint": "npm run check && npm run validate:content",
-    "serve": "node scripts/serve.mjs . 8000",
-    "test": "npm run lint",
-    "test:e2e": "node /tmp/opencode/medil-pw/functional.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "cf:build": "opennextjs-cloudflare build",
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.119.2",
+    "clsx": "^2.1.1",
+    "katex": "^0.19.1",
+    "next": "16.4.6",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "sanitize-html": "^2.18.2",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.19",
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^22.20.7",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/sanitize-html": "^2.16.2",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.6",
+    "typescript": "^5",
+    "vitest": "^5.1.2",
+    "wrangler": "^4.169.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20.9.0"
   }
 }
