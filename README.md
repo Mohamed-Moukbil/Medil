@@ -31,7 +31,7 @@ Ces scripts utilisent uniquement Node.js (>= 18) et ne nécessitent aucune dépe
 
 Le site possède un studio local pour gérer tout le contenu éditorial.
 
-- URL : <http://127.0.0.1:8000/#/admin> (ou lien **Studio admin** dans le pied de page)
+- URL : <http://127.0.0.1:8000/admin> (ou lien **Studio admin** dans le pied de page)
 - Mot de passe par défaut : défini dans `admin.js` (à changer dès le premier accès)
 
 Le studio permet de :
