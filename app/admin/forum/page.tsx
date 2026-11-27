@@ -28,12 +28,18 @@ export default async function AdminForumPage() {
                 </p>
               </div>
               <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-                <form action={async () => { "use server"; await setThreadStatus(thread.id, thread.status === "published" ? "hidden" : "published"); }}>
+                <form
+                  key={`thread-${thread.id}-status`}
+                  action={async () => { "use server"; await setThreadStatus(thread.id, thread.status === "published" ? "hidden" : "published"); }}
+                >
                   <button className="btn btn--sm btn--outline" type="submit">
                     {thread.status === "published" ? "Masquer" : "Publier"}
                   </button>
                 </form>
-                <form action={async () => { "use server"; await deleteThread(thread.id); }}>
+                <form
+                  key={`thread-${thread.id}-delete`}
+                  action={async () => { "use server"; await deleteThread(thread.id); }}
+                >
                   <button className="btn btn--sm btn--outline" type="submit" style={{ color: "var(--coral)" }}>
                     Supprimer
                   </button>
