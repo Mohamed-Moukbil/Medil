@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getPapers } from "@/lib/content/public";
 import { deletePaper, togglePaperStatus } from "@/lib/admin/actions";
+import { DeleteButton } from "@/components/admin/delete-button";
 
 export default async function AdminPapersPage() {
   const papers = await getPapers();
@@ -50,11 +51,7 @@ export default async function AdminPapersPage() {
                       {p.status === "published" ? "Dépublier" : "Publier"}
                     </button>
                   </form>
-                  <form action={async () => { "use server"; await deletePaper(p.id); }}>
-                    <button className="btn btn--sm btn--outline" type="submit" style={{ color: "var(--coral)" }}>
-                      Supprimer
-                    </button>
-                  </form>
+                  <DeleteButton action={async () => deletePaper(p.id)} />
                 </td>
               </tr>
             ))}

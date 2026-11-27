@@ -112,18 +112,23 @@ export async function upsertCourse(input: unknown) {
 }
 
 export async function deleteCourse(id: string) {
-  const auth = await requireAdmin();
-  if (!auth.ok) return auth;
+  try {
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth;
 
-  const { error } = await auth.supabase.from("courses").delete().eq("id", id);
-  if (error) {
-    console.error("[admin] deleteCourse:", error);
-    return { ok: false as const, error: "database" as const, message: error.message };
+    const { error } = await auth.supabase.from("courses").delete().eq("id", id);
+    if (error) {
+      console.error("[admin] deleteCourse:", error);
+      return { ok: false as const, error: "database" as const, message: error.message };
+    }
+
+    revalidatePath("/admin/courses");
+    revalidatePath("/cours");
+    return { ok: true as const };
+  } catch (err) {
+    console.error("[admin] deleteCourse threw:", err);
+    return { ok: false as const, error: "database" as const, message: err instanceof Error ? err.message : "Unknown error" };
   }
-
-  revalidatePath("/admin/courses");
-  revalidatePath("/cours");
-  return { ok: true as const };
 }
 
 export async function toggleCourseStatus(id: string, status: "draft" | "published" | "archived") {
@@ -221,18 +226,23 @@ export async function upsertExercise(input: unknown) {
 }
 
 export async function deleteExercise(id: string) {
-  const auth = await requireAdmin();
-  if (!auth.ok) return auth;
+  try {
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth;
 
-  const { error } = await auth.supabase.from("exercises").delete().eq("id", id);
-  if (error) {
-    console.error("[admin] deleteExercise:", error);
-    return { ok: false as const, error: "database" as const, message: error.message };
+    const { error } = await auth.supabase.from("exercises").delete().eq("id", id);
+    if (error) {
+      console.error("[admin] deleteExercise:", error);
+      return { ok: false as const, error: "database" as const, message: error.message };
+    }
+
+    revalidatePath("/admin/exercises");
+    revalidatePath("/exercices");
+    return { ok: true as const };
+  } catch (err) {
+    console.error("[admin] deleteExercise threw:", err);
+    return { ok: false as const, error: "database" as const, message: err instanceof Error ? err.message : "Unknown error" };
   }
-
-  revalidatePath("/admin/exercises");
-  revalidatePath("/exercices");
-  return { ok: true as const };
 }
 
 export async function toggleExerciseStatus(id: string, status: "draft" | "published" | "archived") {
@@ -317,18 +327,23 @@ export async function upsertPaper(input: unknown) {
 }
 
 export async function deletePaper(id: string) {
-  const auth = await requireAdmin();
-  if (!auth.ok) return auth;
+  try {
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth;
 
-  const { error } = await auth.supabase.from("papers").delete().eq("id", id);
-  if (error) {
-    console.error("[admin] deletePaper:", error);
-    return { ok: false as const, error: "database" as const, message: error.message };
+    const { error } = await auth.supabase.from("papers").delete().eq("id", id);
+    if (error) {
+      console.error("[admin] deletePaper:", error);
+      return { ok: false as const, error: "database" as const, message: error.message };
+    }
+
+    revalidatePath("/admin/papers");
+    revalidatePath("/concours");
+    return { ok: true as const };
+  } catch (err) {
+    console.error("[admin] deletePaper threw:", err);
+    return { ok: false as const, error: "database" as const, message: err instanceof Error ? err.message : "Unknown error" };
   }
-
-  revalidatePath("/admin/papers");
-  revalidatePath("/concours");
-  return { ok: true as const };
 }
 
 export async function togglePaperStatus(id: string, status: "draft" | "published" | "archived") {

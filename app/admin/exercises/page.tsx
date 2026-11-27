@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getExercises } from "@/lib/content/public";
 import { deleteExercise, toggleExerciseStatus } from "@/lib/admin/actions";
+import { DeleteButton } from "@/components/admin/delete-button";
 
 export default async function AdminExercisesPage() {
   const exercises = await getExercises();
@@ -50,11 +51,7 @@ export default async function AdminExercisesPage() {
                       {ex.status === "published" ? "Dépublier" : "Publier"}
                     </button>
                   </form>
-                  <form action={async () => { "use server"; await deleteExercise(ex.id); }}>
-                    <button className="btn btn--sm btn--outline" type="submit" style={{ color: "var(--coral)" }}>
-                      Supprimer
-                    </button>
-                  </form>
+                  <DeleteButton action={async () => deleteExercise(ex.id)} />
                 </td>
               </tr>
             ))}
