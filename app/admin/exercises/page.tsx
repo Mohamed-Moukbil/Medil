@@ -51,7 +51,7 @@ export default async function AdminExercisesPage() {
                       {ex.status === "published" ? "Dépublier" : "Publier"}
                     </button>
                   </form>
-                  <DeleteButton action={async () => deleteExercise(ex.id)} />
+                  <DeleteButton action={async () => { "use server"; return deleteExercise(ex.id); }} />
                 </td>
               </tr>
             ))}

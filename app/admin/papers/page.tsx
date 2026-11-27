@@ -51,7 +51,7 @@ export default async function AdminPapersPage() {
                       {p.status === "published" ? "Dépublier" : "Publier"}
                     </button>
                   </form>
-                  <DeleteButton action={async () => deletePaper(p.id)} />
+                  <DeleteButton action={async () => { "use server"; return deletePaper(p.id); }} />
                 </td>
               </tr>
             ))}

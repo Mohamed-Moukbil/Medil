@@ -51,7 +51,7 @@ export default async function AdminCoursesPage() {
                       {course.status === "published" ? "Dépublier" : "Publier"}
                     </button>
                   </form>
-                  <DeleteButton action={async () => deleteCourse(course.id)} />
+                  <DeleteButton action={async () => { "use server"; return deleteCourse(course.id); }} />
                 </td>
               </tr>
             ))}
