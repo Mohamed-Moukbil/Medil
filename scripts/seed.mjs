@@ -34,12 +34,12 @@ function info(message) {
 }
 
 async function loadEditorial() {
-  const source = await readFile(path.join(ROOT, "legacy", "data.js"), "utf8");
+  const source = await readFile(path.join(ROOT, "data", "medil-editorial.js"), "utf8");
   const start = source.indexOf("{");
   const end = source.lastIndexOf("}");
 
   if (start === -1 || end === -1 || end <= start) {
-    fail("legacy/data.js does not contain the MEDIL_EDITORIAL object.");
+    fail("data/medil-editorial.js does not contain the MEDIL_EDITORIAL object.");
   }
 
   try {

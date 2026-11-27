@@ -12,12 +12,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const source = await readFile(path.join(ROOT, "legacy", "data.js"), "utf8");
+const source = await readFile(path.join(ROOT, "data", "medil-editorial.js"), "utf8");
 const start = source.indexOf("{");
 const end = source.lastIndexOf("}");
 
 if (start === -1 || end === -1) {
-  console.error("legacy/data.js does not contain the MEDIL_EDITORIAL object.");
+  console.error("data/medil-editorial.js does not contain the MEDIL_EDITORIAL object.");
   process.exit(1);
 }
 

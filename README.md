@@ -8,8 +8,9 @@ Next.js app with a real database, real authentication and a secure admin area.
 The visual design is intentionally unchanged: the original CSS lives in
 `app/globals.css` and the original assets are in `public/assets/`.
 
-The old static site is preserved in `legacy/` and remains the rollback target
-until the new deployment is validated.
+The original static site has been removed; the editorial seed data now lives in
+`data/medil-editorial.js`. Cloudflare Pages remains the rollback target until
+the Workers deployment is validated.
 
 ## Stack
 
@@ -43,7 +44,7 @@ seed has run.
 ## 1. Create the Supabase project
 
 Create a **new** Supabase project. This migration deliberately starts from an
-empty database: editorial content is imported from `legacy/data.js`, while old
+empty database: editorial content is imported from `data/medil-editorial.js`, while old
 auth users and personal data are not migrated.
 
 From **Project Settings → API**, copy:
@@ -107,7 +108,7 @@ signups, disable **Confirm email** in the local project only.
 
 ## 4. Seed the editorial content
 
-The seed reads `legacy/data.js` and upserts courses, exercises, concours papers,
+The seed reads `data/medil-editorial.js` and upserts courses, exercises, concours papers,
 the daily challenge and the five original forum threads with their replies.
 
 ```bash
@@ -205,7 +206,7 @@ Then uncomment `incrementalCache: r2IncrementalCache` and add the binding to
 
 The existing Cloudflare Pages project is not touched by this migration. Keep it
 and its DNS record until the Workers deployment has been validated. To roll
-back, point the domain back to Pages; `legacy/` contains the full static site.
+back, point the domain back to Pages.
 
 ## Scripts
 
@@ -234,7 +235,7 @@ components/          UI components (added phase by phase)
 lib/
   supabase/          Browser and server Supabase clients
 content/             Legacy per-item JSON exports (reference)
-legacy/              Original static site — rollback copy
+data/                Editorial seed source (medil-editorial.js)
 public/assets/       Fonts, KaTeX and images
 scripts/seed.mjs     Editorial content importer
 supabase/migrations/ Schema, indexes, RLS and storage policies
