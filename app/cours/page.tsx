@@ -28,7 +28,7 @@ export default async function CoursesPage({
 
   return (
     <>
-      <section className="page-hero">
+      <section className="page-hero page-hero--courses">
         <div className="page-hero-glow" aria-hidden="true" />
         <div className="container">
           <div className="page-hero-inner reveal">
@@ -51,52 +51,87 @@ export default async function CoursesPage({
               <span className="hero-meta-pill">
                 <Icon name="layers" /> {courses.reduce((sum, course) => sum + course.chaptersCount, 0)} chapitres
               </span>
+              <span className="hero-meta-pill">
+                <Icon name="checkCircle" /> Relus par l’équipe
+              </span>
+            </div>
+            <div className="page-hero-deco page-hero-deco--book" aria-hidden="true">∑</div>
+            <div className="page-hero-deco page-hero-deco--atom" aria-hidden="true">
+              <span />
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section">
+      <section className="section library-section">
         <div className="container">
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 32 }}>
-            <Link className={`btn btn--sm ${!subject && !level ? "btn--dark" : "btn--outline"}`} href="/cours">
-              Tous
-            </Link>
-            {SUBJECTS.map((item) => (
-              <Link
-                key={item}
-                className={`btn btn--sm ${subject === item ? "btn--dark" : "btn--outline"}`}
-                href={buildHref(item, level)}
-              >
-                {item}
-              </Link>
-            ))}
-            <span style={{ width: "100%" }} />
-            {LEVELS.map((item) => (
-              <Link
-                key={item}
-                className={`btn btn--sm ${level === item ? "btn--lime" : "btn--outline"}`}
-                href={buildHref(subject, item)}
-              >
-                {item}
-              </Link>
-            ))}
-            {(subject || level) && (
-              <Link className="btn btn--sm btn--ghost-dark" href="/cours" style={{ color: "var(--ink)" }}>
-                Réinitialiser
-              </Link>
-            )}
+          <div className="library-toolbar sticky-toolbar">
+            <div className="filter-groups">
+              <div className="filter-group">
+                <Link className={`filter-pill ${!subject ? "is-active" : ""}`} href={buildHref(undefined, level)}>
+                  Tous
+                </Link>
+                {SUBJECTS.map((item) => (
+                  <Link
+                    key={item}
+                    className={`filter-pill ${subject === item ? "is-active" : ""}`}
+                    href={buildHref(item, level)}
+                  >
+                    {item}
+                  </Link>
+                ))}
+              </div>
+              <span className="filter-separator" />
+              <div className="filter-group">
+                <Link className={`filter-pill ${!level ? "is-active" : ""}`} href={buildHref(subject)}>
+                  Tous niveaux
+                </Link>
+                {LEVELS.map((item) => (
+                  <Link
+                    key={item}
+                    className={`filter-pill ${level === item ? "is-active" : ""}`}
+                    href={buildHref(subject, item)}
+                  >
+                    {item}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div className="library-count">
+              <strong>{courses.length}</strong> cours <span className="count-dot" /> mis à jour cette semaine
+            </div>
           </div>
 
           {courses.length === 0 ? (
-            <p style={{ color: "var(--ink-muted)" }}>Aucun cours pour ces filtres.</p>
+            <div className="empty-state">
+              <span className="empty-icon">
+                <Icon name="search" />
+              </span>
+              <h3>Aucun cours ne correspond.</h3>
+              <p>Essaie un autre filtre, ou reviens à tous les cours.</p>
+              <Link className="btn btn--dark" href="/cours">
+                Réinitialiser les filtres
+              </Link>
+            </div>
           ) : (
-            <div className="course-grid">
+            <div className="course-grid library-grid">
               {courses.map((course) => (
                 <CourseCard key={course.id} course={course} />
               ))}
             </div>
           )}
+          <div className="library-footer reveal">
+            <div className="library-footer-icon">
+              <Icon name="sparkles" />
+            </div>
+            <div>
+              <h3>Un chapitre te manque ?</h3>
+              <p>Dis-nous ce qui bloque. Les prochains cours sont choisis avec la communauté.</p>
+            </div>
+            <Link className="btn btn--outline" href="/forum">
+              Proposer un sujet <Icon name="arrowUpRight" />
+            </Link>
+          </div>
         </div>
       </section>
     </>

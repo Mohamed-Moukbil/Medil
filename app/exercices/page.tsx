@@ -7,6 +7,14 @@ import type { Level, Subject } from "@/lib/content/types";
 const SUBJECTS: Subject[] = ["Maths", "Physique", "Informatique"];
 const LEVELS: Level[] = ["MPSI", "MP", "MP*"];
 
+function buildHref(subject?: string, level?: string) {
+  const params = new URLSearchParams();
+  if (subject) params.set("subject", subject);
+  if (level) params.set("level", level);
+  const query = params.toString();
+  return query ? `/exercices?${query}` : "/exercices";
+}
+
 export default async function ExercisesPage({
   searchParams,
 }: {
@@ -20,7 +28,7 @@ export default async function ExercisesPage({
 
   return (
     <>
-      <section className="page-hero">
+      <section className="page-hero page-hero--exercises">
         <div className="page-hero-glow" aria-hidden="true" />
         <div className="container">
           <div className="page-hero-inner reveal">
@@ -40,40 +48,71 @@ export default async function ExercisesPage({
               <span className="hero-meta-pill">
                 <Icon name="target" /> {exercises.length} exercices
               </span>
+              <span className="hero-meta-pill">
+                <Icon name="checkCircle" /> 100% corrigés
+              </span>
+              <span className="hero-meta-pill">
+                <Icon name="layers" /> Classés par difficulté
+              </span>
+            </div>
+            <div className="page-hero-deco page-hero-deco--sigma" aria-hidden="true">∫</div>
+            <div className="page-hero-deco page-hero-deco--stars" aria-hidden="true">
+              ★<br />★<br />★
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section">
+      <section className="section exercises-library">
         <div className="container">
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 32 }}>
-            <Link className={`btn btn--sm ${!subject ? "btn--dark" : "btn--outline"}`} href={level ? `/exercices?level=${level}` : "/exercices"}>
-              Toutes les matières
-            </Link>
-            {SUBJECTS.map((item) => (
-              <Link
-                key={item}
-                className={`btn btn--sm ${subject === item ? "btn--dark" : "btn--outline"}`}
-                href={`/exercices?subject=${item}${level ? `&level=${level}` : ""}`}
-              >
-                {item}
-              </Link>
-            ))}
-            <span style={{ width: "100%" }} />
-            {LEVELS.map((item) => (
-              <Link
-                key={item}
-                className={`btn btn--sm ${level === item ? "btn--lime" : "btn--outline"}`}
-                href={`/exercices?${subject ? `subject=${subject}&` : ""}level=${item}`}
-              >
-                {item}
-              </Link>
-            ))}
+          <div className="library-toolbar sticky-toolbar">
+            <div className="filter-groups">
+              <div className="filter-group">
+                <Link className={`filter-pill ${!subject ? "is-active" : ""}`} href={buildHref(undefined, level)}>
+                  Tous
+                </Link>
+                {SUBJECTS.map((item) => (
+                  <Link
+                    key={item}
+                    className={`filter-pill ${subject === item ? "is-active" : ""}`}
+                    href={buildHref(item, level)}
+                  >
+                    {item}
+                  </Link>
+                ))}
+              </div>
+              <span className="filter-separator" />
+              <div className="filter-group">
+                <Link className={`filter-pill ${!level ? "is-active" : ""}`} href={buildHref(subject)}>
+                  Tous niveaux
+                </Link>
+                {LEVELS.map((item) => (
+                  <Link
+                    key={item}
+                    className={`filter-pill ${level === item ? "is-active" : ""}`}
+                    href={buildHref(subject, item)}
+                  >
+                    {item}
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div className="library-count">
+              <strong>{exercises.length}</strong> exercices <span className="count-dot" /> corrigés vérifiés
+            </div>
           </div>
 
           {exercises.length === 0 ? (
-            <p style={{ color: "var(--ink-muted)" }}>Aucun exercice pour ces filtres.</p>
+            <div className="empty-state">
+              <span className="empty-icon">
+                <Icon name="search" />
+              </span>
+              <h3>Aucun exercice sur ce radar.</h3>
+              <p>Change de filtre ou tente un autre niveau de difficulté.</p>
+              <Link className="btn btn--dark" href="/exercices">
+                Réinitialiser les filtres
+              </Link>
+            </div>
           ) : (
             <div className="exercise-grid">
               {exercises.map((exercise, index) => (
@@ -81,6 +120,16 @@ export default async function ExercisesPage({
               ))}
             </div>
           )}
+          <div className="exercises-note reveal">
+            <div className="exercises-note-icon">
+              <Icon name="lightbulb" />
+            </div>
+            <div>
+              <strong>Notre philosophie du corrigé.</strong>
+              <p>On ne donne pas seulement la réponse. On explique comment trouver l’idée, pourquoi elle marche, et ce qu’il faut retenir pour la prochaine fois.</p>
+            </div>
+            <span className="note-signature">— L’équipe MEDIL</span>
+          </div>
         </div>
       </section>
     </>

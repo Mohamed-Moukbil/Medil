@@ -264,7 +264,36 @@ export default async function HomePage() {
                       <Icon name="arrowUpRight" />
                     </span>
                   </div>
-                  <div className={`subject-art subject-art--${classes[subject]}`} aria-hidden="true" />
+                  {subject === "Maths" ? (
+                    <div className="subject-art subject-art--maths" aria-hidden="true">
+                      <span className="math-symbol math-symbol--one">∑</span>
+                      <span className="math-symbol math-symbol--two">∫</span>
+                      <span className="math-symbol math-symbol--three">∈</span>
+                      <span className="subject-orbit" />
+                      <span className="subject-orbit subject-orbit--small" />
+                    </div>
+                  ) : subject === "Physique" ? (
+                    <div className="subject-art subject-art--physics" aria-hidden="true">
+                      <span className="physics-core" />
+                      <span className="physics-ring physics-ring--one" />
+                      <span className="physics-ring physics-ring--two" />
+                      <span className="physics-ring physics-ring--three" />
+                      <span className="physics-spark">✦</span>
+                    </div>
+                  ) : (
+                    <div className="subject-art subject-art--info" aria-hidden="true">
+                      <div className="code-window">
+                        <span className="code-dot" />
+                        <span className="code-dot" />
+                        <span className="code-dot" />
+                        <div className="code-line code-line--one" />
+                        <div className="code-line code-line--two" />
+                        <div className="code-line code-line--three" />
+                        <div className="code-cursor" />
+                      </div>
+                      <span className="code-bracket">{"{ }"}</span>
+                    </div>
+                  )}
                   <div className="subject-card-bottom">
                     <h3>{labels[subject]}</h3>
                     <p>{subtitles[subject]}</p>
