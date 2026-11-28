@@ -3,6 +3,7 @@ import { Icon } from "@/components/icons";
 import { Tex } from "@/components/tex";
 import { SaveButton } from "@/components/save-button";
 import { CompleteButton } from "@/components/complete-button";
+import { ReadingProgress } from "@/components/reading-progress";
 import { CoverArt } from "@/components/content/cover-art";
 import { getCourse } from "@/lib/content/public";
 import { createClient } from "@/lib/supabase/server";
@@ -36,6 +37,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
 
   return (
     <>
+      <ReadingProgress />
       <section className="reader-hero">
         <div className="reader-hero-glow" aria-hidden="true" />
         <div className="container">

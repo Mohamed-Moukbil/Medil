@@ -842,6 +842,21 @@ kbd { font-family: var(--sans); font-size: 9px; font-weight: 700; color: rgba(25
 .paper-pdf-empty .btn { margin-top: 20px; }
 
 /* ==========================================================================
+   Reading progress (course pages)
+   ========================================================================== */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: var(--lime, #c8f060);
+  z-index: 2000;
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+/* ==========================================================================
    Forum
    ========================================================================== */
 .forum-page-section { padding-top: 31px; padding-bottom: 104px; }
