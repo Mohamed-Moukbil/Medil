@@ -826,6 +826,21 @@ kbd { font-family: var(--sans); font-size: 9px; font-weight: 700; color: rgba(25
 .papers-aside p { margin-top: 3px; font-size: 10px; color: #6f7469; max-width: 620px; }
 .papers-aside .btn { margin-left: auto; flex: 0 0 auto; border-color: #c9c2b3; font-size: 10px; min-height: 36px; }
 
+/* Aperçu PDF d'un sujet */
+.paper-pdf-card { background: var(--white); border: 1px solid #e2ddd0; border-radius: 20px; box-shadow: var(--shadow-card); overflow: hidden; }
+.paper-pdf-head { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 20px 24px; border-bottom: 1px solid #e5e1d6; flex-wrap: wrap; }
+.paper-pdf-head h2 { margin-top: 8px; font-size: 22px; letter-spacing: -.04em; }
+.paper-pdf-head p:not(.eyebrow) { margin-top: 4px; font-size: 10px; color: var(--ink-muted); }
+.paper-pdf-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.paper-pdf-frame { display: block; width: 100%; height: min(82vh, 980px); border: 0; background: #f2efe5; }
+.paper-pdf-help { padding: 12px 24px; border-top: 1px solid #e5e1d6; font-size: 10px; color: var(--ink-muted); }
+.paper-pdf-help a { color: var(--ink); text-decoration: underline; }
+.paper-pdf-empty { background: var(--white); border: 1px solid #e2ddd0; border-radius: 20px; box-shadow: var(--shadow-card); padding: 52px 24px; text-align: center; }
+.paper-pdf-empty .empty-icon { margin: 0 auto 16px; }
+.paper-pdf-empty h3 { font-size: 22px; letter-spacing: -.03em; }
+.paper-pdf-empty p { max-width: 520px; margin: 8px auto 0; font-size: 12px; line-height: 1.7; color: var(--ink-muted); }
+.paper-pdf-empty .btn { margin-top: 20px; }
+
 /* ==========================================================================
    Forum
    ========================================================================== */
@@ -1687,6 +1702,11 @@ kbd { font-family: var(--sans); font-size: 9px; font-weight: 700; color: rgba(25
   .paper-arrow { width: 25px; height: 25px; }
   .papers-aside { flex-wrap: wrap; padding: 18px; gap: 11px; }
   .papers-aside .btn { margin-left: 0; width: 100%; justify-content: center; }
+  .paper-pdf-head { padding: 16px 18px; }
+  .paper-pdf-head h2 { font-size: 19px; }
+  .paper-pdf-actions { width: 100%; }
+  .paper-pdf-actions .btn { flex: 1 1 auto; justify-content: center; }
+  .paper-pdf-frame { height: 68vh; }
   .library-footer { flex-wrap: wrap; padding: 20px; }
   .library-footer .btn { margin-left: 0; width: 100%; justify-content: center; }
   .footer-inner { padding-top: 50px; }

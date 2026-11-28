@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Icon } from "@/components/icons";
-import { Tex } from "@/components/tex";
 import { getPaper } from "@/lib/content/public";
 import { notFound } from "next/navigation";
 
@@ -9,12 +8,7 @@ export default async function PaperDetailPage({ params }: { params: Promise<{ id
   const paper = await getPaper(id);
   if (!paper) notFound();
 
-  const subjectContent =
-    paper.subject === "Physique"
-      ? "Optique géométrique, électromagnétisme et mécanique. Faire le schéma avant les formules."
-      : paper.subject === "Informatique"
-        ? "Algorithmique, structures de données et preuves de correction."
-        : "Algèbre linéaire, suites et séries. Identifier la structure avant de calculer.";
+  const pdfUrl = paper.pdfUrl;
 
   return (
     <>
@@ -39,34 +33,49 @@ export default async function PaperDetailPage({ params }: { params: Promise<{ id
 
       <section className="section">
         <div className="container">
-          <div className="paper-sheet" style={{ background: "var(--white)", borderRadius: 20, padding: 32, boxShadow: "var(--shadow-card)" }}>
-            <div className="sheet-head">
-              <span className="sheet-school">{paper.school}</span>
-              <span className="sheet-session">Session {paper.year}</span>
-            </div>
-            <div className="sheet-title-block">
-              <span>
-                Concours {paper.school} · Filière {paper.track ?? "MP"}
-              </span>
-              <h2>{paper.title}</h2>
-              <div className="sheet-meta">
-                <span>Durée : {paper.duration ?? "—"}</span>
-                <span>{paper.subject}</span>
-                <span>{paper.parts ?? "—"}</span>
+          {pdfUrl ? (
+            <div className="paper-pdf-card">
+              <div className="paper-pdf-head">
+                <div>
+                  <p className="eyebrow">
+                    <span className="eyebrow-dot" /> Sujet officiel
+                  </p>
+                  <h2>{paper.title}</h2>
+                  <p>
+                    {paper.school} · Session {paper.year} · {paper.subject} · {paper.duration ?? "—"} · {paper.parts ?? "—"}
+                  </p>
+                </div>
+                <div className="paper-pdf-actions">
+                  <a className="btn btn--dark" href={pdfUrl} target="_blank" rel="noopener noreferrer">
+                    <Icon name="file" /> Ouvrir le PDF
+                  </a>
+                  <a className="btn btn--outline" href={pdfUrl} download>
+                    <Icon name="download" /> Télécharger
+                  </a>
+                </div>
               </div>
+              <iframe className="paper-pdf-frame" src={pdfUrl} title={`PDF du sujet ${paper.title}`} loading="lazy" />
+              <p className="paper-pdf-help">
+                Le PDF ne s’affiche pas ?{" "}
+                <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+                  Ouvre-le dans un nouvel onglet
+                </a>
+                .
+              </p>
             </div>
-            <div className="sheet-instructions">
-              L’usage de la calculatrice est interdit. La qualité de la rédaction, la clarté et la précision des raisonnements entreront pour une part importante dans l’appréciation des copies.
+          ) : (
+            <div className="paper-pdf-empty">
+              <span className="empty-icon">
+                <Icon name="file" />
+              </span>
+              <h3>Le PDF de ce sujet n’est pas encore disponible.</h3>
+              <p>Le sujet sera ajouté très bientôt. En attendant, explore les autres annales de la banque de concours.</p>
+              <Link className="btn btn--dark" href="/concours">
+                Retour à la banque
+              </Link>
             </div>
-            <p style={{ marginTop: 24, color: "var(--ink-muted)" }}>{subjectContent}</p>
-            <div className="paper-formula" style={{ marginTop: 24 }}>
-              <Tex expression={paper.subject === "Physique" ? "G=-\\frac{f'_1}{f'_2}" : paper.subject === "Informatique" ? "T(n)=O(\\log n)" : "\\ker P(u)=\\bigoplus \\ker P_i(u)"} display />
-            </div>
-            <div className="sheet-footer" style={{ marginTop: 32 }}>
-              <span>MEDIL · Banque de concours</span>
-              <span>Page 1 / 4</span>
-            </div>
-          </div>
+          )}
+
           {paper.correction ? (
             <div className="paper-sheet paper-sheet--solution" style={{ background: "var(--white)", borderRadius: 20, padding: 32, boxShadow: "var(--shadow-card)", marginTop: 24 }}>
               <div className="sheet-head">

@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 async function requireAdmin() {
   let supabase;
@@ -113,6 +113,7 @@ export async function upsertCourse(input: unknown) {
   try { revalidatePath("/admin/courses"); } catch {}
   try { revalidatePath("/cours"); } catch {}
   try { revalidatePath(`/cours/${v.id}`); } catch {}
+  try { updateTag("courses"); } catch {}
   return { ok: true as const };
 }
 
@@ -129,6 +130,7 @@ export async function deleteCourse(id: string) {
 
     try { revalidatePath("/admin/courses"); } catch {}
     try { revalidatePath("/cours"); } catch {}
+    try { updateTag("courses"); } catch {}
     return { ok: true as const };
   } catch (err) {
     console.error("[admin] deleteCourse threw:", err);
@@ -151,6 +153,7 @@ export async function toggleCourseStatus(id: string, status: "draft" | "publishe
 
   try { revalidatePath("/admin/courses"); } catch {}
   try { revalidatePath("/cours"); } catch {}
+  try { updateTag("courses"); } catch {}
   return { ok: true as const };
 }
 
@@ -227,6 +230,7 @@ export async function upsertExercise(input: unknown) {
   try { revalidatePath("/admin/exercises"); } catch {}
   try { revalidatePath("/exercices"); } catch {}
   try { revalidatePath(`/exercices/${v.id}`); } catch {}
+  try { updateTag("exercises"); } catch {}
   return { ok: true as const };
 }
 
@@ -243,6 +247,7 @@ export async function deleteExercise(id: string) {
 
     try { revalidatePath("/admin/exercises"); } catch {}
     try { revalidatePath("/exercices"); } catch {}
+    try { updateTag("exercises"); } catch {}
     return { ok: true as const };
   } catch (err) {
     console.error("[admin] deleteExercise threw:", err);
@@ -265,6 +270,7 @@ export async function toggleExerciseStatus(id: string, status: "draft" | "publis
 
   try { revalidatePath("/admin/exercises"); } catch {}
   try { revalidatePath("/exercices"); } catch {}
+  try { updateTag("exercises"); } catch {}
   return { ok: true as const };
 }
 
@@ -328,9 +334,10 @@ export async function upsertPaper(input: unknown) {
   try { revalidatePath("/admin/papers"); } catch {}
   try { revalidatePath("/concours"); } catch {}
   try { revalidatePath(`/concours/${v.id}`); } catch {}
+  try { updateTag("papers"); } catch {}
   return { ok: true as const };
 }
-
+ 
 export async function deletePaper(id: string) {
   try {
     const auth = await requireAdmin();
@@ -344,6 +351,7 @@ export async function deletePaper(id: string) {
 
     try { revalidatePath("/admin/papers"); } catch {}
     try { revalidatePath("/concours"); } catch {}
+    try { updateTag("papers"); } catch {}
     return { ok: true as const };
   } catch (err) {
     console.error("[admin] deletePaper threw:", err);
@@ -366,6 +374,7 @@ export async function togglePaperStatus(id: string, status: "draft" | "published
 
   try { revalidatePath("/admin/papers"); } catch {}
   try { revalidatePath("/concours"); } catch {}
+  try { updateTag("papers"); } catch {}
   return { ok: true as const };
 }
 
@@ -385,6 +394,7 @@ export async function setThreadStatus(id: string, status: "published" | "hidden"
 
   try { revalidatePath("/admin/forum"); } catch {}
   try { revalidatePath("/forum"); } catch {}
+  try { updateTag("forum"); } catch {}
   return { ok: true as const };
 }
 
@@ -400,6 +410,7 @@ export async function deleteThread(id: string) {
 
   try { revalidatePath("/admin/forum"); } catch {}
   try { revalidatePath("/forum"); } catch {}
+  try { updateTag("forum"); } catch {}
   return { ok: true as const };
 }
 
@@ -415,5 +426,6 @@ export async function setReplyStatus(id: string, status: "published" | "hidden" 
 
   try { revalidatePath("/admin/forum"); } catch {}
   try { revalidatePath("/forum"); } catch {}
+  try { updateTag("forum"); } catch {}
   return { ok: true as const };
 }
