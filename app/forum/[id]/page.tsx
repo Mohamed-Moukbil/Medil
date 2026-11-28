@@ -1,6 +1,8 @@
 import { after } from "next/server";
 import { Icon } from "@/components/icons";
 import { getThread, getReplies, incrementThreadViews } from "@/lib/content/public";
+import { createClient } from "@/lib/supabase/server";
+import { LikeButton } from "@/components/forum/like-button";
 import { renderPlainText } from "@/lib/content/rich-text";
 import { timeAgo, formatCount, initials } from "@/lib/format";
 import { ReplyForm } from "@/components/forum/reply-form";
@@ -12,6 +14,33 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
   if (!thread) notFound();
 
   const replies = await getReplies(id);
+
+  let supabase = null;
+  try {
+    supabase = await createClient();
+  } catch {
+    supabase = null;
+  }
+  let likedThread = false;
+  const likedReplies = new Set<string>();
+  if (supabase) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      const targetIds = [id, ...replies.map((reply) => reply.id)];
+      const { data: likes } = await supabase
+        .from("user_likes")
+        .select("target_type, target_id")
+        .eq("user_id", user.id)
+        .in("target_type", ["thread", "reply"])
+        .in("target_id", targetIds);
+      for (const like of likes ?? []) {
+        if (like.target_type === "thread" && like.target_id === id) likedThread = true;
+        if (like.target_type === "reply") likedReplies.add(like.target_id);
+      }
+    }
+  }
 
   after(() => {
     void incrementThreadViews(id);
@@ -72,9 +101,7 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
                 ))}
               </div>
               <div className="post-actions">
-                <button className="post-action" type="button">
-                  <Icon name="heart" /> <span>{thread.upvotes}</span> utile
-                </button>
+                <LikeButton targetType="thread" targetId={thread.id} initialCount={thread.upvotes} initialLiked={likedThread} />
               </div>
             </article>
 
@@ -98,9 +125,7 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
                     </div>
                     <div className="post-content" dangerouslySetInnerHTML={{ __html: renderPlainText(reply.body) }} />
                     <div className="post-actions">
-                      <button className="post-action" type="button">
-                        <Icon name="heart" /> <span>{reply.upvotes}</span> utile
-                      </button>
+                      <LikeButton targetType="reply" targetId={reply.id} initialCount={reply.upvotes} initialLiked={likedReplies.has(reply.id)} />
                     </div>
                   </article>
                 ))

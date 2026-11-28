@@ -3,7 +3,7 @@
 import { z } from "zod";
 import type { ForumCategory } from "@/lib/content/types";
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 
 const categories = ["Maths", "Physique", "Informatique", "Concours", "Méthode"] as const;
 
@@ -79,6 +79,7 @@ export async function createThread(input: unknown): Promise<ForumActionResult> {
   }
 
   try { revalidatePath("/forum"); } catch {}
+  try { updateTag("forum"); } catch {}
   return { ok: true, id: data.id };
 }
 
@@ -140,5 +141,112 @@ export async function createReply(input: unknown): Promise<ForumActionResult> {
 
   try { revalidatePath(`/forum/${parsed.data.threadId}`); } catch {}
   try { revalidatePath("/forum"); } catch {}
+  try { updateTag("forum"); } catch {}
   return { ok: true, id: data.id };
+}
+
+export type LikeResult =
+  | { ok: true; liked: boolean; count: number }
+  | { ok: false; error: "auth" | "config" | "database" };
+
+export async function toggleThreadLike(threadId: string): Promise<LikeResult> {
+  let supabase;
+  try {
+    supabase = await createClient();
+  } catch {
+    return { ok: false, error: "config" };
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "auth" };
+
+  const { data: existing } = await supabase
+    .from("user_likes")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .eq("target_type", "thread")
+    .eq("target_id", threadId)
+    .maybeSingle();
+
+  if (existing) {
+    const { error } = await supabase
+      .from("user_likes")
+      .delete()
+      .match({ user_id: user.id, target_type: "thread", target_id: threadId });
+    if (error) return { ok: false, error: "database" };
+  } else {
+    const { error } = await supabase.from("user_likes").upsert(
+      { user_id: user.id, target_type: "thread", target_id: threadId },
+      { onConflict: "user_id,target_type,target_id" },
+    );
+    if (error) return { ok: false, error: "database" };
+  }
+
+  const { count, error: countError } = await supabase
+    .from("user_likes")
+    .select("*", { count: "exact", head: true })
+    .eq("target_type", "thread")
+    .eq("target_id", threadId);
+  if (countError) return { ok: false, error: "database" };
+
+  try { updateTag("forum"); } catch {}
+  try { revalidatePath(`/forum/${threadId}`); } catch {}
+  return { ok: true, liked: !existing, count: count ?? 0 };
+}
+
+export async function toggleReplyLike(replyId: string): Promise<LikeResult> {
+  let supabase;
+  try {
+    supabase = await createClient();
+  } catch {
+    return { ok: false, error: "config" };
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false, error: "auth" };
+
+  const { data: reply } = await supabase
+    .from("forum_replies")
+    .select("thread_id")
+    .eq("id", replyId)
+    .maybeSingle();
+
+  const { data: existing } = await supabase
+    .from("user_likes")
+    .select("user_id")
+    .eq("user_id", user.id)
+    .eq("target_type", "reply")
+    .eq("target_id", replyId)
+    .maybeSingle();
+
+  if (existing) {
+    const { error } = await supabase
+      .from("user_likes")
+      .delete()
+      .match({ user_id: user.id, target_type: "reply", target_id: replyId });
+    if (error) return { ok: false, error: "database" };
+  } else {
+    const { error } = await supabase.from("user_likes").upsert(
+      { user_id: user.id, target_type: "reply", target_id: replyId },
+      { onConflict: "user_id,target_type,target_id" },
+    );
+    if (error) return { ok: false, error: "database" };
+  }
+
+  const { count, error: countError } = await supabase
+    .from("user_likes")
+    .select("*", { count: "exact", head: true })
+    .eq("target_type", "reply")
+    .eq("target_id", replyId);
+  if (countError) return { ok: false, error: "database" };
+
+  try { updateTag("forum"); } catch {}
+  if (reply?.thread_id) {
+    try { revalidatePath(`/forum/${reply.thread_id}`); } catch {}
+  }
+  return { ok: true, liked: !existing, count: count ?? 0 };
 }
