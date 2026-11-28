@@ -227,7 +227,7 @@ export default async function HomePage() {
         <div className="marquee-track">
           {["X/ENS", "MINES-PONTS", "CENTRALE", "CCINP", "E3A", "X/ENS", "MINES-PONTS", "CENTRALE", "CCINP", "E3A"].map((name, index) => (
             <span key={`${name}-${index}`}>
-              <span className={`marquee-item ${index % 2 ? "marquee-item--serif" : ""}`}>{name}</span>
+              <span className={`marquee-item ${(index % 5) % 2 ? "marquee-item--serif" : ""}`}>{name}</span>
               <span className="marquee-star">✦</span>
             </span>
           ))}
