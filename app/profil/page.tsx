@@ -5,6 +5,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { Icon } from "@/components/icons";
 import { getCourses } from "@/lib/content/public";
 import { CourseCard } from "@/components/content/course-card";
+import { ProfileSettings } from "@/components/profile/profile-settings";
 
 export default async function ProfilePage() {
   if (!isSupabaseConfigured()) {
@@ -110,6 +111,12 @@ export default async function ProfilePage() {
               </div>
             )}
           </div>
+          <ProfileSettings
+            initialName={name}
+            initialGrade={grade}
+            initialAvatarUrl={avatarUrl}
+            initialEmail={user.email ?? ""}
+          />
           <div className="profile-shortcuts">
             <Link href="/cours" className="profile-shortcut">
               <Icon name="book" /> Continuer mes cours <Icon name="arrowUpRight" />
