@@ -10,9 +10,11 @@ import { Icon } from "@/components/icons";
 
 type AuthFormProps = {
   mode: "login" | "signup";
+  onModeChange?: (mode: "login" | "signup") => void;
+  onSuccess?: () => void;
 };
 
-export function AuthForm({ mode }: AuthFormProps) {
+export function AuthForm({ mode, onModeChange, onSuccess }: AuthFormProps) {
   const router = useRouter();
   const isLogin = mode === "login";
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +55,11 @@ export function AuthForm({ mode }: AuthFormProps) {
         if (signUpError) throw signUpError;
       }
 
-      router.push(isLogin ? "/profil" : "/connexion?registered=1");
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push(isLogin ? "/profil" : "/connexion?registered=1");
+      }
       router.refresh();
     } catch (caught) {
       const message = caught instanceof Error ? caught.message : "La connexion a échoué.";
@@ -104,12 +110,33 @@ export function AuthForm({ mode }: AuthFormProps) {
       </div>
       <div className="auth-form-side">
         <div className="auth-switch">
-          <Link className={isLogin ? "" : "is-active"} href="/inscription">
-            S’inscrire
-          </Link>
-          <Link className={isLogin ? "is-active" : ""} href="/connexion">
-            Se connecter
-          </Link>
+          {onModeChange ? (
+            <>
+              <button
+                type="button"
+                className={isLogin ? "" : "is-active"}
+                onClick={() => onModeChange("signup")}
+              >
+                S’inscrire
+              </button>
+              <button
+                type="button"
+                className={isLogin ? "is-active" : ""}
+                onClick={() => onModeChange("login")}
+              >
+                Se connecter
+              </button>
+            </>
+          ) : (
+            <>
+              <Link className={isLogin ? "" : "is-active"} href="/inscription">
+                S’inscrire
+              </Link>
+              <Link className={isLogin ? "is-active" : ""} href="/connexion">
+                Se connecter
+              </Link>
+            </>
+          )}
         </div>
         <h3>{isLogin ? "Se connecter" : "Créer ton compte"}</h3>
         <p className="auth-form-sub">{isLogin ? "Ton espace t’attend." : "Gratuit. En moins de trente secondes."}</p>
@@ -159,7 +186,13 @@ export function AuthForm({ mode }: AuthFormProps) {
         </form>
         <p className="auth-bottom-note">
           {isLogin ? "Pas encore de compte ?" : "Déjà un compte ?"}{" "}
-          <Link href={isLogin ? "/inscription" : "/connexion"}>{isLogin ? "S’inscrire" : "Se connecter"}</Link>
+          {onModeChange ? (
+            <button type="button" onClick={() => onModeChange(isLogin ? "signup" : "login")}>
+              {isLogin ? "S’inscrire" : "Se connecter"}
+            </button>
+          ) : (
+            <Link href={isLogin ? "/inscription" : "/connexion"}>{isLogin ? "S’inscrire" : "Se connecter"}</Link>
+          )}
         </p>
       </div>
     </div>

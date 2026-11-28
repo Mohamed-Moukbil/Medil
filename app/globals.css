@@ -208,7 +208,7 @@ p, h1, h2, h3, h4, h5 { margin: 0; }
 .header-search-label { font-size: 12px; font-weight: 600; }
 kbd { font-family: var(--sans); font-size: 9px; font-weight: 700; color: rgba(255, 255, 255, 0.48); background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 5px; padding: 2px 5px; line-height: 1.3; }
 .header-auth { display: flex; align-items: center; gap: 8px; }
-.header-login { font-size: 13px; font-weight: 650; color: rgba(255, 255, 255, 0.68); padding: 9px 5px; transition: color 0.2s; }
+.header-login { font-size: 13px; font-weight: 650; color: rgba(255, 255, 255, 0.68); padding: 9px 5px; transition: color 0.2s; background: none; border: none; cursor: pointer; font-family: inherit; }
 .header-login:hover { color: var(--white); }
 .profile-chip { display: flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 100px; color: var(--white); font-size: 12px; font-weight: 700; transition: border-color 0.2s, background 0.2s; }
 .profile-chip:hover { background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.22); }

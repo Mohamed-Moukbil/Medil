@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import { Icon } from "@/components/icons";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { toggleSave } from "@/lib/personal/actions";
+import { useAuthModal } from "@/components/auth/auth-modal-provider";
 
 type SaveButtonProps = {
   itemType: "course" | "exercise";
@@ -18,8 +18,7 @@ export function SaveButton({ itemType, itemId, title, className = "icon-button" 
   const [saved, setSaved] = useState(false);
   const [ready, setReady] = useState(() => !isSupabaseConfigured());
   const [pending, startTransition] = useTransition();
-  const router = useRouter();
-  const pathname = usePathname();
+  const { openAuth } = useAuthModal();
 
   useEffect(() => {
     const supabase = createClient();
@@ -68,7 +67,7 @@ export function SaveButton({ itemType, itemId, title, className = "icon-button" 
         return;
       }
       if (result.error === "auth") {
-        router.push(`/connexion?next=${encodeURIComponent(pathname)}`);
+        openAuth("login");
       }
     });
   };

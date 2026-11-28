@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { AuthModalProvider } from "@/components/auth/auth-modal-provider";
 import { getSiteUrl } from "@/lib/supabase/config";
 import "./globals.css";
 
@@ -56,11 +57,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <a className="skip-link" href="#app">
           Aller au contenu
         </a>
-        <SiteHeader />
-        <main id="app" tabIndex={-1}>
-          {children}
-        </main>
-        <SiteFooter />
+        <AuthModalProvider>
+          <SiteHeader />
+          <main id="app" tabIndex={-1}>
+            {children}
+          </main>
+          <SiteFooter />
+        </AuthModalProvider>
       </body>
     </html>
   );

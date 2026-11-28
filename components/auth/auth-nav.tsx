@@ -6,8 +6,10 @@ import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/client";
 import { initials } from "@/lib/format";
 import { Icon } from "@/components/icons";
+import { useAuthModal } from "@/components/auth/auth-modal-provider";
 
 export function AuthNav({ mobile = false }: { mobile?: boolean }) {
+  const { openAuth } = useAuthModal();
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -60,17 +62,17 @@ export function AuthNav({ mobile = false }: { mobile?: boolean }) {
 
   return (
     <>
-      <Link className="header-login" href="/connexion">
+      <button className="header-login" type="button" onClick={() => openAuth("login")}>
         Connexion
-      </Link>
-      <Link className="btn btn--lime btn--sm" href="/inscription">
+      </button>
+      <button className="btn btn--lime btn--sm" type="button" onClick={() => openAuth("signup")}>
         {mobile ? "Rejoindre MEDIL" : "Rejoindre"}
         {!mobile && (
           <span className="btn-orb">
             <Icon name="arrowUpRight" />
           </span>
         )}
-      </Link>
+      </button>
     </>
   );
 }
