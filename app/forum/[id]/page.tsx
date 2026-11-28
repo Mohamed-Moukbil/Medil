@@ -1,6 +1,6 @@
 import { after } from "next/server";
 import { Icon } from "@/components/icons";
-import { getThread, getReplies, incrementThreadViews, getThreadViews } from "@/lib/content/public";
+import { getThread, getReplies, incrementThreadViews } from "@/lib/content/public";
 import { createClient } from "@/lib/supabase/server";
 import { LikeButton } from "@/components/forum/like-button";
 import { renderPlainText } from "@/lib/content/rich-text";
@@ -12,9 +12,6 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
   const { id } = await params;
   const thread = await getThread(id);
   if (!thread) notFound();
-
-  const freshViews = await getThreadViews(id);
-  if (freshViews !== null) thread.views = freshViews;
 
   const replies = await getReplies(id);
 
@@ -76,9 +73,7 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
               <span className="thread-hero-stat">
                 <Icon name="forum" /> <strong>{thread.replyCount}</strong> réponses
               </span>
-              <span className="thread-hero-stat">
-                <Icon name="eye" /> <strong>{thread.views}</strong> vues
-              </span>
+
             </div>
           </div>
         </div>
@@ -149,10 +144,7 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
               <strong>{thread.replyCount}</strong>
               <span>réponses</span>
             </div>
-            <div className="mini-stat-row">
-              <strong>{thread.views}</strong>
-              <span>vues</span>
-            </div>
+
             <div className="mini-stat-row">
               <strong>{thread.upvotes}</strong>
               <span>utile</span>

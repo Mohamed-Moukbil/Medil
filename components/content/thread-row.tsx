@@ -40,9 +40,6 @@ export function ThreadRow({ thread }: { thread: ForumThread }) {
         <span>
           <Icon name="forum" /> {thread.replyCount}
         </span>
-        <span>
-          <Icon name="eye" /> {thread.views}
-        </span>
       </span>
       <span className="thread-chevron">
         <Icon name="arrowUpRight" />
