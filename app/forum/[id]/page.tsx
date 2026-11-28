@@ -4,7 +4,7 @@ import { getThread, getReplies, incrementThreadViews, getThreadViews } from "@/l
 import { createClient } from "@/lib/supabase/server";
 import { LikeButton } from "@/components/forum/like-button";
 import { renderPlainText } from "@/lib/content/rich-text";
-import { timeAgo, formatCount, initials } from "@/lib/format";
+import { timeAgo, initials } from "@/lib/format";
 import { ReplyForm } from "@/components/forum/reply-form";
 import { notFound } from "next/navigation";
 
@@ -77,7 +77,7 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
                 <Icon name="forum" /> <strong>{thread.replyCount}</strong> réponses
               </span>
               <span className="thread-hero-stat">
-                <Icon name="eye" /> <strong>{formatCount(thread.views)}</strong> vues
+                <Icon name="eye" /> <strong>{thread.views}</strong> vues
               </span>
             </div>
           </div>
@@ -150,7 +150,7 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
               <span>réponses</span>
             </div>
             <div className="mini-stat-row">
-              <strong>{formatCount(thread.views)}</strong>
+              <strong>{thread.views}</strong>
               <span>vues</span>
             </div>
             <div className="mini-stat-row">

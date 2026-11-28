@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Icon } from "@/components/icons";
-import { formatCount, timeAgo } from "@/lib/format";
+import { timeAgo } from "@/lib/format";
 import type { ForumThread } from "@/lib/content/types";
 
 export function ThreadRow({ thread }: { thread: ForumThread }) {
@@ -41,7 +41,7 @@ export function ThreadRow({ thread }: { thread: ForumThread }) {
           <Icon name="forum" /> {thread.replyCount}
         </span>
         <span>
-          <Icon name="eye" /> {formatCount(thread.views)}
+          <Icon name="eye" /> {thread.views}
         </span>
       </span>
       <span className="thread-chevron">
