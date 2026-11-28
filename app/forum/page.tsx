@@ -69,13 +69,7 @@ export default async function ForumPage({
             </p>
             <div className="page-hero-meta">
               <span className="hero-meta-pill">
-                <Icon name="users" /> 4 800 membres
-              </span>
-              <span className="hero-meta-pill">
                 <Icon name="forum" /> {allThreads.length} discussions
-              </span>
-              <span className="hero-meta-pill">
-                <span className="live-dot" /> 128 en ligne
               </span>
             </div>
             <div className="page-hero-actions">
@@ -157,9 +151,6 @@ export default async function ForumPage({
               <div className="forum-side-card forum-side-card--dark">
                 <div className="online-avatars">
                   <AvatarStack extra="avatar-stack--dark" />
-                  <span className="online-status">
-                    <span /> 128 connectés
-                  </span>
                 </div>
                 <h3>La promo est là.</h3>
                 <p>Une question posée maintenant a de grandes chances d’avoir une réponse avant la prochaine colles.</p>
@@ -197,24 +188,7 @@ export default async function ForumPage({
                   Poser ma question <Icon name="plus" />
                 </Link>
               </div>
-              <div className="forum-side-card mini-stats-card">
-                <p className="eyebrow">
-                  <span className="eyebrow-dot" />
-                  Aujourd’hui
-                </p>
-                <div className="mini-stat-row">
-                  <strong>42</strong>
-                  <span>nouvelles réponses</span>
-                </div>
-                <div className="mini-stat-row">
-                  <strong>12</strong>
-                  <span>sujets résolus</span>
-                </div>
-                <div className="mini-stat-row">
-                  <strong>97%</strong>
-                  <span>de questions avec réponse</span>
-                </div>
-              </div>
+
             </aside>
           </div>
         </div>

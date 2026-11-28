@@ -409,9 +409,6 @@ export default async function HomePage() {
                 <span className="avatar avatar--xl avatar--lime">LB</span>
                 <span className="avatar avatar--xl avatar--lilac">AK</span>
                 <span className="avatar avatar--xl avatar--peach">SM</span>
-                <span className="online-pill">
-                  <span /> 128 en ligne
-                </span>
               </div>
             </div>
           </div>
@@ -610,22 +607,9 @@ export default async function HomePage() {
               <aside className="community-card">
                 <div className="online-avatars">
                   <AvatarStack extra="avatar-stack--dark" />
-                  <span className="online-status">
-                    <span /> 128 connectés
-                  </span>
                 </div>
                 <h3>Un collectif qui bosse.</h3>
                 <p>Des élèves de Ginette, LLG, Hoche, Stan, Chaptal et ailleurs. Des explications, des schémas, des sources.</p>
-                <div className="community-stats">
-                  <div>
-                    <strong>4,8k</strong>
-                    <span>membres</span>
-                  </div>
-                  <div>
-                    <strong>97%</strong>
-                    <span>de questions résolues</span>
-                  </div>
-                </div>
                 <Link className="community-link" href="/forum">
                   Rejoindre la conversation <Icon name="arrowRight" />
                 </Link>
