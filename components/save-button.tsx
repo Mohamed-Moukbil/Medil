@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Icon } from "@/components/icons";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
@@ -15,6 +16,7 @@ type SaveButtonProps = {
 };
 
 export function SaveButton({ itemType, itemId, title, className = "icon-button" }: SaveButtonProps) {
+  const router = useRouter();
   const [saved, setSaved] = useState(false);
   const [ready, setReady] = useState(() => !isSupabaseConfigured());
   const [pending, startTransition] = useTransition();
@@ -64,10 +66,13 @@ export function SaveButton({ itemType, itemId, title, className = "icon-button" 
       const result = await toggleSave({ itemType, itemId, saved: !saved });
       if (result.ok) {
         setSaved(result.saved);
+        router.refresh();
         return;
       }
       if (result.error === "auth") {
         openAuth("login");
+      } else {
+        console.error("[medil] save failed:", result.error);
       }
     });
   };
