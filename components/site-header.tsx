@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AuthNav } from "@/components/auth/auth-nav";
+import { SearchModal } from "@/components/search/search-modal";
 import { Icon } from "@/components/icons";
 
 const NAV_ITEMS = [
@@ -71,11 +72,11 @@ export function SiteHeader() {
         </nav>
 
         <div className="header-actions">
-          <Link className="header-search" href="/recherche" aria-label="Ouvrir la recherche">
+          <button className="header-search" type="button" data-open-search aria-label="Ouvrir la recherche" onClick={() => window.dispatchEvent(new CustomEvent("medil:open-search"))}>
             <span className="header-search-icon" />
             <span className="header-search-label">Rechercher</span>
             <kbd>⌘K</kbd>
-          </Link>
+          </button>
           <div className="header-auth">
             <AuthNav />
           </div>
@@ -105,15 +106,16 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <Link className="mobile-search-btn" href="/recherche">
+        <button className="mobile-search-btn" type="button" data-open-search onClick={() => window.dispatchEvent(new CustomEvent("medil:open-search"))}>
           <span>Rechercher une ressource</span>
           <kbd>⌘K</kbd>
-        </Link>
+        </button>
         <div className="mobile-auth">
           <AuthNav mobile />
         </div>
         <p className="mobile-panel-note">Fait par des taupins, pour des taupins. MPSI · MP.</p>
       </div>
+      <SearchModal />
     </header>
   );
 }
