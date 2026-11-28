@@ -5,6 +5,7 @@ import { SaveButton } from "@/components/save-button";
 import { CompleteButton } from "@/components/complete-button";
 import { CoverArt } from "@/components/content/cover-art";
 import { getCourse } from "@/lib/content/public";
+import { createClient } from "@/lib/supabase/server";
 import { renderRichText } from "@/lib/content/rich-text";
 import { formatRating } from "@/lib/format";
 import { notFound } from "next/navigation";
@@ -13,6 +14,25 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
   const { id } = await params;
   const course = await getCourse(id);
   if (!course) notFound();
+
+  let completed = false;
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user) {
+      const { data: row } = await supabase
+        .from("user_completed")
+        .select("item_id")
+        .eq("user_id", user.id)
+        .eq("item_id", id)
+        .maybeSingle();
+      completed = Boolean(row);
+    }
+  } catch {
+    completed = false;
+  }
 
   return (
     <>
@@ -67,12 +87,12 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
             <div className="reader-progress-card">
               <div className="reader-progress-top">
                 <span>Progression</span>
-                <strong>0%</strong>
+                <strong>{completed ? "100%" : "0%"}</strong>
               </div>
               <div className="progress-track progress-track--dark">
-                <span style={{ width: "0%" }} />
+                <span style={{ width: completed ? "100%" : "0%" }} />
               </div>
-              <p>Encore un petit effort.</p>
+              <p>{completed ? "Cours terminé. Bravo !" : "Encore un petit effort."}</p>
             </div>
             <nav className="toc" aria-label="Sommaire">
               <p className="toc-title">Sommaire</p>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getCourses, getExercises, getPapers, getThreads, getSiteStats, getDailyChallenge } from "@/lib/content/public";
+import { createClient } from "@/lib/supabase/server";
 import { Icon } from "@/components/icons";
 import { Tex } from "@/components/tex";
 import { CourseCard } from "@/components/content/course-card";
@@ -20,6 +21,27 @@ export default async function HomePage() {
   const featuredPool = courses.filter((course) => course.featured);
   const featured = (featuredPool.length ? featuredPool : courses).slice(0, 4);
   const heroCourse = courses.find((course) => course.featured) ?? courses[0] ?? null;
+
+  let heroCompleted = false;
+  if (heroCourse) {
+    try {
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        const { data: row } = await supabase
+          .from("user_completed")
+          .select("item_id")
+          .eq("user_id", user.id)
+          .eq("item_id", heroCourse.id)
+          .maybeSingle();
+        heroCompleted = Boolean(row);
+      }
+    } catch {
+      heroCompleted = false;
+    }
+  }
   const heroPaper = papers.find((paper) => paper.hot) ?? papers[0] ?? null;
   const latestPaper = [...papers].sort((a, b) => b.year - a.year)[0] ?? null;
   const heroPaperLetter = heroPaper ? /([A-Z])\s*$/.exec(heroPaper.title)?.[1] : undefined;
@@ -141,10 +163,10 @@ export default async function HomePage() {
               </div>
               <div className="study-progress-head">
                 <span>Progression</span>
-                <strong>0%</strong>
+                <strong>{heroCompleted ? "100%" : "0%"}</strong>
               </div>
               <div className="progress-track">
-                <span style={{ width: "0%" }} />
+                <span style={{ width: heroCompleted ? "100%" : "0%" }} />
               </div>
               <div className="study-footer">
                 <span>
