@@ -6,12 +6,14 @@ import { Icon } from "@/components/icons";
 import { createClient } from "@/lib/supabase/client";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { toggleComplete } from "@/lib/personal/complete";
+import { useAuthModal } from "@/components/auth/auth-modal-provider";
 
 export function CompleteButton({ itemId }: { itemId: string }) {
   const [completed, setCompleted] = useState(false);
   const [ready, setReady] = useState(() => !isSupabaseConfigured());
   const [pending, startTransition] = useTransition();
   const router = useRouter();
+  const { openAuth } = useAuthModal();
 
   useEffect(() => {
     const supabase = createClient();
@@ -55,6 +57,12 @@ export function CompleteButton({ itemId }: { itemId: string }) {
       if (result.ok) {
         setCompleted(result.completed);
         router.refresh();
+        return;
+      }
+      if (result.error === "auth") {
+        openAuth("login");
+      } else {
+        console.error("[medil] complete failed:", result.error);
       }
     });
   };
