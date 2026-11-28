@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 import { Icon } from "@/components/icons";
-import { initialNewsletterState, subscribeToNewsletter } from "@/lib/newsletter/actions";
+import { initialNewsletterState } from "@/lib/newsletter/state";
+import { subscribeToNewsletter } from "@/lib/newsletter/actions";
 
 export function NewsletterForm() {
   const [state, formAction, pending] = useActionState(subscribeToNewsletter, initialNewsletterState);
