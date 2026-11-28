@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getThreads } from "@/lib/content/public";
+import { getThreads, getThreadViewsMap } from "@/lib/content/public";
 import { Icon } from "@/components/icons";
 import { ThreadRow } from "@/components/content/thread-row";
 import { AvatarStack } from "@/components/content/avatar-stack";
@@ -35,6 +35,11 @@ export default async function ForumPage({
   const query = normalize(rawQuery);
 
   const allThreads = await getThreads();
+  const viewsMap = await getThreadViewsMap();
+  for (const thread of allThreads) {
+    const v = viewsMap.get(thread.id);
+    if (v !== undefined) thread.views = v;
+  }
   const categoryThreads = category ? allThreads.filter((thread) => thread.category === category) : allThreads;
   const threads = query
     ? categoryThreads.filter((thread) =>

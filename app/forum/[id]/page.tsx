@@ -1,6 +1,6 @@
 import { after } from "next/server";
 import { Icon } from "@/components/icons";
-import { getThread, getReplies, incrementThreadViews } from "@/lib/content/public";
+import { getThread, getReplies, incrementThreadViews, getThreadViews } from "@/lib/content/public";
 import { createClient } from "@/lib/supabase/server";
 import { LikeButton } from "@/components/forum/like-button";
 import { renderPlainText } from "@/lib/content/rich-text";
@@ -12,6 +12,9 @@ export default async function ThreadDetailPage({ params }: { params: Promise<{ i
   const { id } = await params;
   const thread = await getThread(id);
   if (!thread) notFound();
+
+  const freshViews = await getThreadViews(id);
+  if (freshViews !== null) thread.views = freshViews;
 
   const replies = await getReplies(id);
 

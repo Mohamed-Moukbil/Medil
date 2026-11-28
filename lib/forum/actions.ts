@@ -184,16 +184,15 @@ export async function toggleThreadLike(threadId: string): Promise<LikeResult> {
     if (error) return { ok: false, error: "database" };
   }
 
-  const { count, error: countError } = await supabase
-    .from("user_likes")
-    .select("*", { count: "exact", head: true })
-    .eq("target_type", "thread")
-    .eq("target_id", threadId);
-  if (countError) return { ok: false, error: "database" };
+  const { data: threadRow } = await supabase
+    .from("forum_threads")
+    .select("upvotes")
+    .eq("id", threadId)
+    .maybeSingle();
 
   try { updateTag("forum"); } catch {}
   try { revalidatePath(`/forum/${threadId}`); } catch {}
-  return { ok: true, liked: !existing, count: count ?? 0 };
+  return { ok: true, liked: !existing, count: (threadRow as { upvotes?: number } | null)?.upvotes ?? 0 };
 }
 
 export async function toggleReplyLike(replyId: string): Promise<LikeResult> {
@@ -237,16 +236,15 @@ export async function toggleReplyLike(replyId: string): Promise<LikeResult> {
     if (error) return { ok: false, error: "database" };
   }
 
-  const { count, error: countError } = await supabase
-    .from("user_likes")
-    .select("*", { count: "exact", head: true })
-    .eq("target_type", "reply")
-    .eq("target_id", replyId);
-  if (countError) return { ok: false, error: "database" };
+  const { data: replyRow } = await supabase
+    .from("forum_replies")
+    .select("upvotes")
+    .eq("id", replyId)
+    .maybeSingle();
 
   try { updateTag("forum"); } catch {}
   if (reply?.thread_id) {
     try { revalidatePath(`/forum/${reply.thread_id}`); } catch {}
   }
-  return { ok: true, liked: !existing, count: count ?? 0 };
+  return { ok: true, liked: !existing, count: (replyRow as { upvotes?: number } | null)?.upvotes ?? 0 };
 }

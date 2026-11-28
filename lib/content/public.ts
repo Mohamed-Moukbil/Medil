@@ -415,16 +415,7 @@ async function fetchThread(id: string): Promise<ForumThread | null> {
   }
   if (!data) return null;
 
-  const thread = mapThreadRow(data as unknown as ForumThreadRow);
-
-  const { count } = await supabase
-    .from("user_likes")
-    .select("*", { count: "exact", head: true })
-    .eq("target_type", "thread")
-    .eq("target_id", id);
-  thread.upvotes = count ?? 0;
-
-  return thread;
+  return mapThreadRow(data as unknown as ForumThreadRow);
 }
 
 export const getThread = unstable_cache(fetchThread, ["forum-thread"], {
@@ -437,7 +428,30 @@ export async function incrementThreadViews(id: string): Promise<void> {
   if (!supabase) return;
   const { error } = await supabase.rpc("increment_thread_views", { thread_id: id });
   if (error) logQueryError(`increment views ${id}`, error);
-  try { revalidateTag("forum", { expire: 0 }); } catch {}
+}
+
+export async function getThreadViews(id: string): Promise<number | null> {
+  const supabase = getPublicClient();
+  if (!supabase) return null;
+  const { data, error } = await supabase
+    .from("forum_threads")
+    .select("views")
+    .eq("id", id)
+    .maybeSingle();
+  if (error || !data) return null;
+  return (data as { views: number }).views ?? null;
+}
+
+export async function getThreadViewsMap(): Promise<Map<string, number>> {
+  const supabase = getPublicClient();
+  const map = new Map<string, number>();
+  if (!supabase) return map;
+  const { data, error } = await supabase.from("forum_threads").select("id, views");
+  if (error || !data) return map;
+  for (const row of data as Array<{ id: string; views: number }>) {
+    map.set(row.id, row.views ?? 0);
+  }
+  return map;
 }
 
 async function fetchReplies(threadId: string): Promise<ForumReply[]> {
@@ -462,25 +476,7 @@ async function fetchReplies(threadId: string): Promise<ForumReply[]> {
     return [];
   }
 
-  const replies = (data as unknown as ForumReplyRow[]).map(mapReplyRow);
-
-  const replyIds = replies.map((reply) => reply.id);
-  if (replyIds.length > 0) {
-    const { data: likes } = await supabase
-      .from("user_likes")
-      .select("target_id")
-      .eq("target_type", "reply")
-      .in("target_id", replyIds);
-    const counts = new Map<string, number>();
-    for (const like of likes ?? []) {
-      counts.set(like.target_id, (counts.get(like.target_id) ?? 0) + 1);
-    }
-    for (const reply of replies) {
-      reply.upvotes = counts.get(reply.id) ?? 0;
-    }
-  }
-
-  return replies;
+  return (data as unknown as ForumReplyRow[]).map(mapReplyRow);
 }
 
 export const getReplies = unstable_cache(fetchReplies, ["forum-replies"], {
