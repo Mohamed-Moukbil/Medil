@@ -1,6 +1,6 @@
 import "server-only";
 
-import { revalidateTag, unstable_cache } from "next/cache";
+import { unstable_cache } from "next/cache";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 import { getLocalEditorial } from "./local";

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
+type TopLoaderWindow = Window & { __topLoaderInterval?: ReturnType<typeof setInterval> | null };
+
 export function TopLoader() {
   const pathname = usePathname();
   const [loading, setLoading] = useState(false);
@@ -10,10 +12,15 @@ export function TopLoader() {
 
   // Hide loader when route changes (navigation complete)
   useEffect(() => {
-    setLoading(false);
-    setProgress(100);
-    const t = setTimeout(() => setProgress(0), 300);
-    return () => clearTimeout(t);
+    const t1 = setTimeout(() => {
+      setLoading(false);
+      setProgress(100);
+    }, 0);
+    const t2 = setTimeout(() => setProgress(0), 300);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
   }, [pathname]);
 
   // Show loader on link clicks
@@ -25,7 +32,6 @@ export function TopLoader() {
       const href = anchor.getAttribute("href");
       if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) return;
       if (anchor.target === "_blank") return;
-      // Only internal links
       try {
         const url = new URL(href, window.location.origin);
         if (url.origin !== window.location.origin) return;
@@ -35,14 +41,10 @@ export function TopLoader() {
       }
       setLoading(true);
       setProgress(20);
-      // Animate progress
-      let p = 20;
       const interval = setInterval(() => {
-        p = Math.min(90, p + Math.random() * 10);
-        setProgress(p);
+        setProgress((p) => Math.min(90, p + Math.random() * 10));
       }, 200);
-      // Store interval to clear on completion
-      (window as any).__topLoaderInterval = interval;
+      (window as TopLoaderWindow).__topLoaderInterval = interval;
     };
     document.addEventListener("click", onClick, true);
     return () => document.removeEventListener("click", onClick, true);
@@ -50,12 +52,11 @@ export function TopLoader() {
 
   // Clear interval when loading stops
   useEffect(() => {
-    if (!loading) {
-      const interval = (window as any).__topLoaderInterval;
-      if (interval) {
-        clearInterval(interval);
-        (window as any).__topLoaderInterval = null;
-      }
+    if (loading) return;
+    const w = window as TopLoaderWindow;
+    if (w.__topLoaderInterval) {
+      clearInterval(w.__topLoaderInterval);
+      w.__topLoaderInterval = null;
     }
   }, [loading]);
 

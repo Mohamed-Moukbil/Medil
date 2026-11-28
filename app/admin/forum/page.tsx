@@ -1,6 +1,5 @@
-import { getThreads, getReplies } from "@/lib/content/public";
-import { setThreadStatus, deleteThread, setReplyStatus } from "@/lib/admin/actions";
-import { Icon } from "@/components/icons";
+import { getThreads } from "@/lib/content/public";
+import { setThreadStatus, deleteThread } from "@/lib/admin/actions";
 
 export default async function AdminForumPage() {
   const threads = await getThreads();
